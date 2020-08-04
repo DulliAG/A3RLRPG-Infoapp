@@ -30,6 +30,10 @@
   - Link für die [Nordholm Karte](https://info.realliferpg.de/map) erstellen
 
 **Händler**
+- [ ] Händler abrufen
+- [ ] Angebote abrufen
+  - Items eines Händlers abrufen und als `collapsible` darstellen
+  
 **Markt**
 
 - [ ] Aktuelle Marktpreise von Server 1 & 2
