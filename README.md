@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://files.dulliag.de/share/qr-code.png" width="240px" height="auto">
+  <img src="https://files.dulliag.de/share/qr-code.png" width="240px" height="auto">
 </p>
 
 <h1 align="center">DAG-Infoapp</h1>
@@ -9,8 +9,8 @@
 **Allgemein**
 
 - [ ] Logo beim Laden anpassen
-- [ ] Navigation einbauen
-- [ ] Header einbauen
+- [x] Navigation einbauen
+- [x] Header einbauen
 
 **Home/Serverliste**
 
@@ -30,10 +30,12 @@
   - Link für die [Nordholm Karte](https://info.realliferpg.de/map) erstellen
 
 **Händler**
+
 - [ ] Händler abrufen
 - [ ] Angebote abrufen
+
   - Items eines Händlers abrufen und als `collapsible` darstellen
-  
+
 **Markt**
 
 - [ ] Aktuelle Marktpreise von Server 1 & 2
