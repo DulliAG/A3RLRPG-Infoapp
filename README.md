@@ -8,13 +8,13 @@
 
 **Allgemein**
 
-- [ ] Logo beim Laden anpassen
+- [x] Logo beim Laden anpassen
 - [x] Navigation einbauen
 - [x] Header einbauen
 
 **Home/Serverliste**
 
-- [ ] Serverliste
+- [x] Serverliste
   - Server abrufen
   - Server in einer Card darstellen
 - [ ] Serverinformationen anzeigen
@@ -38,7 +38,7 @@
 
 **Markt**
 
-- [ ] Aktuelle Marktpreise von Server 1 & 2
+- [x] Aktuelle Marktpreise von Server 1 & 2
   - Daten abrufen
   - Daten anzeigen
   - Marktpreise aktualisieren
