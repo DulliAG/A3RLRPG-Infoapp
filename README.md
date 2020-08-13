@@ -52,5 +52,8 @@
 
 [Expo](https://expo.io)
 [React Native](https://reactnative.dev/)
+[React Native Navigation](https://reactnavigation.org/)
+[React Native Tab View](https://www.npmjs.com/package/react-native-tab-view)
+[React Native Collapsible](https://github.com/oblador/react-native-collapsible)
 [ReallifeRPG API](https://api.realliferpg.de)
 [ReallifeRPG App Drawables](https://github.com/A3ReallifeRPG/RealLifeRPG-App/tree/master/app/src/main/res/drawable)
