@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, ToastAndroid, RefreshControl } from "react-native";
+import { Image, ToastAndroid, RefreshControl, View, ActivityIndicator } from "react-native";
 import Styled from "styled-components";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -47,7 +47,11 @@ export default class MarketItem extends React.Component {
 
   render() {
     if (this.state.loading == true && this.state.refreshing == false) {
-      return null;
+      return (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <ActivityIndicator size="large" color="#2f95dc" />
+        </View>
+      );
     } else {
       const onRefresh = () => {
         this.setState({ refreshing: true });
