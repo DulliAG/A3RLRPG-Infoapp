@@ -19,7 +19,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={HomeScreen}
         options={{
           title: "Home",
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-home" />,
         }}
       />
       <BottomTab.Screen
@@ -27,7 +27,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={ProfileScreen}
         options={{
           title: "Profil",
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-person" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-contact" />,
         }}
       />
       <BottomTab.Screen
@@ -35,7 +35,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={StoresScreen}
         options={{
           title: "Händler",
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-wallet" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cart" />,
         }}
       />
       <BottomTab.Screen
@@ -43,7 +43,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={MarketScreen}
         options={{
           title: "Markt",
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-trending-up" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-trending-up" />,
         }}
       />
     </BottomTab.Navigator>
