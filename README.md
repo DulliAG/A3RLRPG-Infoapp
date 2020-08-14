@@ -31,8 +31,9 @@
 
 **Händler**
 
-- [ ] Händler abrufen
-- [ ] Angebote abrufen
+- [ ] **Performance steigern**
+- [x] Händler abrufen
+- [x] Angebote abrufen
 
   - Items eines Händlers abrufen und als `collapsible` darstellen
 
