@@ -1,7 +1,8 @@
 import React from "react";
-import { Image, ToastAndroid, RefreshControl, View, ActivityIndicator } from "react-native";
+import { Image, ToastAndroid, RefreshControl } from "react-native";
 import Styled from "styled-components";
 import { ScrollView } from "react-native-gesture-handler";
+import Spinner from "../components/Spinner";
 
 export default class MarketItem extends React.Component {
   constructor() {
@@ -47,11 +48,7 @@ export default class MarketItem extends React.Component {
 
   render() {
     if (this.state.loading == true && this.state.refreshing == false) {
-      return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <ActivityIndicator size="large" color="#2f95dc" />
-        </View>
-      );
+      return <Spinner size="large" />;
     } else {
       const onRefresh = () => {
         this.setState({ refreshing: true });
@@ -135,8 +132,10 @@ const Item = Styled.View`
   margin: 5px auto;
   padding: 5px 10px;
   background-color: #fff;
+  border-left-width: 5px;
+  border-color: #2f95dc;
   border-radius: 5px;
-`;
+  `;
 
 const Info = Styled.View`
   flex-direction: row;
