@@ -22,7 +22,7 @@
 
 **Profil**
 
-- [ ] API-Key speichern & auslesen
+- [x] API-Key speichern & auslesen
 - [ ] Allgemeine Spielerinformationen
 - [ ] Fahrzeugliste
   - Intakte Fahrzeuge anzeigen lassen
