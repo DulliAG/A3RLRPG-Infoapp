@@ -16,8 +16,7 @@ export class SettingsModal extends React.Component {
   constructor() {
     super();
     this.state = {
-      isModalVisible: true,
-      scrollOffset: 0,
+      isModalVisible: false,
       apiKey: null,
     };
   }
