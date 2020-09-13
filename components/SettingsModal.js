@@ -45,12 +45,6 @@ export class SettingsModal extends React.Component {
     this.setState({ isModalVisible: false });
   };
 
-  handleScrollTo = (p) => {
-    if (this.scrollViewRef) {
-      this.scrollViewRef.scrollTo(p);
-    }
-  };
-
   componentDidMount() {
     this.getKey();
   }
@@ -166,6 +160,14 @@ const styles = StyleSheet.create({
     borderColor: "rgba(0, 0, 0, 0.1)",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   bottomModal: {
     justifyContent: "flex-end",
