@@ -84,86 +84,86 @@ export default class Store extends React.Component {
   }
 
   render() {
-    while (this.state.loading == true) {
+    if (this.state.loading == true) {
       return <Spinner size="large" />;
-    }
+    } else {
+      return (
+        <View style={{ backgroundColor: "#fff" }}>
+          <FlatList
+            data={this.state.content}
+            renderItem={({ item }) => (
+              <Text style={styles.item} onPress={this.setItems.bind(this, item)}>
+                {item.shopname}
+              </Text>
+            )}
+          />
+          <Modal
+            isVisible={this.state.isModalVisible}
+            style={styles.bottomModal}
+            backdropColor="rgba(0, 0, 0, 0)"
+            backdropOpacity={1}
+            animationIn="slideInUp"
+            animationOut="slideOutDown"
+            animationInTiming={200}
+            animationOutTiming={200}
+            onBackdropPress={() => this.closeModal()}
+          >
+            <View style={styles.modalContent}>
+              <TouchableWithoutFeedback
+                onPress={() => this.closeModal()}
+                onPressIn={() => this.closeModal()}
+              >
+                <View
+                  style={{
+                    width: "10%",
+                    height: 5,
+                    marginBottom: 10,
+                    backgroundColor: "rgba(0, 0, 0, 0.1)",
+                    borderRadius: 50,
+                  }}
+                />
+              </TouchableWithoutFeedback>
 
-    return (
-      <View style={{ backgroundColor: "#fff" }}>
-        <FlatList
-          data={this.state.content}
-          renderItem={({ item }) => (
-            <Text style={styles.item} onPress={this.setItems.bind(this, item)}>
-              {item.shopname}
-            </Text>
-          )}
-        />
-        <Modal
-          isVisible={this.state.isModalVisible}
-          style={styles.bottomModal}
-          backdropColor="rgba(0, 0, 0, 0)"
-          backdropOpacity={1}
-          animationIn="slideInUp"
-          animationOut="slideOutDown"
-          animationInTiming={200}
-          animationOutTiming={200}
-          onBackdropPress={() => this.closeModal()}
-        >
-          <View style={styles.modalContent}>
-            <TouchableWithoutFeedback
-              onPress={() => this.closeModal()}
-              onPressIn={() => this.closeModal()}
-            >
-              <View
+              <ScrollView
                 style={{
-                  width: "10%",
-                  height: 5,
-                  marginBottom: 10,
-                  backgroundColor: "rgba(0, 0, 0, 0.1)",
-                  borderRadius: 50,
+                  maxHeight: Layout.window.height * 0.6,
+                  width: "90%",
                 }}
-              />
-            </TouchableWithoutFeedback>
-
-            <ScrollView
-              style={{
-                maxHeight: Layout.window.height * 0.6,
-                width: "90%",
-              }}
-              showsVerticalScrollIndicator={false}
-            >
-              {this.state.shopItems != null
-                ? this.state.shopItems.map((item, index) => {
-                    return (
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          flexWrap: "wrap",
-                          alignItems: "center",
-                          paddingHorizontal: 20,
-                          paddingVertical: 8,
-                          marginBottom: 5,
-                          borderWidth: 1,
-                          borderColor: "#ededed",
-                          backgroundColor: "#f8f9fa",
-                          borderRadius: 8,
-                        }}
-                      >
-                        <Text style={{ width: "70%", fontWeight: "bold" }}>{item.name}</Text>
-                        <Text style={{ width: "30%", textAlign: "right" }}>{item.price} €</Text>
-                        <Text>Level: {item.level}</Text>
-                        {this.state.category == "vehicles" ? (
-                          <Text style={{ marginLeft: 10 }}>Kofferraum: {item.v_space} Kg.</Text>
-                        ) : null}
-                      </View>
-                    );
-                  })
-                : null}
-            </ScrollView>
-          </View>
-        </Modal>
-      </View>
-    );
+                showsVerticalScrollIndicator={false}
+              >
+                {this.state.shopItems != null
+                  ? this.state.shopItems.map((item, index) => {
+                      return (
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            flexWrap: "wrap",
+                            alignItems: "center",
+                            paddingHorizontal: 20,
+                            paddingVertical: 8,
+                            marginBottom: 5,
+                            borderWidth: 1,
+                            borderColor: "#ededed",
+                            backgroundColor: "#f8f9fa",
+                            borderRadius: 8,
+                          }}
+                        >
+                          <Text style={{ width: "70%", fontWeight: "bold" }}>{item.name}</Text>
+                          <Text style={{ width: "30%", textAlign: "right" }}>{item.price} €</Text>
+                          <Text>Level: {item.level}</Text>
+                          {this.state.category == "vehicles" ? (
+                            <Text style={{ marginLeft: 10 }}>Kofferraum: {item.v_space} Kg.</Text>
+                          ) : null}
+                        </View>
+                      );
+                    })
+                  : null}
+              </ScrollView>
+            </View>
+          </Modal>
+        </View>
+      );
+    }
   }
 }
 

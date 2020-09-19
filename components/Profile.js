@@ -9,12 +9,10 @@ import { Ionicons } from "@expo/vector-icons";
 
 // TODO This needs an re-design asap!!!
 export default class Profile extends React.Component {
-  constructor(props) {
+  constructor() {
     super();
-    this.props = props;
     this.state = {
       loading: true,
-      apiKey: null,
       profile: null,
     };
   }
@@ -22,9 +20,7 @@ export default class Profile extends React.Component {
   getKey() {
     return new Promise((res, rej) => {
       try {
-        var key = AsyncStorage.getItem("@apiKey");
-        this.setState({ apiKey: key });
-        res(key);
+        res(AsyncStorage.getItem("@apiKey"));
       } catch (err) {
         rej(err);
       }
@@ -35,16 +31,14 @@ export default class Profile extends React.Component {
     return new Promise((res, rej) => {
       fetch(`https://api.realliferpg.de/v1/player/${apiKey}/`)
         .then((response) => response.json())
-        .then((response) => {
-          res(response);
-        })
+        .then((response) => res(response))
         .catch((err) => rej(err));
     });
   }
 
   componentDidMount() {
-    this.getKey().then((value) => {
-      this.getProfile(value).then((profileData) => {
+    this.getKey().then((key) => {
+      this.getProfile(key).then((profileData) => {
         this.setState({ profile: profileData.data[0], loading: false });
       });
     });

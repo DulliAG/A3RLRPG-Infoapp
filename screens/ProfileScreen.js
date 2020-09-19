@@ -4,6 +4,9 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import Colors from "../constants/Colors";
 import Profile from "../components/Profile";
 import Styled from "styled-components";
+import CBS from "../components/CBS";
+import Vehicles from "../components/Vehicles";
+import Houses from "../components/Houses";
 
 const YourApp = () => {
   const [index, setIndex] = React.useState(0);
@@ -19,27 +22,15 @@ const YourApp = () => {
   };
 
   const VehicleRoute = () => {
-    return (
-      <View style={{ ...styles.Tab, justifyContent: "center", alignItems: "center" }}>
-        <Text>Fahrzeuge</Text>
-      </View>
-    );
+    return <Vehicles />;
   };
 
   const HouseRoute = () => {
-    return (
-      <View style={{ ...styles.Tab, justifyContent: "center", alignItems: "center" }}>
-        <Text>Gebäude</Text>
-      </View>
-    );
+    return <Houses />;
   };
 
   const CBSRoute = () => {
-    return (
-      <View style={{ ...styles.Tab, justifyContent: "center", alignItems: "center" }}>
-        <Text>Community Buildings</Text>
-      </View>
-    );
+    return <CBS />;
   };
 
   const renderScene = SceneMap({
