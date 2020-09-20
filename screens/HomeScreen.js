@@ -1,12 +1,20 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { ServerList } from "../components/Server";
 
 const YourApp = () => {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Try editing me! 🎉</Text>
+    <View style={styles.container}>
+      <ServerList />
     </View>
   );
 };
 
 export default YourApp;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f8f9fa",
+  },
+});
