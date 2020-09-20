@@ -15,6 +15,12 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
+    "sdkVersion": "38.0.0",
+    "android": {
+      "package": "de.dulliag.infoapp",
+      "permissions": [],
+      "icon": "./assets/images/rlrpg_logo.png"
+    },
     "ios": {
       "supportsTablet": true
     },
