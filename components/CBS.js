@@ -290,6 +290,8 @@ export default class CBS extends React.Component {
                 style={{
                   ...styles.item,
                   borderColor: item.finished == 1 ? "#ededed" : Colors.tabIconSelected,
+                  backgroundColor: item.finished == 1 ? "#f8f9fa" : Colors.tabIconSelected,
+                  color: item.finished == 1 ? "#000" : "#fff",
                 }}
                 onPress={this.setItems.bind(this, item)}
               >

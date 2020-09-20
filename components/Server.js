@@ -58,7 +58,7 @@ export class ServerList extends React.Component {
       return <Spinner size="large" />;
     } else {
       return (
-        <View>
+        <View style={{ flex: 1 }}>
           <ServerContainer>
             <Heading>Serverliste</Heading>
             <ScrollView
@@ -92,8 +92,8 @@ export class ServerList extends React.Component {
               })}
             </ScrollView>
           </ServerContainer>
-          <InfoContainer style={{ marginTop: 10 }}>
-            <Heading>Informationen</Heading>
+          <InfoContainer style={{ flex: 1, marginTop: 10 }}>
+            <Heading>Spielerliste</Heading>
             <PlayerList players={this.state.selectedServer.Players} />
           </InfoContainer>
         </View>
@@ -164,7 +164,7 @@ export class PlayerList extends React.Component {
 
   render() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <ScrollView style={{ paddingHorizontal: "5%" }} showsVerticalScrollIndicator={true}>
           <View
             style={{

@@ -30,6 +30,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: "Home",
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-home" />,
+          // tabBarBadge: 3,
         }}
       />
       <BottomTab.Screen
