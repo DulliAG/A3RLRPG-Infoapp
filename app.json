@@ -4,10 +4,10 @@
     "slug": "DAG-Infoapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/rlrpg_logo.png",
+    "icon": "./assets/images/dag-blobbo.png",
     "scheme": "myapp",
     "splash": {
-      "image": "./assets/images/rlrpg_logo_splash.png",
+      "image": "./assets/images/dag-blobbo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,13 +19,13 @@
     "android": {
       "package": "de.dulliag.infoapp",
       "permissions": [],
-      "icon": "./assets/images/rlrpg_logo.png"
+      "icon": "./assets/images/dag-blobbo.png"
     },
     "ios": {
       "supportsTablet": true
     },
     "web": {
-      "favicon": "./assets/images/rlrpg_logo.png"
+      "favicon": "./assets/images/dag-blobbo.png"
     }
   }
 }
