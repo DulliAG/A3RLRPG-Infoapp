@@ -1,9 +1,13 @@
 import React from "react";
-import { StyleSheet, View, Text, RefreshControl, ToastAndroid, Alert } from "react-native";
-import { ScrollView, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { ReallifeAPI } from "../ApiHandler";
 import Layout from "../constants/Layout";
 import Styled from "styled-components";
+// Components
+import { StyleSheet, View, Text, RefreshControl, ToastAndroid, Alert } from "react-native";
+import { ScrollView, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import Spinner from "../components/Spinner";
+
+const reallifeRPG = new ReallifeAPI();
 
 export class ServerList extends React.Component {
   constructor() {
@@ -18,10 +22,10 @@ export class ServerList extends React.Component {
 
   refresh = () => {
     this.setState({ refreshing: true });
-    this.getServer().then((serverList) => {
+    reallifeRPG.getServerList().then((list) => {
       this.setState({
-        server: serverList.data,
-        selectedServer: serverList.data[0],
+        server: list.data,
+        selectedServer: list.data[0],
         refreshing: false,
       });
       ToastAndroid.showWithGravityAndOffset(
@@ -34,27 +38,20 @@ export class ServerList extends React.Component {
     });
   };
 
-  getServer() {
-    return new Promise((res, rej) => {
-      fetch("https://api.realliferpg.de/v1/servers/")
-        .then((response) => response.json())
-        .then((response) => res(response))
-        .catch((err) => rej(err));
-    });
-  }
-
   componentDidMount() {
-    this.getServer().then((serverList) => {
+    reallifeRPG.getServerList().then((list) => {
       this.setState({
-        server: serverList.data,
-        selectedServer: serverList.data[0],
+        server: list.data,
+        selectedServer: list.data[0],
         loading: false,
       });
     });
   }
 
   render() {
-    if (this.state.loading == true || this.state.refreshing == true) {
+    const { loading, refreshing, server, selectedServer } = this.state;
+
+    if (loading && !refreshing) {
       return <Spinner size="large" />;
     } else {
       return (
@@ -64,11 +61,9 @@ export class ServerList extends React.Component {
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}
-              refreshControl={
-                <RefreshControl refreshing={this.state.refreshing} onRefresh={this.refresh} />
-              }
+              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
             >
-              {this.state.server.map((server) => {
+              {server.map((server) => {
                 return (
                   <TouchableWithoutFeedback
                     onPress={() => {
@@ -77,6 +72,9 @@ export class ServerList extends React.Component {
                   >
                     <Server
                       id={server.Id}
+                      width={
+                        server.length > 1 ? Layout.window.width * 0.85 : Layout.window.width * 0.9
+                      }
                       name={server.Servername}
                       online={server.Playercount}
                       slots={server.Slots}
@@ -94,7 +92,7 @@ export class ServerList extends React.Component {
           </ServerContainer>
           <InfoContainer style={{ flex: 1, marginTop: 10 }}>
             <Heading>Spielerliste</Heading>
-            <PlayerList players={this.state.selectedServer.Players} />
+            <PlayerList players={selectedServer.Players} />
           </InfoContainer>
         </View>
       );
@@ -103,51 +101,48 @@ export class ServerList extends React.Component {
 }
 
 export class Server extends React.Component {
-  constructor(props) {
-    super();
-    this.props = props;
-  }
-
   render() {
-    if (this.props.id <= 3) {
+    const { id, name, width, online, slots, sides } = this.props;
+
+    if (id <= 3) {
       return (
-        <Card key={this.props.name}>
+        <Card key={name} style={{ width: width }}>
           <View>
-            <Servername>{this.props.name}</Servername>
+            <Servername>{name}</Servername>
             <Online>
-              Online: {this.props.online} / {this.props.slots}
+              Online: {online} / {slots}
             </Online>
           </View>
           <View style={styles.fractionContainer}>
             <View style={styles.fractionCard}>
               <Strong>Zivilisten: </Strong>
-              <Text>{this.props.sides.civ}</Text>
+              <Text>{sides.civ}</Text>
             </View>
 
             <View style={styles.fractionCard}>
               <Strong>Polizei: </Strong>
-              <Text>{this.props.sides.cop}</Text>
+              <Text>{sides.cop}</Text>
             </View>
 
             <View style={styles.fractionCard}>
               <Strong>Medic: </Strong>
-              <Text>{this.props.sides.medic}</Text>
+              <Text>{sides.medic}</Text>
             </View>
 
             <View style={styles.fractionCard}>
               <Strong>RAC: </Strong>
-              <Text>{this.props.sides.rac}</Text>
+              <Text>{sides.rac}</Text>
             </View>
           </View>
         </Card>
       );
     } else {
       return (
-        <Card key={this.props.name}>
+        <Card key={name}>
           <View>
-            <Servername>{this.props.name}</Servername>
+            <Servername>{name}</Servername>
             <Online>
-              Online: {this.props.online} / {this.props.slots}
+              Online: {online} / {slots}
             </Online>
           </View>
         </Card>
@@ -157,12 +152,9 @@ export class Server extends React.Component {
 }
 
 export class PlayerList extends React.Component {
-  constructor(props) {
-    super();
-    this.props = props;
-  }
-
   render() {
+    const { players } = this.props;
+
     return (
       <View style={{ flex: 1 }}>
         <ScrollView style={{ paddingHorizontal: "5%" }} showsVerticalScrollIndicator={true}>
@@ -174,8 +166,8 @@ export class PlayerList extends React.Component {
               alignItems: "center",
             }}
           >
-            {this.props.players.length >= 1 ? (
-              this.props.players.map((player) => {
+            {players.length >= 1 ? (
+              players.map((player) => {
                 return (
                   <Text key={player} style={styles.item}>
                     {player}
@@ -183,7 +175,7 @@ export class PlayerList extends React.Component {
                 );
               })
             ) : (
-              <Text style={{ ...styles.item, width: "100%" }}>Keine Spieler gefunden</Text>
+              <Text style={{ ...styles.item }}>Keine Spieler gefunden</Text>
             )}
           </View>
         </ScrollView>
@@ -210,10 +202,9 @@ const Heading = Styled.Text`
 `;
 
 const Card = Styled.View`
-  width: ${Layout.window.width * 0.85};
   margin-left: 20px;
   padding: 15px 20px;
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: white;
   border-top-width: 5px;
   border-color: #2f95dc;
@@ -247,14 +238,14 @@ const styles = StyleSheet.create({
     width: "50%",
   },
   item: {
-    width: Layout.isSmallDevice == false ? "49%" : "100%",
+    width: "100%",
     textAlign: "center",
     paddingHorizontal: 20,
     paddingVertical: 8,
     marginTop: 5,
     borderWidth: 1,
     borderColor: "#ededed",
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     borderRadius: 8,
   },
 });

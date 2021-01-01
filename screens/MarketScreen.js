@@ -1,8 +1,9 @@
 import React from "react";
+// Components
 import { View, StyleSheet } from "react-native";
 import MarketItem from "../components/MarketItem";
 
-const YourApp = () => {
+const MarketScreen = () => {
   return (
     <View style={styles.container}>
       <MarketItem />
@@ -10,7 +11,7 @@ const YourApp = () => {
   );
 };
 
-export default YourApp;
+export default MarketScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -1,8 +1,9 @@
 import React from "react";
+// Components
 import { View, StyleSheet } from "react-native";
 import { ServerList } from "../components/Server";
 
-const YourApp = () => {
+const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <ServerList />
@@ -10,7 +11,7 @@ const YourApp = () => {
   );
 };
 
-export default YourApp;
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {

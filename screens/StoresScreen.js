@@ -1,30 +1,28 @@
-import * as React from "react";
-import { View, StyleSheet, Dimensions, Text, TouchableOpacity } from "react-native";
-import { TabView, TabBar, SceneMap } from "react-native-tab-view";
+import React, { useState } from "react";
 import Colors from "../constants/Colors";
+// Components
+import { StyleSheet, Dimensions, Text } from "react-native";
+import { TabView, TabBar, SceneMap } from "react-native-tab-view";
 import Store from "../components/StoreItem";
 
-const YourApp = () => {
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
+const StoreScreen = () => {
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
     { key: "vehicles", title: "Fahrzeuge" },
     { key: "items", title: "Gegenstände" },
   ]);
 
-  // FIXME Improve Store performance
-  const VehicleRoute = () => {
-    // return <Store category="vehicles" multpile={false} />;
+  const VehicleStores = () => {
     return <Store category="vehicles" />;
   };
 
-  const ItemRoute = () => {
-    // return <Store category="items" multpile={false} />;
+  const ItemStores = () => {
     return <Store category="items" />;
   };
 
   const renderScene = SceneMap({
-    vehicles: VehicleRoute,
-    items: ItemRoute,
+    vehicles: VehicleStores,
+    items: ItemStores,
   });
 
   return (
@@ -37,8 +35,6 @@ const YourApp = () => {
           indicatorStyle={{
             backgroundColor: Colors.tabIconSelected,
             height: 5,
-            borderTopRightRadius: 5,
-            borderTopLeftRadius: 5,
           }}
           renderLabel={({ route, focused, color }) => (
             <Text style={[focused ? styles.activeTabTextColor : styles.inactiveTabTextColor]}>
@@ -54,7 +50,7 @@ const YourApp = () => {
   );
 };
 
-export default YourApp;
+export default StoreScreen;
 
 const styles = StyleSheet.create({
   Tab: {

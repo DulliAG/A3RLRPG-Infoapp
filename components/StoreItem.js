@@ -1,171 +1,170 @@
-import React from "react";
-import { View, StyleSheet, Text, ScrollView, TouchableWithoutFeedback } from "react-native";
-import Spinner from "./Spinner";
-import { FlatList } from "react-native-gesture-handler";
+import React, { Component, createRef } from "react";
 import Layout from "../constants/Layout";
-import Modal from "react-native-modal";
+import { ReallifeAPI } from "../ApiHandler";
+import styled from "styled-components";
+// Components
+import Spinner from "./Spinner";
+import { View, StyleSheet, Text, ScrollView, RefreshControl } from "react-native";
+import { Modalize } from "react-native-modalize";
+import { FlatList } from "react-native-gesture-handler";
 
-// TODO How can we increase the performance?
-// FIXME Make the modal down-swipeable
-export default class Store extends React.Component {
+const reallifeRPG = new ReallifeAPI();
+
+export default class Store extends Component {
   constructor(props) {
     super();
     this.state = {
-      loading: false,
-      isModalVisible: false,
-      category: props.category,
-      content: [],
-      shopItems: null,
+      loading: true,
+      refreshing: false,
+      loadingItems: true,
+      category: props.category, // should be vehicles or items
     };
+    this.modalizeRef = createRef(null);
   }
 
-  getShops(category) {
-    return new Promise((res, rej) => {
-      fetch("https://api.realliferpg.de/v1/info/" + category + "_shoptypes")
-        .then((response) => response.json())
-        .then((response) => res(response.data))
-        .catch((error) => rej(error));
-    });
-  }
+  _renderShopItem = ({ item }) => {
+    const { category } = this.state;
+    if (category === "vehicles") {
+      return (
+        <ShopItem>
+          <ItemName>{item.name}</ItemName>
+          <Row>
+            <ItemInformation>Level: {item.level}</ItemInformation>
+            <ItemLevel>{item.v_space} Kg</ItemLevel>
+            <ItemPrice>{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €</ItemPrice>
+          </Row>
+        </ShopItem>
+      );
+    } else if (category === "items") {
+      return (
+        <ShopItem>
+          <ItemName>{item.name}</ItemName>
+          <Row>
+            <ItemInformation style={{ width: "50%" }}>Level: {item.level}</ItemInformation>
+            <ItemPrice style={{ width: "50%" }}>
+              {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €
+            </ItemPrice>
+          </Row>
+        </ShopItem>
+      );
+    }
+  };
 
-  getShopItems(category, shopname) {
-    return new Promise((res, rej) => {
-      fetch("https://api.realliferpg.de/v1/info/" + category + "/" + shopname)
-        .then((response) => response.json())
-        .then((response) => res(response))
-        .catch((error) => rej(error));
-    });
-  }
+  _renderShop = (category, shop) => {
+    return (
+      <Text
+        key={shop.shoptype}
+        style={styles.item}
+        onPress={() => this.getShopItems(category, shop)}
+      >
+        {shop.shopname}
+      </Text>
+    );
+  };
 
-  setItems = (items) => {
-    let updateState = new Promise((res) => {
-      this.setState({ shopItems: items.items });
-      res(items.items);
-    });
-
-    Promise.all([updateState]).then(() => {
-      this.showModal();
+  getShopItems = async (category, shop) => {
+    this.openShopModal();
+    const items = await reallifeRPG.getShopItems(category, shop.shoptype);
+    this.setState({
+      activeShop: { name: shop.shopname, category: category },
+      shopItems: items.data,
+      loadingItems: false,
     });
   };
 
-  showModal = () => {
-    this.setState({ isModalVisible: true });
+  openShopModal = () => this.modalizeRef.current?.open();
+
+  closeShopModal = () => this.modalizeRef.current?.close();
+
+  refresh = async () => {
+    const { category } = this.state;
+    this.setState({ refreshing: true });
+    const shopList = await reallifeRPG.getShops(category);
+    this.setState({ shops: shopList.data, refreshing: false });
   };
 
-  closeModal = () => {
-    this.setState({ isModalVisible: false });
-  };
-
-  componentDidMount() {
-    this.setState({ loading: true });
-    this.getShops(this.state.category)
-      .then((shops) => {
-        this.setState({ content: shops });
-      })
-      .then(() => {
-        var temp = [];
-        for (const key in this.state.content) {
-          const shop = this.state.content[key];
-          this.getShopItems(this.state.category, shop.shoptype)
-            .then((items) => {
-              temp.push({
-                shopname: shop.shopname,
-                shoptype: shop.shoptype,
-                items: items.data,
-              });
-            })
-            .then(() => {
-              this.setState({ content: temp, loading: false });
-            })
-            .catch((err) => console.error(err));
-        }
-      })
-      .catch((err) => console.error(err));
+  async componentDidMount() {
+    const { category } = this.state;
+    const shopList = await reallifeRPG.getShops(category);
+    this.setState({ shops: shopList.data, loading: false });
   }
 
   render() {
-    if (this.state.loading == true) {
+    const { category } = this.props;
+    const { loading, refreshing, loadingItems, shops, activeShop, shopItems } = this.state;
+
+    if (loading && !refreshing) {
       return <Spinner size="large" />;
     } else {
       return (
-        <View style={{ backgroundColor: "#fff" }}>
-          <FlatList
-            data={this.state.content}
-            renderItem={({ item }) => (
-              <Text style={styles.item} onPress={this.setItems.bind(this, item)}>
-                {item.shopname}
-              </Text>
-            )}
-          />
-          <Modal
-            isVisible={this.state.isModalVisible}
-            style={styles.bottomModal}
-            backdropColor="rgba(0, 0, 0, 0)"
-            backdropOpacity={1}
-            animationIn="slideInUp"
-            animationOut="slideOutDown"
-            animationInTiming={200}
-            animationOutTiming={200}
-            onBackdropPress={() => this.closeModal()}
+        <View>
+          <ScrollView
+            horizontal={false}
+            showsVerticalScrollIndicator={true}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
           >
-            <View style={styles.modalContent}>
-              <TouchableWithoutFeedback
-                onPress={() => this.closeModal()}
-                onPressIn={() => this.closeModal()}
-              >
-                <View
-                  style={{
-                    width: "10%",
-                    height: 5,
-                    marginBottom: 10,
-                    backgroundColor: "rgba(0, 0, 0, 0.1)",
-                    borderRadius: 50,
-                  }}
+            {shops.length > 0 ? (
+              shops.map((shop) => {
+                return this._renderShop(category, shop);
+              })
+            ) : (
+              <Text style={styles.item}>Keine Shops gefunden</Text>
+            )}
+          </ScrollView>
+          <Modalize
+            ref={this.modalizeRef}
+            adjustToContentHeight={false}
+            snapPoint={Layout.window.height * 0.25}
+          >
+            {!loadingItems ? (
+              <View style={modal.content}>
+                <Text style={modal.heading}>{activeShop.name.toUpperCase()}</Text>
+                <FlatList
+                  data={shopItems}
+                  keyExtractor={(item) => item.id}
+                  renderItem={this._renderShopItem}
                 />
-              </TouchableWithoutFeedback>
-
-              <ScrollView
-                style={{
-                  maxHeight: Layout.window.height * 0.6,
-                  width: "90%",
-                }}
-                showsVerticalScrollIndicator={false}
-              >
-                {this.state.shopItems != null
-                  ? this.state.shopItems.map((item, index) => {
-                      return (
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            flexWrap: "wrap",
-                            alignItems: "center",
-                            paddingHorizontal: 20,
-                            paddingVertical: 8,
-                            marginBottom: 5,
-                            borderWidth: 1,
-                            borderColor: "#ededed",
-                            backgroundColor: "#f8f9fa",
-                            borderRadius: 8,
-                          }}
-                        >
-                          <Text style={{ width: "70%", fontWeight: "bold" }}>{item.name}</Text>
-                          <Text style={{ width: "30%", textAlign: "right" }}>{item.price} €</Text>
-                          <Text>Level: {item.level}</Text>
-                          {this.state.category == "vehicles" ? (
-                            <Text style={{ marginLeft: 10 }}>Kofferraum: {item.v_space} Kg.</Text>
-                          ) : null}
-                        </View>
-                      );
-                    })
-                  : null}
-              </ScrollView>
-            </View>
-          </Modal>
+              </View>
+            ) : (
+              <View style={modal.content}>
+                <Spinner size="large" />
+              </View>
+            )}
+          </Modalize>
         </View>
       );
     }
   }
 }
+
+const ShopItem = styled.View`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
+const Row = styled.View`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
+const ItemName = styled.Text`
+  display: flex;
+  width: 100%;
+  padding-top: 8px;
+  font-weight: bold;
+`;
+const ItemInformation = styled.Text`
+  width: ${100 / 3}%;
+`;
+const ItemLevel = styled.Text`
+  text-align: center;
+  width: ${100 / 3}%;
+`;
+const ItemPrice = styled.Text`
+  width: ${100 / 3}%;
+  text-align: right;
+  font-weight: bold;
+`;
 
 const styles = StyleSheet.create({
   container: {
@@ -180,29 +179,20 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderWidth: 1,
     borderColor: "#ededed",
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "white",
     borderRadius: 8,
   },
-  modalContent: {
-    backgroundColor: "white",
-    paddingTop: 15,
-    paddingBottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "rgba(0, 0, 0, 0.1)",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+});
+
+const modal = StyleSheet.create({
+  content: {
+    padding: 20,
   },
-  bottomModal: {
-    justifyContent: "flex-end",
-    margin: 0,
+  heading: {
+    marginBottom: 2,
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#ccc",
   },
 });

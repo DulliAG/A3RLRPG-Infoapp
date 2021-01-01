@@ -1,44 +1,66 @@
 import React from "react";
-import { Image, ToastAndroid, RefreshControl } from "react-native";
+import { ReallifeAPI } from "../ApiHandler";
 import Styled from "styled-components";
-import { ScrollView } from "react-native-gesture-handler";
+// Component
 import Spinner from "../components/Spinner";
+import { Image, ScrollView, RefreshControl } from "react-native";
+
+const reallifeRPG = new ReallifeAPI();
 
 export default class MarketItem extends React.Component {
   constructor() {
     super();
     this.state = {
-      loading: false,
+      loading: true,
       refreshing: false,
       data: [],
     };
   }
 
-  getMarket(server) {
-    return new Promise((res, rej) => {
-      fetch("https://api.realliferpg.de/v1/market/" + server)
-        .then((response) => response.json())
-        .then((response) => {
-          res(response);
-        })
-        .catch((error) => rej(error));
-    });
-  }
+  refresh = () => {
+    this.setState({ refreshing: true });
+    const server1 = reallifeRPG.getMarketPrices(1),
+      server2 = reallifeRPG.getMarketPrices(2);
 
-  componentDidMount() {
-    this.setState({ loading: true });
-    const server1 = this.getMarket(1);
-    const server2 = this.getMarket(2);
     Promise.all([server1, server2])
       .then((value) => {
         const market1 = value[0].data,
           market2 = value[1].data;
-        var items = [];
+        let items = [];
+
         for (const key in market1) {
           items.push({
             item: market1[key].item,
             localized: market1[key].localized,
-            price: { server1: parseInt(market1[key].price), server2: parseInt(market2[key].price) },
+            price: {
+              server1: parseInt(market1[key].price),
+              server2: parseInt(market2[key].price),
+            },
+          });
+        }
+        this.setState({ data: items });
+      })
+      .then(() => this.setState({ refreshing: false }));
+  };
+
+  async componentDidMount() {
+    const server1 = reallifeRPG.getMarketPrices(1),
+      server2 = reallifeRPG.getMarketPrices(2);
+
+    Promise.all([server1, server2])
+      .then((value) => {
+        const market1 = value[0].data,
+          market2 = value[1].data;
+        let items = [];
+
+        for (const key in market1) {
+          items.push({
+            item: market1[key].item,
+            localized: market1[key].localized,
+            price: {
+              server1: parseInt(market1[key].price),
+              server2: parseInt(market2[key].price),
+            },
           });
         }
         this.setState({ data: items });
@@ -47,51 +69,18 @@ export default class MarketItem extends React.Component {
   }
 
   render() {
-    if (this.state.loading == true && this.state.refreshing == false) {
+    const { loading, refreshing, data } = this.state;
+
+    if (loading && !refreshing) {
       return <Spinner size="large" />;
     } else {
-      const onRefresh = () => {
-        this.setState({ refreshing: true });
-        const server1 = this.getMarket(1);
-        const server2 = this.getMarket(2);
-        Promise.all([server1, server2])
-          .then((value) => {
-            const market1 = value[0].data,
-              market2 = value[1].data;
-            var items = [];
-            for (const key in market1) {
-              items.push({
-                item: market1[key].item,
-                localized: market1[key].localized,
-                price: {
-                  server1: parseInt(market1[key].price),
-                  server2: parseInt(market2[key].price),
-                },
-              });
-            }
-            this.setState({ data: items });
-          })
-          .then(() => {
-            ToastAndroid.showWithGravityAndOffset(
-              "Marktpreise aktualisiert",
-              ToastAndroid.LONG,
-              ToastAndroid.BOTTOM,
-              25,
-              150
-            );
-            this.setState({ refreshing: false });
-          });
-      };
-
       return (
         <ScrollView
           horizontal={false}
           showsVerticalScrollIndicator={true}
-          refreshControl={
-            <RefreshControl refreshing={this.state.refreshing} onRefresh={onRefresh} />
-          }
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
         >
-          {this.state.data.map((item, index) => {
+          {data.map((item, index) => {
             return (
               <Item key={index}>
                 <Info>
@@ -109,11 +98,15 @@ export default class MarketItem extends React.Component {
                 <PriceContainer>
                   <Row>
                     <Strong>Server 1: </Strong>
-                    <Price>{item.price.server1} $</Price>
+                    <Price>
+                      {item.price.server1.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €
+                    </Price>
                   </Row>
                   <Row>
                     <Strong>Server 2: </Strong>
-                    <Price>{item.price.server2} $</Price>
+                    <Price>
+                      {item.price.server2.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €
+                    </Price>
                   </Row>
                 </PriceContainer>
               </Item>
@@ -128,13 +121,13 @@ export default class MarketItem extends React.Component {
 const Item = Styled.View`
   flex-direction: row;
   align-items: center;
-  width: 95%;
+  width: 90%;
   margin: 5px auto;
   padding: 5px 10px;
   background-color: #fff;
   border-left-width: 5px;
   border-color: #2f95dc;
-  border-radius: 5px;
+  border-radius: 8px;
   `;
 
 const Info = Styled.View`
