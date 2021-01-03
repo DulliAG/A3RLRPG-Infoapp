@@ -1,8 +1,7 @@
 {
   "expo": {
-    "name": "DAG-Infoapp",
-    "slug": "DAG-Infoapp",
-    "version": "1.0.0",
+    "name": "A3RLRPG-Infoapp",
+    "slug": "A3RLRPG-Infoapp",
     "orientation": "portrait",
     "icon": "./assets/images/dag-blobbo.png",
     "scheme": "myapp",
