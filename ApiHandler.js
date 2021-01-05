@@ -5,6 +5,10 @@ import AsyncStorage from "@react-native-community/async-storage";
  * Documentation: https://api.realliferpg.de
  */
 class ReallifeAPI {
+  constructor() {
+    this.serverRestarts = ["03", "06", "09", "12", "15", "18", "21", "24"];
+  }
+
   /**
    * Check if the ReallifeRPG was already saved on the device
    * If the key was saved it will return an String containing the value
@@ -67,6 +71,43 @@ class ReallifeAPI {
     const data = await response.json();
     return data;
   }
+
+  /**
+   * @param {string} apiKey ReallifeRPG API-Key
+   */
+  async getProfile(apiKey) {
+    const response = await fetch("https://api.realliferpg.de/v1/player/" + apiKey);
+    const data = await response.json();
+    return data;
+  }
+
+  /**
+   * @param {string} apiKey ReallifeRPG API-Key
+   */
+  async getPlayerVehicles(apiKey) {
+    const response = await fetch("https://api.realliferpg.de/v1/player/" + apiKey + "/vehicles");
+    const data = await response.json();
+    return data;
+  }
+
+  async getCBS() {
+    const response = await fetch("https://api.realliferpg.de/v1/cbs/");
+    const data = await response.json();
+    return data;
+  }
+
+  /**
+   * @param {number} payedFor Amount of hours until the maintenance expires
+   */
+  getMaintenanceExpireDate(payedFor) {
+    const hoursLeft = payedFor,
+      dateOfExpire = new Date(Date.now() + hoursLeft * (60 * 60 * 1000));
+    // TODO Calculate the server period of expire
+    return {
+      expireDate: dateOfExpire,
+    };
+  }
 }
 
 export { ReallifeAPI };
+// Arnold Hobel Michael Metzger
