@@ -10,7 +10,7 @@ import { Text, View, StyleSheet, Dimensions } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
 const ProfileScreen = () => {
-  const [index, setIndex] = React.useState(2);
+  const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: "profile", title: "Profil" },
     { key: "vehicles", title: "Fahrzeuge" },
