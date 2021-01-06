@@ -6,48 +6,48 @@ Dies ist **nicht** die **offizielle Infoapp** von [ReallifeRPG](https://reallife
 
 ## :rocket: Features
 
-#### Home
+<details>
+  <summary>👥 Serverliste</summary>
+  Sehe wer gerade auf welchem Server spielt und auf welchem Server sich deine Freunde befinden
+</details>
 
-- [x] Serverliste
-- [x] Serverinformationen
+<details>
+  <summary>👷 Profil</summary>
+  Zeigt dir Spieler Informationen, Konten, Fahrzeuge, Häuser, Appartments sowie Baustellen an welche auf deinen Spieler registriert sind
+</details>
 
-#### Profil
+<details>
+  <summary>🏷️ Shops</summary>
+  Aufwählung aller verfügbaren Shops für Fahrzeuge und Items sowie deren Angebote
+</details>
 
-- [x] Allgemeine Spielerinformationen
-- [x] Fahrzeugliste
-  - Nur intakte Fahrzeuge anzeigen
-- [x] Gebäude anzeigen
-  - Link für die [Nordholm Karte](https://info.realliferpg.de/map) erstellen
-- [x] CBS abrufen
-
-#### Händler
-
-- [x] Händler anzeigen
-- [x] Angebote abrufen
-
-#### Markt
-
-- [x] Aktuelle Marktpreise abrufen
-
-#### Einstellungen
-
-- [x] API-key speichern
+<details>
+  <summary>📈 Markt</summary>
+  Zeigt die derzeitigen Marktpreise sowie die "Top Jobs"(Bestbezahlten Items)
+</details>
 
 ## :calendar: Geplante Features
 
-- [ ] Neues Design
-  - [ ] Dunkles Design
-  - [ ] Profil überarbeiten
-  - [ ] Händler überarbeiten
-- [ ] [DulliAG Auktionshaus](https://dulliag.de/Auktionen/) integration
+<details>
+  <summary>🔊 Benachrichtigungen</summary>
+  Wenn dein Haus gewartet oder das Appartment verlängert werden muss. (7 Tage, 24h & in der Matrix des ablaufens) <br />
+  Außerdem wenn ein neuer Changelog erschien ist
+</details>
+
+<details>
+  <summary>💡 Dark-Theme</summary>
+  Dunkles Farbschema für die App
+</details>
+
+<details>
+  <summary>📱 Kontaktbuch</summary>
+  Zeigt die derzeitigen Marktpreise sowie die "Top Jobs"(Bestbezahlten Items). <br />
+  Für ein Beispiel siehe <a href="https://app.dulliag.de">A3RLRPG-Infopanel</a>
+</details>
 
 ## :link: Ressourcen
 
-[Expo](https://expo.io)
-[React Native](https://reactnative.dev/)
-[React Native Navigation](https://reactnavigation.org/)
-[React Native Tab View](https://www.npmjs.com/package/react-native-tab-view)
-[React Native Collapsible](https://github.com/oblador/react-native-collapsible)
-[React Native Modals](https://github.com/react-native-community/react-native-modal)
 [ReallifeRPG API](https://api.realliferpg.de)
 [ReallifeRPG App Drawables](https://github.com/A3ReallifeRPG/RealLifeRPG-App/tree/master/app/src/main/res/drawable)
+
+_Alle weiteren genutzten Ressourcen können [hier](./package.json#L10) gefunden werden_
