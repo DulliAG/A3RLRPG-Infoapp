@@ -1,185 +1,292 @@
-import React from "react";
+import React, { Component, createRef } from "react";
+import Styled from "styled-components";
+import Colors from "../constants/Colors";
+import { ReallifeAPI } from "../ApiHandler";
+import { NotifyHandler } from "../NotifyHandler";
+// Components
+import Spinner from "../components/Spinner";
+import CustomAlert from "../components/CustomAlert";
 import {
   View,
   ScrollView,
-  TouchableWithoutFeedback,
-  FlatList,
   StyleSheet,
   Text,
+  RefreshControl,
   Linking,
+  ToastAndroid,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import Spinner from "../components/Spinner";
-import Modal from "react-native-modal";
-import AsyncStorage from "@react-native-community/async-storage";
+import { Modalize } from "react-native-modalize";
+import { TouchableHighlight, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import NoKey from "./NoKey";
 
-export default class Houses extends React.Component {
+const reallifeRPG = new ReallifeAPI();
+const notifyHandler = new NotifyHandler();
+
+export default class Houses extends Component {
   constructor() {
     super();
     this.state = {
       loading: true,
-      content: null,
-      modalVisible: false,
-      modalContent: null,
+      refreshing: false,
+      loadingModal: false,
     };
+    this.modalizeRef = createRef(null);
   }
 
-  getKey() {
-    return new Promise((res, rej) => {
-      try {
-        res(AsyncStorage.getItem("@apiKey"));
-      } catch (err) {
-        rej(err);
+  // TODO Check if this function works
+  deleteNotification = async (house) => {
+    const allNotifications = await notifyHandler.getAllScheduledNotifications();
+    const houseNotifications = allNotifications.filter((notification) => {
+      if (notification.content.data.houseId === house.id) {
+        return notification.identifier;
       }
     });
-  }
-
-  getHouses(apiKey) {
-    return new Promise((res, rej) => {
-      fetch(`https://api.realliferpg.de/v1/player/${apiKey}/`)
-        .then((response) => response.json())
-        .then((response) => res(response))
-        .catch((err) => rej(err));
+    houseNotifications.forEach((notificationIdentifier) => {
+      notifyHandler.cancelScheduledNotification(notificationIdentifier);
     });
-  }
-
-  setModalContent = (object) => {
-    let updateState = new Promise((res) => {
-      this.setState({ modalContent: object });
-      res(object);
-    });
-
-    Promise.all([updateState]).then(() => {
-      this.showModal();
-    });
-  };
-
-  setModal = () => {
-    let house = this.state.modalContent;
-    var loc = house.location.substring(1, house.location.length - 1).split(",");
-    return (
-      <Modal
-        isVisible={this.state.modalVisible}
-        style={styles.bottomModal}
-        backdropColor="rgba(0, 0, 0, 0)"
-        backdropOpacity={1}
-        animationIn="slideInUp"
-        animationOut="slideOutDown"
-        animationInTiming={200}
-        animationOutTiming={200}
-        onBackdropPress={() => this.closeModal()}
-        onSwipeComplete={() => this.closeModal()}
-        swipeDirection={"down"}
-      >
-        <View style={styles.modalContent}>
-          <TouchableWithoutFeedback
-            onPress={() => this.closeModal()}
-            onPressIn={() => this.closeModal()}
-          >
-            <View
-              style={{
-                width: "10%",
-                height: 5,
-                marginBottom: 10,
-                backgroundColor: "rgba(0, 0, 0, 0.1)",
-                borderRadius: 50,
-              }}
-            />
-          </TouchableWithoutFeedback>
-
-          <ScrollView
-            style={{
-              width: "100%",
-            }}
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={{ flexDirection: "row", justifyContent: "center" }}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  fontSize: 16,
-                  paddingRight: 5,
-                }}
-              >
-                {house.id}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-                width: "90%",
-                marginTop: 5,
-                marginLeft: "5%",
-              }}
-            >
-              <Text style={{ ...styles.smallItem, width: "74%" }}>
-                Gewartet für {house.payed_for / 24} Tage
-              </Text>
-              <Text
-                style={{ ...styles.smallItem, width: "24%" }}
-                onPress={() =>
-                  Linking.openURL(`https://info.realliferpg.de/map?x=${loc[0]}&y=${loc[1]}`)
-                }
-              >
-                <Ionicons name="ios-map" size={19} color="black" />
-              </Text>
-            </View>
-          </ScrollView>
-        </View>
-      </Modal>
+    ToastAndroid.showWithGravityAndOffset(
+      "Benachrichtigungen gelöscht",
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      150
     );
   };
 
-  showModal = () => {
-    this.setState({ modalVisible: true });
+  // TODO Check if this works
+  setNotification = async (house) => {
+    const apiKey = await reallifeRPG.getApiKey();
+    const timeLeft = house.payed_for;
+    const expireDate = reallifeRPG.getMaintenanceExpireDate(timeLeft);
+    const isHouse = house.players !== undefined ? true : false;
+    // TODO Schedule an notification at the start of the server period the maintenance expires
+    // Check if there are 7 days or more left to schedule the notification
+    const options = {
+      title: isHouse ? "Hauswartung" : "Appartment Mietvertrag",
+      message: isHouse
+        ? `Die Wartung für dein Haus ${house.id} läuft in 7 Tagen aus!`
+        : `Der Mietvertrag für dein Appartment ${house.id} läuft in 7 Tagen ab!`,
+      data: { creatorApiKey: apiKey, id: house.id },
+      trigger: expireDate,
+    };
+    if (timeLeft >= 7 * 24) {
+      notifyHandler.schedulePushNotification(
+        options.title,
+        options.message,
+        options.data,
+        options.trigger
+      );
+    }
+    // Check if there are 24 hours or more left to schedule the notification
+    if (timeLeft >= 24) {
+      notifyHandler.schedulePushNotification(
+        options.title,
+        options.message,
+        options.data,
+        options.trigger
+      );
+    }
+    ToastAndroid.showWithGravityAndOffset(
+      "Benachrichtigungen erstellt",
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      150
+    );
   };
 
-  closeModal = () => {
-    this.setState({ modalVisible: false });
+  _renderModalContent = (selectedHouse) => {
+    // TODO Use an WebView with Modalize instead of redirecting to an browser
+    // https://github.com/jeremybarbet/react-native-modalize/blob/master/examples/expo/src/components/modals/FacebookWebView.js
+    let icon,
+      btnAction,
+      loading = false;
+    const { apiKey } = this.state;
+    const loc = selectedHouse.location.substring(1, selectedHouse.location.length - 1).split(",");
+
+    // FIXME Check if there aleady exists an scheduled notification & if yes we change the icon and make them deletable
+    if (loading) {
+      return <Spinner />;
+    } else {
+      return (
+        <View style={styles.row}>
+          <View style={styles.btnContainer}>
+            <Label>Position</Label>
+            <TouchableHighlight
+              style={modal.btn}
+              underlayColor="#ededed"
+              onPress={() =>
+                Linking.openURL(`https://info.realliferpg.de/map?x=${loc[0]}&y=${loc[1]}`)
+              }
+            >
+              <Ionicons
+                name="ios-map"
+                size={24}
+                color="black"
+                style={{ textAlign: "center", paddingVertical: 15 }}
+              />
+            </TouchableHighlight>
+          </View>
+          {/* <View style={styles.btnContainer}>
+            <Label>Benachrichtigung</Label>
+            <TouchableHighlight style={modal.btn} underlayColor="#ededed" onPress={btnAction}>
+              <Ionicons
+                name={"ios-notifications"}
+                size={24}
+                color="black"
+                style={{ textAlign: "center", paddingVertical: 15 }}
+              />
+            </TouchableHighlight>
+          </View> */}
+        </View>
+      );
+    }
   };
 
-  componentDidMount() {
-    this.getKey().then((key) => {
-      this.getHouses(key).then((data) => {
-        this.setState({ content: data.data[0].houses, loading: false });
-      });
-    });
+  _renderRental = (rental) => {
+    return (
+      <TouchableWithoutFeedback key={rental.id} onPress={() => this.openModal(rental)}>
+        <Card key={rental.id} style={{ marginTop: 18, padding: 20 }}>
+          <Text style={{ textAlign: "center", fontWeight: "bold" }}>
+            Appartment Nr. {rental.id}
+          </Text>
+        </Card>
+      </TouchableWithoutFeedback>
+    );
+  };
+
+  _renderHouse = (house) => {
+    return (
+      <TouchableWithoutFeedback key={house.id} onPress={() => this.openModal(house)}>
+        <Card key={house.id} style={{ marginTop: 18, padding: 20 }}>
+          <Text style={{ textAlign: "center", fontWeight: "bold" }}>Haus Nr. {house.id}</Text>
+        </Card>
+      </TouchableWithoutFeedback>
+    );
+  };
+
+  openModal = (house) => {
+    this.setState({ selectedHouse: house });
+    this.modalizeRef.current?.open();
+  };
+
+  closeModal = () => this.modalizeRef.current?.close();
+
+  refresh = async () => {
+    const apiKey = await reallifeRPG.getApiKey();
+    if (apiKey !== null) {
+      const profile = await reallifeRPG.getProfile(apiKey);
+      this.setState({ profile: profile.data[0], refreshing: false });
+    } else {
+      this.setState({ profile: null, refreshing: false });
+    }
+  };
+
+  async componentDidMount() {
+    const apiKey = await reallifeRPG.getApiKey();
+    if (apiKey !== null) {
+      const profile = await reallifeRPG.getProfile(apiKey);
+      this.setState({ profile: profile.data[0], apiKey: apiKey, loading: false });
+    } else {
+      this.setState({ profile: null, loading: false });
+    }
   }
 
   render() {
-    if (this.state.loading == true) {
+    const { loading, refreshing, loadingModal, profile, selectedHouse } = this.state;
+
+    if (loading && !refreshing) {
       return <Spinner size="large" />;
     } else {
-      return (
-        <View style={{ flex: 1, backgroundColor: "white" }}>
-          <FlatList
-            data={this.state.content}
-            renderItem={({ item }) => (
-              <Text style={styles.item} onPress={this.setModalContent.bind(this, item)}>
-                {item.id}
-              </Text>
-            )}
-          />
+      // If profile equals null the key wasn't set
+      if (profile !== null) {
+        return (
+          <View style={{ flex: 1 }}>
+            <ScrollView
+              horizontal={false}
+              showsVerticalScrollIndicator={true}
+              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+            >
+              <CustomAlert
+                msg={
+                  "Hier werden nur Immobilien, Appartments & Baustellen angezeigt für welche du einen Schlüssel besitzt!"
+                }
+                bg={Colors.tabIconSelected}
+              />
+              {profile.houses.length > 0 ? (
+                profile.houses.map((house, index) => {
+                  return this._renderHouse(house);
+                })
+              ) : (
+                <Card style={{ marginTop: 18, padding: 20 }}>
+                  <Text style={{ textAlign: "center", fontWeight: "bold" }}>
+                    Kein Haus gefunden
+                  </Text>
+                </Card>
+              )}
 
-          {this.state.modalContent != null ? this.setModal() : null}
-        </View>
-      );
+              {profile.rentals.length > 0 ? (
+                profile.rentals.map((rental, index) => {
+                  return this._renderRental(rental);
+                })
+              ) : (
+                <Card style={{ marginTop: 18, padding: 20 }}>
+                  <Text style={{ textAlign: "center", fontWeight: "bold" }}>
+                    Kein Appartment gefunden
+                  </Text>
+                </Card>
+              )}
+            </ScrollView>
+            <Modalize ref={this.modalizeRef} adjustToContentHeight={true}>
+              <View style={modal.content}>
+                <Text style={modal.heading}>
+                  {selectedHouse !== undefined
+                    ? selectedHouse.players !== undefined
+                      ? `Haus ${selectedHouse.id}`.toUpperCase()
+                      : `Appartment ${selectedHouse.id}`.toUpperCase()
+                    : null}
+                </Text>
+                {selectedHouse !== undefined ? this._renderModalContent(selectedHouse) : null}
+              </View>
+            </Modalize>
+          </View>
+        );
+      } else {
+        return <NoKey />;
+      }
     }
   }
 }
 
+const Card = Styled.View`
+  width: 90%;
+  margin-left: 5%;
+  background-color: white;
+  border-top-width: 5px;
+  border-color: ${Colors.tabIconSelected};
+  border-radius: 8px;
+`;
+const Label = Styled.Text`
+  margin-bottom: 6px;
+  text-align: center;
+  font-weight: bold;
+`;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+  },
+  row: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+  },
+  btnContainer: {
+    width: "35%",
   },
   item: {
-    display: "flex",
-    alignItems: "center",
     width: "90%",
     textAlign: "center",
     marginLeft: "5%",
@@ -187,52 +294,22 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginTop: 5,
     borderWidth: 1,
-    backgroundColor: "#f8f9fa",
     borderColor: "#ededed",
-    borderRadius: 8,
-  },
-  smallItem: {
-    textAlign: "center",
-    width: "49%",
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    marginBottom: 5,
-    borderWidth: 1,
-    borderColor: "#ededed",
-    backgroundColor: "#f8f9fa",
-    borderRadius: 8,
-  },
-  projectItem: {
-    textAlign: "center",
-    width: "49%",
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    marginBottom: 5,
-    borderWidth: 1,
-    borderColor: "#ededed",
-    backgroundColor: "#f8f9fa",
-    borderRadius: 8,
-  },
-  modalContent: {
     backgroundColor: "white",
-    paddingTop: 15,
-    paddingBottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "rgba(0, 0, 0, 0.1)",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    borderRadius: 8,
   },
-  bottomModal: {
-    justifyContent: "flex-end",
-    margin: 0,
+});
+
+const modal = StyleSheet.create({
+  content: {
+    padding: 20,
   },
+  heading: {
+    marginBottom: 2,
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#ccc",
+  },
+  btn: { backgroundColor: "#f8f9fa", borderRadius: 8 },
 });

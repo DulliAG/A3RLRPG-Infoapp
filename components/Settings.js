@@ -1,10 +1,12 @@
 import React, { Component, createRef } from "react";
 import { StyleSheet, View, TouchableOpacity, TextInput, Text } from "react-native";
 import { ReallifeAPI } from "../ApiHandler";
+import { NotifyHandler } from "../NotifyHandler";
 // Components
 import { Modalize } from "react-native-modalize";
 
 const reallifeRPG = new ReallifeAPI();
+const notifyHandler = new NotifyHandler();
 
 export default class Settings extends Component {
   constructor() {
@@ -23,6 +25,8 @@ export default class Settings extends Component {
     const newKey = this.state.apiKey;
     reallifeRPG.saveApiKey(newKey);
     this.close();
+    // We're gonna delete all scheduled push notifications because we're now selecting data from a new player
+    // notifyHandler.cancelAllScheduledNotification();
   };
 
   async componentDidMount() {

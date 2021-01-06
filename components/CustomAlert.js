@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 const CustomAlert = (props) => {
-  console.log(props);
   const styles = StyleSheet.create({
     container: {
       width: "100%",

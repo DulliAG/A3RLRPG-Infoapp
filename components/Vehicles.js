@@ -1,221 +1,207 @@
-import React from "react";
-import {
-  View,
-  ScrollView,
-  TouchableWithoutFeedback,
-  FlatList,
-  StyleSheet,
-  Text,
-  Image,
-} from "react-native";
+import React, { Component, createRef } from "react";
+import Colors from "../constants/Colors";
 import Styled from "styled-components";
+import { ReallifeAPI } from "../ApiHandler";
+// Components
+import { View, ScrollView, StyleSheet, Text, RefreshControl } from "react-native";
 import Spinner from "../components/Spinner";
-import Modal from "react-native-modal";
-import AsyncStorage from "@react-native-community/async-storage";
+import { Modalize } from "react-native-modalize";
+import NoKey from "../components/NoKey";
 
-export default class Vehicles extends React.Component {
+const reallifeRPG = new ReallifeAPI();
+
+export default class Vehicles extends Component {
   constructor() {
     super();
     this.state = {
       loading: true,
-      content: null,
-      modalVisible: false,
-      modalContent: null,
+      refreshing: false,
     };
+    this.modalizeRef = createRef(null);
   }
 
-  getKey() {
-    return new Promise((res, rej) => {
-      try {
-        res(AsyncStorage.getItem("@apiKey"));
-      } catch (err) {
-        rej(err);
-      }
-    });
-  }
-
-  getVehicles(apiKey) {
-    return new Promise((res, rej) => {
-      fetch(`https://api.realliferpg.de/v1/player/${apiKey}/vehicles/`)
-        .then((response) => response.json())
-        .then((response) => res(response))
-        .catch((err) => rej(err));
-    });
-  }
-
-  setModalContent = (object) => {
-    let updateState = new Promise((res) => {
-      this.setState({ modalContent: object });
-      res(object);
-    });
-
-    Promise.all([updateState]).then(() => {
-      this.showModal();
-    });
-  };
-
-  setModal = () => {
-    let vehicle = this.state.modalContent;
-    var status;
-    if (vehicle.active == 1) {
-      status = "Ausgeparkt";
-    } else if (vehicle.impound == 1) {
-      status = "Beschlagnahmt";
+  _renderVehicleData = (vehicle) => {
+    const vehiclePlate = vehicle.plate,
+      formattedPlate = `${vehiclePlate.substring(0, 2)} ${vehiclePlate.substring(
+        2,
+        4
+      )} ${vehiclePlate.substring(4, 8)}`;
+    let status, fraction;
+    // Vehicle status
+    if (vehicle.active === 1) {
+      status = <Badge style={{ backgroundColor: "#ffc107" }}>Ausgeparkt</Badge>;
+    } else if (vehicle.impound === 1) {
+      status = <Badge style={{ backgroundColor: "#dc3545" }}>Beschlagnahmt</Badge>;
     } else {
-      status = "Geparkt";
+      status = <Badge style={{ backgroundColor: "#28a745" }}>Geparkt</Badge>;
     }
+    // Fraction
+    if (vehicle.side === "COP") {
+      fraction = <Badge>Polizei</Badge>;
+    } else if (vehicle.side === "EAST") {
+      fraction = <Badge style={{ backgroundColor: "#ffc107" }}>RAC</Badge>;
+    } else if (vehicle.side === "MEDIC" || vehicle.side === "GUER") {
+      fraction = <Badge style={{ backgroundColor: "#dc3545" }}>Medics</Badge>;
+    } else {
+      fraction = <Badge style={{ backgroundColor: "#28a745" }}>Zivilisten</Badge>;
+    }
+
     return (
-      <Modal
-        isVisible={this.state.modalVisible}
-        style={styles.bottomModal}
-        backdropColor="rgba(0, 0, 0, 0)"
-        backdropOpacity={1}
-        animationIn="slideInUp"
-        animationOut="slideOutDown"
-        animationInTiming={200}
-        animationOutTiming={200}
-        onBackdropPress={() => this.closeModal()}
-        onSwipeComplete={() => this.closeModal()}
-        swipeDirection={"down"}
-      >
-        <View style={styles.modalContent}>
-          <TouchableWithoutFeedback
-            onPress={() => this.closeModal()}
-            onPressIn={() => this.closeModal()}
-          >
-            <View
-              style={{
-                width: "10%",
-                height: 5,
-                marginBottom: 10,
-                backgroundColor: "rgba(0, 0, 0, 0.1)",
-                borderRadius: 50,
-              }}
-            />
-          </TouchableWithoutFeedback>
-
-          <ScrollView
-            style={{
-              width: "100%",
-            }}
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={{ flexDirection: "row", justifyContent: "center" }}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  fontSize: 16,
-                  paddingRight: 5,
-                }}
-              >
-                {vehicle.vehicle_data.name}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-                width: "90%",
-                marginTop: 5,
-                marginLeft: "5%",
-              }}
-            >
-              <Text style={styles.smallItem}>{vehicle.plate}</Text>
-              <Text style={styles.smallItem}>{status}</Text>
-            </View>
-
-            <FuelContainer>
-              <FuelBar
-                style={{
-                  width: `${vehicle.fuel * 100}%`,
-                }}
-              />
-            </FuelContainer>
-
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-                width: "90%",
-                marginTop: 5,
-                marginLeft: "5%",
-              }}
-            >
-              <Text style={styles.smallItem}>{vehicle.vehicle_data.v_space} Kg</Text>
-              <Text style={styles.smallItem}>{vehicle.vehicle_data.price} €</Text>
-            </View>
-          </ScrollView>
+      <View>
+        <View style={{ ...styles.row, alignItems: "center", marginTop: 9 }}>
+          <Con3 style={{ borderRightWidth: 1, borderColor: "#ededed" }}>
+            <Label>Status</Label>
+            {status}
+          </Con3>
+          <Con3 style={{ borderRightWidth: 1, borderColor: "#ededed" }}>
+            <Label>Fraktion</Label>
+            {fraction}
+          </Con3>
+          <Con3>
+            <Label>Kennzeichen</Label>
+            <Badge>{formattedPlate}</Badge>
+          </Con3>
         </View>
-      </Modal>
+
+        <Label style={{ marginTop: 8 }}>Tank {`${(vehicle.fuel * 100).toFixed(0)}%`}</Label>
+        <FuelBar>
+          <FuelProgress
+            style={{
+              width: `${vehicle.fuel * 100}%`,
+            }}
+          />
+        </FuelBar>
+
+        <Text style={{ fontWeight: "bold", textAlign: "center", marginTop: 8 }}>
+          Gekauft am {vehicle.created_at}
+        </Text>
+      </View>
     );
   };
 
-  showModal = () => {
-    this.setState({ modalVisible: true });
+  _renderVehicle = (vehicle) => {
+    if (vehicle.alive) {
+      return (
+        <Text key={vehicle.id} style={styles.item} onPress={() => this.openVehicleModal(vehicle)}>
+          {vehicle.vehicle_data.name}
+        </Text>
+      );
+    }
   };
 
-  closeModal = () => {
-    this.setState({ modalVisible: false });
+  openVehicleModal = (vehicle) => {
+    this.setState({ selectedVehicle: vehicle });
+    this.modalizeRef.current?.open();
   };
 
-  componentDidMount() {
-    this.getKey().then((key) => {
-      this.getVehicles(key).then((vehicles) => {
-        this.setState({ content: vehicles.data, loading: false });
-      });
-    });
+  closeVehicleModal = () => this.modalizeRef.current?.close();
+
+  refresh = async () => {
+    refresh = async () => {
+      this.setState({ refreshing: true });
+      const apiKey = await reallifeRPG.getApiKey();
+      if (apiKey !== null) {
+        const vehicles = await reallifeRPG.getPlayerVehicles(apiKey);
+        this.setState({ vehicles: vehicles.data, refreshing: false });
+      } else {
+        this.setState({ vehicles: null, refreshing: false });
+      }
+    };
+  };
+
+  async componentDidMount() {
+    const apiKey = await reallifeRPG.getApiKey();
+    if (apiKey !== null) {
+      const vehicles = await reallifeRPG.getPlayerVehicles(apiKey);
+      this.setState({ vehicles: vehicles.data, loading: false });
+    } else {
+      this.setState({ vehicles: null, loading: false });
+    }
   }
 
   render() {
-    if (this.state.loading == true) {
+    const { loading, refreshing, vehicles, selectedVehicle } = this.state;
+    if (loading && !refreshing) {
       return <Spinner size="large" />;
     } else {
-      return (
-        <View style={{ flex: 1, backgroundColor: "white" }}>
-          <FlatList
-            data={this.state.content}
-            renderItem={({ item }) =>
-              item.alive == 1 ? (
-                <Text style={styles.item} onPress={this.setModalContent.bind(this, item)}>
-                  {item.vehicle_data.name}
+      // If vehicles equals null the key wasn't set
+      if (vehicles !== null) {
+        return (
+          <View style={styles.container}>
+            <ScrollView
+              horizontal={false}
+              showsVerticalScrollIndicator={true}
+              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+              style={styles.container}
+            >
+              {vehicles.map((vehicle, index) => {
+                return this._renderVehicle(vehicle);
+              })}
+            </ScrollView>
+            <Modalize ref={this.modalizeRef} adjustToContentHeight={true}>
+              <View style={modal.content}>
+                <Text style={modal.heading}>
+                  {selectedVehicle !== undefined
+                    ? selectedVehicle.vehicle_data.name.toUpperCase()
+                    : null}
                 </Text>
-              ) : null
-            }
-          />
-
-          {this.state.modalContent != null ? this.setModal() : null}
-        </View>
-      );
+                {selectedVehicle !== undefined ? this._renderVehicleData(selectedVehicle) : null}
+              </View>
+            </Modalize>
+          </View>
+        );
+      } else {
+        return <NoKey />;
+      }
     }
   }
 }
 
-const FuelContainer = Styled.View`
-  width: 90%;
-  height: 25px;
-  marginLeft: 5%;
-  border-radius: 5px;
-  background-color: #ededed;
+const Con3 = Styled.View`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: ${100 / 3}%;
 `;
-
+const Label = Styled.Text`
+  text-align: center;
+  width: 100%;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: bold;
+`;
+const Badge = Styled.Text`
+  text-align: center;
+  padding: 4px;
+  font-size: 14px;
+  border-radius: 6px;
+  background-color: ${Colors.tabIconSelected};
+  color: white;
+`;
 const FuelBar = Styled.View`
+  width: 100%;
+  height: 25px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+`;
+const FuelProgress = Styled.View`
   height: 100%;
   background-color: #dc3545;
-  border-radius: 5px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 `;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+  },
+  row: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   item: {
-    display: "flex",
-    alignItems: "center",
     width: "90%",
     textAlign: "center",
     marginLeft: "5%",
@@ -223,52 +209,21 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginTop: 5,
     borderWidth: 1,
-    backgroundColor: "#f8f9fa",
     borderColor: "#ededed",
+    backgroundColor: "#fff",
     borderRadius: 8,
   },
-  smallItem: {
+});
+
+const modal = StyleSheet.create({
+  content: {
+    padding: 20,
+  },
+  heading: {
+    marginBottom: 2,
     textAlign: "center",
-    width: "49%",
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    marginBottom: 5,
-    borderWidth: 1,
-    borderColor: "#ededed",
-    backgroundColor: "#f8f9fa",
-    borderRadius: 8,
-  },
-  projectItem: {
-    textAlign: "center",
-    width: "49%",
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    marginBottom: 5,
-    borderWidth: 1,
-    borderColor: "#ededed",
-    backgroundColor: "#f8f9fa",
-    borderRadius: 8,
-  },
-  modalContent: {
-    backgroundColor: "white",
-    paddingTop: 15,
-    paddingBottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "rgba(0, 0, 0, 0.1)",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  bottomModal: {
-    justifyContent: "flex-end",
-    margin: 0,
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#ccc",
   },
 });

@@ -20,32 +20,26 @@ export class ServerList extends React.Component {
     };
   }
 
-  refresh = () => {
+  refresh = async () => {
     this.setState({ refreshing: true });
-    reallifeRPG.getServerList().then((list) => {
-      this.setState({
-        server: list.data,
-        selectedServer: list.data[0],
-        refreshing: false,
-      });
-      ToastAndroid.showWithGravityAndOffset(
-        "Serverliste aktualisert",
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        25,
-        150
-      );
+    const serverList = await reallifeRPG.getServerList();
+    this.setState({
+      server: serverList.data,
+      selectedServer: serverList.data[0],
+      loading: false,
     });
+    ToastAndroid.showWithGravityAndOffset(
+      "Serverliste aktualisert",
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      150
+    );
   };
 
-  componentDidMount() {
-    reallifeRPG.getServerList().then((list) => {
-      this.setState({
-        server: list.data,
-        selectedServer: list.data[0],
-        loading: false,
-      });
-    });
+  async componentDidMount() {
+    const serverList = await reallifeRPG.getServerList();
+    this.setState({ server: serverList.data, selectedServer: serverList.data[0], loading: false });
   }
 
   render() {
@@ -63,9 +57,10 @@ export class ServerList extends React.Component {
               showsHorizontalScrollIndicator={false}
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
             >
-              {server.map((server) => {
+              {server.map((server, index) => {
                 return (
                   <TouchableWithoutFeedback
+                    key={index}
                     onPress={() => {
                       this.setState({ selectedServer: server });
                     }}

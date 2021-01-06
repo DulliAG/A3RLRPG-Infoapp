@@ -1,15 +1,16 @@
 import React from "react";
+import Colors from "../constants/Colors";
+// Routes
+import Profile from "../components/Profile";
+import Vehicles from "../components/Vehicles";
+import House from "../components/Houses";
+import CBS from "../components/CBS";
+// Components
 import { Text, View, StyleSheet, Dimensions } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-import Colors from "../constants/Colors";
-import Profile from "../components/Profile";
-import Styled from "styled-components";
-import CBS from "../components/CBS";
-import Vehicles from "../components/Vehicles";
-import Houses from "../components/Houses";
 
-const YourApp = () => {
-  const [index, setIndex] = React.useState(0);
+const ProfileScreen = () => {
+  const [index, setIndex] = React.useState(2);
   const [routes] = React.useState([
     { key: "profile", title: "Profil" },
     { key: "vehicles", title: "Fahrzeuge" },
@@ -26,7 +27,7 @@ const YourApp = () => {
   };
 
   const HouseRoute = () => {
-    return <Houses />;
+    return <House />;
   };
 
   const CBSRoute = () => {
@@ -51,8 +52,6 @@ const YourApp = () => {
             indicatorStyle={{
               backgroundColor: Colors.tabIconSelected,
               height: 5,
-              borderTopRightRadius: 5,
-              borderTopLeftRadius: 5,
             }}
             renderLabel={({ route, focused, color }) => (
               <Text style={[focused ? styles.activeTabTextColor : styles.inactiveTabTextColor]}>
@@ -69,16 +68,7 @@ const YourApp = () => {
   );
 };
 
-export default YourApp;
-
-const Strong = Styled.Text`
-  font-weight: bold;
-  font-size: 18px;
-`;
-
-const Link = Styled.Text`
-  text-decoration: underline black;
-`;
+export default ProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -89,7 +79,6 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "90%",
     height: "100%",
-    backgroundColor: "red",
   },
   activeTabTextColor: {
     fontWeight: "600",
@@ -97,15 +86,5 @@ const styles = StyleSheet.create({
   },
   inactiveTabTextColor: {
     color: "#000",
-  },
-  StatsContainer: {
-    flexDirection: "column",
-    alignItems: "center",
-    paddingVertical: 10,
-    marginTop: 20,
-    backgroundColor: "#fff",
-    borderTopWidth: 5,
-    borderTopColor: Colors.tabIconSelected,
-    borderRadius: 5,
   },
 });
