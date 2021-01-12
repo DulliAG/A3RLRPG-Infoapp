@@ -149,6 +149,7 @@ export class Server extends React.Component {
 export class PlayerList extends React.Component {
   render() {
     const { players } = this.props;
+    const sortedPlayers = players.length > 1 ? players.sort() : players;
 
     return (
       <View style={{ flex: 1 }}>
