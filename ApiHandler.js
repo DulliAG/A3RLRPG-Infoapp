@@ -96,6 +96,12 @@ class ReallifeAPI {
     return data;
   }
 
+  async getChangelogs() {
+    const response = await fetch("https://api.realliferpg.de/v1/changelog");
+    const data = await response.json();
+    return data;
+  }
+
   /**
    * @param {number} payedFor Amount of hours until the maintenance expires
    */
