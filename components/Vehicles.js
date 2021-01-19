@@ -97,16 +97,14 @@ export default class Vehicles extends Component {
   closeVehicleModal = () => this.modalizeRef.current?.close();
 
   refresh = async () => {
-    refresh = async () => {
-      this.setState({ refreshing: true });
-      const apiKey = await reallifeRPG.getApiKey();
-      if (apiKey !== null) {
-        const vehicles = await reallifeRPG.getPlayerVehicles(apiKey);
-        this.setState({ vehicles: vehicles.data, refreshing: false });
-      } else {
-        this.setState({ vehicles: null, refreshing: false });
-      }
-    };
+    this.setState({ refreshing: true });
+    const apiKey = await reallifeRPG.getApiKey();
+    if (apiKey !== null) {
+      const vehicles = await reallifeRPG.getPlayerVehicles(apiKey);
+      this.setState({ vehicles: vehicles.data, refreshing: false });
+    } else {
+      this.setState({ vehicles: null, refreshing: false });
+    }
   };
 
   async componentDidMount() {
@@ -121,7 +119,8 @@ export default class Vehicles extends Component {
 
   render() {
     const { loading, refreshing, vehicles, selectedVehicle } = this.state;
-    if (loading && !refreshing) {
+
+    if (loading || refreshing) {
       return <Spinner size="large" />;
     } else {
       // If vehicles equals null the key wasn't set
@@ -191,7 +190,6 @@ const FuelProgress = Styled.View`
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 `;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -214,7 +212,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 });
-
 const modal = StyleSheet.create({
   content: {
     padding: 20,
