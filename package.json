@@ -11,6 +11,7 @@
     "@react-native-community/async-storage": "^1.11.0",
     "@react-native-community/masked-view": "^0.1.6",
     "@react-navigation/bottom-tabs": "^5.3.1",
+    "@react-navigation/drawer": "^5.11.4",
     "@react-navigation/native": "^5.2.1",
     "@react-navigation/stack": "^5.2.16",
     "expo": "~38.0.8",
@@ -21,7 +22,6 @@
     "react": "~16.11.0",
     "react-dom": "~16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
-    "react-native-collapsible": "^1.5.3",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-modal": "^11.5.6",
     "react-native-modalize": "^2.0.6",
@@ -29,6 +29,7 @@
     "react-native-reanimated": "^1.9.0",
     "react-native-safe-area-context": "^3.0.7",
     "react-native-screens": "^2.9.0",
+    "react-native-swipe-item": "^0.4.0",
     "react-native-tab-view": "^2.15.1",
     "react-native-web": "~0.11.7",
     "styled-components": "^5.1.1"
