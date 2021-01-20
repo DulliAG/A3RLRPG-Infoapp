@@ -114,7 +114,7 @@ export default class Store extends Component {
           <Modalize
             ref={this.modalizeRef}
             adjustToContentHeight={false}
-            snapPoint={Layout.window.height * 0.25}
+            snapPoint={Layout.window.height * 0.35}
           >
             {!loadingItems ? (
               <View style={modal.content}>

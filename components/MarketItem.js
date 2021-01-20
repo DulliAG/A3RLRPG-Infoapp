@@ -71,7 +71,7 @@ export default class MarketItem extends React.Component {
   render() {
     const { loading, refreshing, data } = this.state;
 
-    if (loading && !refreshing) {
+    if (loading || refreshing) {
       return <Spinner size="large" />;
     } else {
       return (

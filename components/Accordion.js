@@ -84,8 +84,8 @@ const styles = StyleSheet.create({
     height: 56,
     paddingHorizontal: "5%",
     backgroundColor: "white",
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderTopWidth: 0.5,
+    borderBottomWidth: 0.5,
     borderColor: "#ededed",
   },
   title: {

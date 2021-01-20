@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { expo } from "../app.json";
 // Components
-import { View, StyleSheet, TouchableOpacity, Text, TextInput } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text, Linking, TextInput } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { ReallifeAPI } from "../ApiHandler";
 
 const reallifeRPG = new ReallifeAPI();
@@ -23,27 +25,56 @@ const SettingsScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.formControl}>
-        <Text style={styles.label}>API-Key</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => setApiKey(value)}
-          placeholder={"API-Key eingeben"}
-          value={apiKey}
-        />
-        <View
-          style={{
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "flex-end",
-            marginTop: 10,
-          }}
-        >
-          <TouchableOpacity activeOpacity={0.9} onPress={saveNewKey}>
-            <Text style={{ ...styles.button, ...styles.save }}>Speichern</Text>
-          </TouchableOpacity>
+      <ScrollView horizontal={false} showsVerticalScrollIndicator={true}>
+        <View style={styles.section}>
+          <Text style={styles.heading}>Informationen</Text>
+          <Text style={styles.label}>
+            Name: <Text style={styles.text}>{expo.name}</Text>
+          </Text>
+          <Text style={styles.label}>
+            Webseite:{" "}
+            <Text style={styles.text} onPress={() => Linking.openURL("https://dulliag.de/")}>
+              https://dulliag.de
+            </Text>
+          </Text>
+          <Text style={styles.label}>
+            Quellcode:{" "}
+            <Text
+              style={styles.text}
+              onPress={() => Linking.openURL("https://github.com/tklein1801/A3RLRPG-Infoapp/")}
+            >
+              GitHub
+            </Text>
+          </Text>
+          <Text style={styles.label}>
+            Version: <Text style={styles.text}>{expo.version}</Text>
+          </Text>
         </View>
-      </View>
+
+        <View style={styles.section}>
+          <View style={styles.formControl}>
+            <Text style={styles.heading}>API-Key</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={(value) => setApiKey(value)}
+              placeholder={"API-Key eingeben"}
+              value={apiKey}
+            />
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                marginTop: 10,
+              }}
+            >
+              <TouchableOpacity activeOpacity={0.9} onPress={saveNewKey}>
+                <Text style={{ ...styles.button, ...styles.save }}>Speichern</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -55,17 +86,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
-  formControl: {
+  section: {
     width: "90%",
+    marginTop: 10,
     marginLeft: "5%",
+  },
+  formControl: {
+    width: "100%",
     marginTop: 16,
   },
-  label: {
-    paddingTop: 10,
-    fontSize: 14,
+  heading: {
+    fontSize: 16,
     fontWeight: "bold",
     lineHeight: 22,
     color: "#333",
+  },
+  label: {
+    fontWeight: "bold",
+  },
+  text: {
+    fontWeight: "normal",
   },
   input: {
     paddingVertical: 7,

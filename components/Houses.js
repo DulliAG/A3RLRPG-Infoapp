@@ -110,25 +110,33 @@ export default class Houses extends Component {
       return <Spinner />;
     } else {
       return (
-        <View style={styles.row}>
-          <View style={styles.btnContainer}>
-            <Label>Position</Label>
-            <TouchableHighlight
-              style={modal.btn}
-              underlayColor="#ededed"
-              onPress={() =>
-                Linking.openURL(`https://info.realliferpg.de/map?x=${loc[0]}&y=${loc[1]}`)
-              }
-            >
-              <Ionicons
-                name="ios-map"
-                size={24}
-                color="black"
-                style={{ textAlign: "center", paddingVertical: 15 }}
-              />
-            </TouchableHighlight>
-          </View>
-          {/* <View style={styles.btnContainer}>
+        <View>
+          <Label>
+            {`Gewartet für ${selectedHouse.payed_for / 24} ${
+              selectedHouse.payed_for / 24 > 1 ? "Tage" : "Tag"
+            }`}
+          </Label>
+          <View style={styles.row}>
+            <View style={styles.btnContainer}>
+              <Label>Position</Label>
+              <TouchableHighlight
+                style={modal.btn}
+                underlayColor="#ededed"
+                onPress={() =>
+                  Linking.openURL(`https://info.realliferpg.de/map?x=${loc[0]}&y=${loc[1]}`)
+                }
+              >
+                <Ionicons
+                  name="ios-map"
+                  size={24}
+                  color="black"
+                  style={{ textAlign: "center", paddingVertical: 15 }}
+                />
+              </TouchableHighlight>
+            </View>
+            {/* 
+            FIXME After we solved 
+            <View style={styles.btnContainer}>
             <Label>Benachrichtigung</Label>
             <TouchableHighlight style={modal.btn} underlayColor="#ededed" onPress={btnAction}>
               <Ionicons
@@ -139,12 +147,14 @@ export default class Houses extends Component {
               />
             </TouchableHighlight>
           </View> */}
+          </View>
         </View>
       );
     }
   };
 
   _renderRental = (rental) => {
+    return <Text key={rental.id} style={styles.item} onPress={() => this.openModal(rental)}></Text>;
     return (
       <TouchableWithoutFeedback key={rental.id} onPress={() => this.openModal(rental)}>
         <Card key={rental.id} style={{ marginTop: 18, padding: 20 }}>
@@ -158,12 +168,21 @@ export default class Houses extends Component {
 
   _renderHouse = (house) => {
     return (
+      <Text key={house.id} style={styles.item} onPress={() => this.openModal(house)}>
+        Haus Nr. {house.id}
+      </Text>
+    );
+    return (
       <TouchableWithoutFeedback key={house.id} onPress={() => this.openModal(house)}>
         <Card key={house.id} style={{ marginTop: 18, padding: 20 }}>
           <Text style={{ textAlign: "center", fontWeight: "bold" }}>Haus Nr. {house.id}</Text>
         </Card>
       </TouchableWithoutFeedback>
     );
+  };
+
+  _renderPlaceholder = (message) => {
+    return <Text style={styles.item}>{message}</Text>;
   };
 
   openModal = (house) => {
@@ -174,6 +193,7 @@ export default class Houses extends Component {
   closeModal = () => this.modalizeRef.current?.close();
 
   refresh = async () => {
+    this.setState({ refreshing: true });
     const apiKey = await reallifeRPG.getApiKey();
     if (apiKey !== null) {
       const profile = await reallifeRPG.getProfile(apiKey);
@@ -196,7 +216,7 @@ export default class Houses extends Component {
   render() {
     const { loading, refreshing, loadingModal, profile, selectedHouse } = this.state;
 
-    if (loading && !refreshing) {
+    if (loading || refreshing) {
       return <Spinner size="large" />;
     } else {
       // If profile equals null the key wasn't set
@@ -210,33 +230,21 @@ export default class Houses extends Component {
             >
               <CustomAlert
                 msg={
-                  "Hier werden nur Immobilien, Appartments & Baustellen angezeigt für welche du einen Schlüssel besitzt!"
+                  "Hier werden nur Immobilien & Appartments angezeigt für welche du einen Schlüssel besitzt!"
                 }
                 bg={Colors.tabIconSelected}
               />
-              {profile.houses.length > 0 ? (
-                profile.houses.map((house, index) => {
-                  return this._renderHouse(house);
-                })
-              ) : (
-                <Card style={{ marginTop: 18, padding: 20 }}>
-                  <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-                    Kein Haus gefunden
-                  </Text>
-                </Card>
-              )}
+              {profile.houses.length > 0
+                ? profile.houses.map((house) => {
+                    return this._renderHouse(house);
+                  })
+                : this._renderPlaceholder("Kein Haus gefunden")}
 
-              {profile.rentals.length > 0 ? (
-                profile.rentals.map((rental, index) => {
-                  return this._renderRental(rental);
-                })
-              ) : (
-                <Card style={{ marginTop: 18, padding: 20 }}>
-                  <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-                    Kein Appartment gefunden
-                  </Text>
-                </Card>
-              )}
+              {profile.rentals.length > 0
+                ? profile.rentals.map((rental) => {
+                    return this._renderRental(rental);
+                  })
+                : this._renderPlaceholder("Kein Appartment gefunden")}
             </ScrollView>
             <Modalize ref={this.modalizeRef} adjustToContentHeight={true}>
               <View style={modal.content}>
