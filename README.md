@@ -26,6 +26,12 @@ Dies ist **nicht** die **offizielle Infoapp** von [ReallifeRPG](https://reallife
   Zeigt die derzeitigen Marktpreise sowie die "Top Jobs"(Bestbezahlten Items)
 </details>
 
+<details>
+  <summary>📱 Kontaktbuch</summary>
+  Zeigt eine Liste von Spielern an welche ihre Handynummer sowie ihre Nordholm Bankverbindung angegeben haben an. <br />
+  Für ein Beispiel siehe <a href="https://app.dulliag.de">A3RLRPG-Infopanel</a>
+</details>
+
 ## :calendar: Geplante Features
 
 <details>
@@ -37,12 +43,6 @@ Dies ist **nicht** die **offizielle Infoapp** von [ReallifeRPG](https://reallife
 <details>
   <summary>💡 Dark-Theme</summary>
   Dunkles Farbschema für die App
-</details>
-
-<details>
-  <summary>📱 Kontaktbuch</summary>
-  Zeigt die derzeitigen Marktpreise sowie die "Top Jobs"(Bestbezahlten Items). <br />
-  Für ein Beispiel siehe <a href="https://app.dulliag.de">A3RLRPG-Infopanel</a>
 </details>
 
 ## :link: Ressourcen
