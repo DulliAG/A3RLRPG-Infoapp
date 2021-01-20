@@ -1,67 +1,60 @@
-import React, { useState } from "react";
-import Colors from "../constants/Colors";
+import React from "react";
 // Components
-import { StyleSheet, Dimensions, Text } from "react-native";
-import { TabView, TabBar, SceneMap } from "react-native-tab-view";
 import Store from "../components/StoreItem";
+import TabBarIcon from "../components/TabBarIcon";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+const BottomTab = createBottomTabNavigator();
+const INITIAL_ROUTE_NAME = "Vehicles";
 
 const StoreScreen = () => {
-  const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    { key: "vehicles", title: "Fahrzeuge" },
-    { key: "items", title: "Gegenstände" },
-  ]);
-
-  const VehicleStores = () => {
+  const VehicleStore = () => {
     return <Store category="vehicles" />;
   };
-
-  const ItemStores = () => {
+  const ItemStore = () => {
     return <Store category="items" />;
   };
-
-  const renderScene = SceneMap({
-    vehicles: VehicleStores,
-    items: ItemStores,
-  });
+  const routes = [
+    {
+      name: "Vehicles",
+      title: "Fahrzeuge",
+      component: VehicleStore,
+      icon: "ios-car",
+    },
+    {
+      name: "Items",
+      title: "Gegenstände",
+      component: ItemStore,
+      icon: "ios-cart",
+    },
+  ];
 
   return (
-    <TabView
-      navigationState={{ index, routes }}
-      renderTabBar={(props) => (
-        <TabBar
-          {...props}
-          style={{ backgroundColor: "#fff" }}
-          indicatorStyle={{
-            backgroundColor: Colors.tabIconSelected,
-            height: 5,
-          }}
-          renderLabel={({ route, focused, color }) => (
-            <Text style={[focused ? styles.activeTabTextColor : styles.inactiveTabTextColor]}>
-              {route.title}
-            </Text>
-          )}
-        />
-      )}
-      renderScene={renderScene}
-      onIndexChange={setIndex}
-      initialLayout={Dimensions.get("window").width}
-    />
+    <BottomTab.Navigator
+      initialRouteName={INITIAL_ROUTE_NAME}
+      tabBarOptions={{
+        style: {
+          elevation: 0, // for android
+          shadowOpacity: 0, // for iOS
+          borderBottomWidth: 1,
+          borderBottomColor: "#ededed",
+        },
+      }}
+    >
+      {routes.map((route) => {
+        return (
+          <BottomTab.Screen
+            name={route.name}
+            component={route.component}
+            options={{
+              title: route.title,
+              tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name={route.icon} />,
+            }}
+          />
+        );
+      })}
+    </BottomTab.Navigator>
   );
 };
 
 export default StoreScreen;
-
-const styles = StyleSheet.create({
-  Tab: {
-    flex: 1,
-    backgroundColor: "#f8f9fa",
-  },
-  activeTabTextColor: {
-    fontWeight: "600",
-    color: Colors.tabIconSelected,
-  },
-  inactiveTabTextColor: {
-    color: "#000",
-  },
-});
