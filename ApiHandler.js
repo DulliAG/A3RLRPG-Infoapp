@@ -134,7 +134,7 @@ class DulliAPI {
     formData.append("avatarUrl", avatarUrl);
     formData.append("telNo", telNo);
     formData.append("iban", iban);
-    const response = await fetch(this.host + "/acon/v1/create.php", {
+    const response = await fetch(this.host + "/acon/v1/create", {
       method: "POST",
       body: formData,
     });
@@ -148,7 +148,7 @@ class DulliAPI {
   async deleteContact(contactId) {
     const formData = new FormData();
     formData.append("contactId", contactId);
-    const response = await fetch(this.host + "/acon/v1/delete.php", {
+    const response = await fetch(this.host + "/acon/v1/delete", {
       method: "POST",
       body: formData,
     });
@@ -157,7 +157,7 @@ class DulliAPI {
   }
 
   async getAllContacts() {
-    const response = await fetch(this.host + "/acon/v1/getAll.php", {
+    const response = await fetch(this.host + "/acon/v1/all", {
       method: "GET",
     });
     const data = await response.json();
@@ -168,7 +168,7 @@ class DulliAPI {
    * @param {string} playerId Steam64 id
    */
   async getContactByPlayerId(playerId) {
-    const response = await fetch(`${this.host}/acon/v1/getAll.php?playerId=${playerId}`, {
+    const response = await fetch(`${this.host}/acon/v1/getByPlayerId?playerId=${playerId}`, {
       method: "GET",
     });
     const data = await response.json();
@@ -179,7 +179,7 @@ class DulliAPI {
    * @param {number} contactId
    */
   async getContact(contactId) {
-    const response = await fetch(`${this.host}/acon/v1/getAll.php?contactId=${contactId}`, {
+    const response = await fetch(`${this.host}/acon/v1/get?contactId=${contactId}`, {
       method: "GET",
     });
     const data = await response.json();
