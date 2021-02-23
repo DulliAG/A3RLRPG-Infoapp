@@ -12,7 +12,7 @@ const INITIAL_ROUTE_NAME = "Profile";
 
 const ProfileScreen = () => {
   const routes = [
-    { name: "Profile", title: "Profil", component: Profile, icon: "ios-home" },
+    { name: "Profile", title: "Profil", component: Profile, icon: "ios-contact" },
     { name: "Vehicles", title: "Fahrzeuge", component: Vehicles, icon: "ios-car" },
     {
       name: "Houses",

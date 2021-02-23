@@ -26,7 +26,7 @@ export class ServerList extends React.Component {
     this.setState({
       server: serverList.data,
       selectedServer: serverList.data[0],
-      loading: false,
+      refreshing: false,
     });
     ToastAndroid.showWithGravityAndOffset(
       "Serverliste aktualisert",
