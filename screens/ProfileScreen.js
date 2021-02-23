@@ -3,7 +3,6 @@ import React from "react";
 import Profile from "../components/Profile";
 import Vehicles from "../components/Vehicles";
 import House from "../components/Houses";
-import CBS from "../components/CBS";
 // Components
 import TabBarIcon from "../components/TabBarIcon";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -21,7 +20,6 @@ const ProfileScreen = () => {
       component: House,
       icon: "ios-home",
     },
-    { name: "CBS", title: "CBS", component: CBS, icon: "ios-construct" },
   ];
 
   return (
