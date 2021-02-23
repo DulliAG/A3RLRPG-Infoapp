@@ -2,12 +2,12 @@
   "expo": {
     "name": "A3RLRPG-Infoapp",
     "slug": "A3RLRPG-Infoapp",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "orientation": "portrait",
     "icon": "./assets/images/dag-blobbo.png",
     "scheme": "myapp",
     "splash": {
-      "image": "./assets/images/test.png",
+      "image": "./assets/images/dag-blobbo-small.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
