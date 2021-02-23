@@ -7,7 +7,7 @@
     "icon": "./assets/images/dag-blobbo.png",
     "scheme": "myapp",
     "splash": {
-      "image": "./assets/images/dag-blobbo.png",
+      "image": "./assets/images/test.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
