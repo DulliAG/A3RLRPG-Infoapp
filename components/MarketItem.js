@@ -1,9 +1,12 @@
 import React from "react";
+import { bonus as itemBonus, illegalItems } from "../config.json";
 import { ReallifeAPI } from "../ApiHandler";
+import Colors from "../constants/Colors";
 import Styled from "styled-components";
 // Component
 import Spinner from "../components/Spinner";
 import { Image, ScrollView, RefreshControl } from "react-native";
+import CustomAlert from "./CustomAlert";
 
 const reallifeRPG = new ReallifeAPI();
 
@@ -19,24 +22,51 @@ export default class MarketItem extends React.Component {
 
   refresh = () => {
     this.setState({ refreshing: true });
-    const server1 = reallifeRPG.getMarketPrices(1),
-      server2 = reallifeRPG.getMarketPrices(2);
-
-    Promise.all([server1, server2])
+    const s1 = {
+      information: reallifeRPG.getServer(1),
+      market: reallifeRPG.getMarketPrices(1),
+    };
+    const s2 = {
+      information: reallifeRPG.getServer(2),
+      market: reallifeRPG.getMarketPrices(2),
+    };
+    Promise.all([s1.information, s1.market, s2.information, s2.market])
       .then((value) => {
-        const market1 = value[0].data,
-          market2 = value[1].data;
-        let items = [];
-
-        for (const key in market1) {
-          items.push({
-            item: market1[key].item,
-            localized: market1[key].localized,
-            price: {
-              server1: parseInt(market1[key].price),
-              server2: parseInt(market2[key].price),
-            },
-          });
+        var s1 = {
+          information: value[0],
+          market: value[1].data,
+          copAmount: reallifeRPG.getCopAmount(value[0]),
+        };
+        var s2 = {
+          information: value[2],
+          market: value[3].data,
+          copAmount: reallifeRPG.getCopAmount(value[2]),
+        };
+        var bonus = {
+          s1: itemBonus.filter((boni) => boni.amount === s1.copAmount)[0].multiplier,
+          s2: itemBonus.filter((boni) => boni.amount === s2.copAmount)[0].multiplier,
+        };
+        var items = [];
+        for (const key in s1.market) {
+          if (illegalItems.includes(s1.market[key].item)) {
+            items.push({
+              item: s1.market[key].item,
+              localized: s1.market[key].localized,
+              price: {
+                server1: parseInt(s1.market[key].price * bonus.s1),
+                server2: parseInt(s2.market[key].price * bonus.s2),
+              },
+            });
+          } else {
+            items.push({
+              item: s1.market[key].item,
+              localized: s1.market[key].localized,
+              price: {
+                server1: parseInt(s1.market[key].price),
+                server2: parseInt(s2.market[key].price),
+              },
+            });
+          }
         }
         this.setState({ data: items });
       })
@@ -44,24 +74,51 @@ export default class MarketItem extends React.Component {
   };
 
   async componentDidMount() {
-    const server1 = reallifeRPG.getMarketPrices(1),
-      server2 = reallifeRPG.getMarketPrices(2);
-
-    Promise.all([server1, server2])
+    const s1 = {
+      information: reallifeRPG.getServer(1),
+      market: reallifeRPG.getMarketPrices(1),
+    };
+    const s2 = {
+      information: reallifeRPG.getServer(2),
+      market: reallifeRPG.getMarketPrices(2),
+    };
+    Promise.all([s1.information, s1.market, s2.information, s2.market])
       .then((value) => {
-        const market1 = value[0].data,
-          market2 = value[1].data;
-        let items = [];
-
-        for (const key in market1) {
-          items.push({
-            item: market1[key].item,
-            localized: market1[key].localized,
-            price: {
-              server1: parseInt(market1[key].price),
-              server2: parseInt(market2[key].price),
-            },
-          });
+        var s1 = {
+          information: value[0],
+          market: value[1].data,
+          copAmount: reallifeRPG.getCopAmount(value[0]),
+        };
+        var s2 = {
+          information: value[2],
+          market: value[3].data,
+          copAmount: reallifeRPG.getCopAmount(value[2]),
+        };
+        var bonus = {
+          s1: itemBonus.filter((boni) => boni.amount === s1.copAmount)[0].multiplier,
+          s2: itemBonus.filter((boni) => boni.amount === s2.copAmount)[0].multiplier,
+        };
+        var items = [];
+        for (const key in s1.market) {
+          if (illegalItems.includes(s1.market[key].item)) {
+            items.push({
+              item: s1.market[key].item,
+              localized: s1.market[key].localized,
+              price: {
+                server1: parseInt(s1.market[key].price * bonus.s1),
+                server2: parseInt(s2.market[key].price * bonus.s2),
+              },
+            });
+          } else {
+            items.push({
+              item: s1.market[key].item,
+              localized: s1.market[key].localized,
+              price: {
+                server1: parseInt(s1.market[key].price),
+                server2: parseInt(s2.market[key].price),
+              },
+            });
+          }
         }
         this.setState({ data: items });
       })
@@ -80,6 +137,10 @@ export default class MarketItem extends React.Component {
           showsVerticalScrollIndicator={true}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
         >
+          <CustomAlert
+            bg={Colors.noticeBackground}
+            msg="Der Bonus für illegale Items wird automatisch berechnet!"
+          />
           {data.map((item, index) => {
             return (
               <Item key={index}>

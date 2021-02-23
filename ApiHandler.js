@@ -41,6 +41,19 @@ class ReallifeAPI {
     return data;
   }
 
+  async getServer(serverId) {
+    const response = await fetch("https://api.realliferpg.de/v1/servers/");
+    const json = await response.json();
+    const serverData = json.data.filter((server) => server.Id == serverId);
+    return serverData;
+  }
+
+  getCopAmount(serverInformation) {
+    return serverInformation.length === 1
+      ? serverInformation[0].Side.Cops.filter((player) => player.includes("[C")).length
+      : 0;
+  }
+
   /**
    * Get the current market prices from an (online or offline) server
    * @param {number} serverId
