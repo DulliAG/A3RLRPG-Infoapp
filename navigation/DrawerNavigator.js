@@ -7,7 +7,6 @@ import ProfileScreen from "../screens/ProfileScreen";
 import StoreScreen from "../screens/StoresScreen";
 import MarketScreen from "../screens/MarketScreen";
 import CBSScreen from "../screens/CommunityBuildingScreen";
-import ContactScreen from "../screens/ContactScreen";
 import ChangelogScreen from "../screens/ChangelogScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 // Components
@@ -52,12 +51,6 @@ const routes = [
     title: "CBS",
     component: CBSScreen,
     icon: "ios-construct",
-  },
-  {
-    name: "Contacts",
-    title: "Kontaktbuch",
-    component: ContactScreen,
-    icon: "ios-contacts",
   },
   {
     name: "Changelogs",
