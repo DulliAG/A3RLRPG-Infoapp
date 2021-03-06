@@ -3,14 +3,12 @@ import { ReallifeAPI } from "./ApiHandler";
 import { NotifyHandler } from "./NotifyHandler";
 // Components
 import { StatusBar } from "expo-status-bar";
-import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import DrawerNavigator from "./navigation/DrawerNavigator";
 import { Platform, StyleSheet, View } from "react-native";
 import Settings from "./components/Settings";
 
-const reallifeRPG = new ReallifeAPI();
-const notifyHandler = new NotifyHandler();
+const RLRPG_API = new ReallifeAPI();
 
 export default class App extends Component {
   openSettings = () => this.settingsRef.open();
@@ -39,8 +37,6 @@ export default class App extends Component {
   }
 
   render() {
-    const Stack = createStackNavigator();
-
     return (
       <View style={styles.container}>
         {Platform.OS === "ios" && <StatusBar barStyle="dark-content" />}

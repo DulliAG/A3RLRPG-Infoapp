@@ -1,6 +1,5 @@
 import * as React from "react";
 import Colors from "../constants/Colors";
-import { createStackNavigator } from "@react-navigation/stack";
 // Routes
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
@@ -16,12 +15,11 @@ import {
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { TouchableWithoutFeedback } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 const Drawer = createDrawerNavigator();
 const INITIAL_ROUTE_NAME = "Home";
-const routes = [
+const Routes = [
   {
     name: "Home",
     title: "Serverliste",
@@ -74,16 +72,14 @@ const CustomDrawerComponents = (props) => {
   );
 };
 
-export default function DrawerNavigator({ navigation, route }) {
-  const Stack = createStackNavigator();
-
+export default function DrawerNavigator(props) {
   return (
     <Drawer.Navigator
       initialRouteName={INITIAL_ROUTE_NAME}
       drawerContent={(props) => <CustomDrawerComponents {...props} />}
       drawerStyle={{ width: "75%" }}
     >
-      {routes.map((route, index) => {
+      {Routes.map((route, index) => {
         return (
           <Drawer.Screen
             key={index}
@@ -97,65 +93,26 @@ export default function DrawerNavigator({ navigation, route }) {
                   color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
                 />
               ),
+              title: route.title,
+              headerShown: true,
+              title: route.title,
+              headerStyle: {
+                backgroundColor: "#fff",
+                elevation: 0, // for android
+                shadowOpacity: 0, // for iOS
+                borderBottomWidth: 1,
+                borderBottomColor: "#ededed",
+              },
+              headerTintColor: "black",
+              headerTitleStyle: {
+                fontWeight: "bold",
+                flexGrow: 1,
+                alignSelf: "center",
+                marginLeft: -55,
+                // marginRight: -55, // required to be in center bcause of the headerRight-element
+              },
             }}
-            component={() => {
-              return (
-                <Stack.Navigator>
-                  <Stack.Screen
-                    name={route.name}
-                    component={route.component}
-                    options={({ navigation }) => ({
-                      title: route.title,
-                      headerStyle: {
-                        backgroundColor: "#fff",
-                        elevation: 0, // for android
-                        shadowOpacity: 0, // for iOS
-                        borderBottomWidth: 1,
-                        borderBottomColor: "#ededed",
-                      },
-                      headerTintColor: "black",
-                      headerTitleStyle: {
-                        fontWeight: "bold",
-                        flexGrow: 1,
-                        alignSelf: "center",
-                        marginLeft: -55,
-                        // marginRight: -55, // required to be in center bcause of the headerRight-element
-                      },
-                      headerLeft: () => {
-                        return (
-                          <TouchableWithoutFeedback
-                            onPress={() => {
-                              navigation.toggleDrawer();
-                            }}
-                          >
-                            <Ionicons
-                              style={{ marginLeft: 28 }}
-                              name="ios-menu"
-                              size={28}
-                              color="black"
-                            />
-                          </TouchableWithoutFeedback>
-                        );
-                      },
-                      // headerRight: () => (
-                      //   <TouchableWithoutFeedback
-                      //     onPress={() => {
-                      //       console.log("Open settings");
-                      //     }}
-                      //   >
-                      //     <Ionicons
-                      //       style={{ marginRight: 25 }}
-                      //       name="ios-settings"
-                      //       size={28}
-                      //       color="black"
-                      //     />
-                      //   </TouchableWithoutFeedback>
-                      // ),
-                    })}
-                  />
-                </Stack.Navigator>
-              );
-            }}
+            component={route.component}
           />
         );
       })}
