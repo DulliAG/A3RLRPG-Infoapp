@@ -53,6 +53,10 @@ class NotifyHandler {
     return token;
   }
 
+  async getExpoPushToken() {
+    return (await Notifications.getExpoPushTokenAsync()).data;
+  }
+
   async getAllScheduledNotifications() {
     return await Notifications.getAllScheduledNotificationsAsync();
   }

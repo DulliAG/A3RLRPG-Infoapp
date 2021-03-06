@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { ReallifeAPI } from "./ApiHandler";
-import { NotifyHandler } from "./NotifyHandler";
 // Components
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
@@ -14,26 +13,8 @@ export default class App extends Component {
   openSettings = () => this.settingsRef.open();
 
   async componentDidMount() {
-    // Check is the ReallifeRPG API-Key was set
-    const apiKey = await reallifeRPG.getApiKey();
-
-    // TODO Check if this works
-    if (apiKey !== null) {
-      // Check if the expire date matches the notification date
-      // const scheduledNotifications = await notifyHandler.getAllScheduledNotifications();
-      // scheduledNotifications.forEach((notification) => {
-      //   const creatorApiKey = notification.content.data.creatorKey; // Should return the Reallife API-Key
-      //   const notificationIdentifier = notification.identifier;
-      //   if (creatorApiKey === apiKey) {
-      //     // TODO Check if the scheduled time still matches the house expiration
-      //   } else {
-      //     notifyHandler.cancelScheduledNotification(notificationIdentifier);
-      //   }
-      // });
-    } else {
-      this.openSettings();
-      // notifyHandler.cancelAllScheduledNotifications();
-    }
+    const ApiKey = await RLRPG_API.getApiKey();
+    if (ApiKey == null || ApiKey == "") this.openSettings();
   }
 
   render() {
