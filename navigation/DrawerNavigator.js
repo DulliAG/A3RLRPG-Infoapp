@@ -1,5 +1,6 @@
 import * as React from "react";
 import Colors from "../constants/Colors";
+import { expo } from "../app.json";
 // Routes
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
@@ -9,11 +10,11 @@ import CBSScreen from "../screens/CommunityBuildingScreen";
 import ChangelogScreen from "../screens/ChangelogScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 // Components
+import { View, Text, Image, StyleSheet } from "react-native";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
-  DrawerItem,
 } from "@react-navigation/drawer";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -65,18 +66,55 @@ const Routes = [
 ];
 
 const CustomDrawerComponents = (props) => {
+  const { avatar, username, playerId } = props;
   return (
-    <DrawerContentScrollView {...props} style={{ paddingTop: 20 }}>
-      <DrawerItemList {...props} />
-    </DrawerContentScrollView>
+    <>
+      <DrawerContentScrollView {...props} style={{ paddingTop: 20 }}>
+        <View style={styles.drawerContent}>
+          <View style={styles.userInfoSection}>
+            <View style={{ flexDirection: "row", marginTop: 15 }}>
+              <Image
+                source={{
+                  uri: avatar,
+                }}
+                style={{ width: 60, height: 60, borderRadius: 8 }}
+              />
+              <View
+                style={{
+                  marginLeft: 8,
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={styles.username}>{username}</Text>
+                <Text style={styles.playerId}>{playerId}</Text>
+              </View>
+            </View>
+          </View>
+
+          <DrawerItemList {...props} />
+        </View>
+      </DrawerContentScrollView>
+      <View style={styles.bottomDrawerSection}>
+        <Text>Version: {expo.version}</Text>
+      </View>
+    </>
   );
 };
 
 export default function DrawerNavigator(props) {
+  const { avatar, username, playerId } = props;
   return (
     <Drawer.Navigator
       initialRouteName={INITIAL_ROUTE_NAME}
-      drawerContent={(props) => <CustomDrawerComponents {...props} />}
+      drawerContent={(props) => (
+        <CustomDrawerComponents
+          avatar={avatar}
+          username={username}
+          playerId={playerId}
+          {...props}
+        />
+      )}
       drawerStyle={{ width: "75%" }}
     >
       {Routes.map((route, index) => {
@@ -119,3 +157,31 @@ export default function DrawerNavigator(props) {
     </Drawer.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  drawerContent: {
+    flex: 1,
+  },
+  userInfoSection: {
+    paddingHorizontal: 10,
+    marginBottom: 8,
+  },
+  username: {
+    fontSize: 16,
+    marginTop: 3,
+    marginBottom: 4,
+    fontWeight: "bold",
+  },
+  playerId: {
+    fontSize: 15,
+    lineHeight: 14,
+    color: "#ccc",
+  },
+  bottomDrawerSection: {
+    alignItems: "center",
+    paddingTop: 8,
+    marginBottom: 8,
+    borderTopColor: "#ededed",
+    borderTopWidth: 1,
+  },
+});
