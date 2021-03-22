@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Component } from "react";
 import { expo } from "../app.json";
 // Components
 import { View, StyleSheet, TouchableOpacity, Text, Linking, TextInput } from "react-native";
@@ -7,79 +7,84 @@ import { ReallifeAPI } from "../ApiHandler";
 
 const reallifeRPG = new ReallifeAPI();
 
-const SettingsScreen = () => {
-  const [apiKey, setApiKey] = useState();
+export default class SettingsScreen extends Component {
+  constructor() {
+    super();
+    this.state = {
+      apiKey: null,
+    };
+    this.website = "https://dulliag.de";
+    this.issues = "https://github.com/tklein1801/A3RLRPG-Infoapp/";
+  }
 
-  const saveNewKey = async () => {
-    const newKey = apiKey;
-    reallifeRPG.saveApiKey(newKey);
+  saveNewKey = async () => {
+    const { apiKey } = this.state;
+    reallifeRPG.saveApiKey(apiKey);
+    // TODO Display an toast to show the user that the key was saved successfully
     // this.close();
     // We're gonna delete all scheduled push notifications because we're now selecting data from a new player
     // notifyHandler.cancelAllScheduledNotification();
   };
 
-  useEffect(async () => {
-    // setState({ apiKey: await reallifeRPG.getApiKey() });
-    setApiKey(await reallifeRPG.getApiKey());
-  }, []);
+  async componentDidMount() {
+    this.setState({ apiKey: await reallifeRPG.getApiKey() });
+  }
 
-  return (
-    <View style={styles.container}>
-      <ScrollView horizontal={false} showsVerticalScrollIndicator={true}>
-        <View style={styles.section}>
-          <Text style={styles.heading}>Informationen</Text>
-          <Text style={styles.label}>
-            Name: <Text style={styles.text}>{expo.name}</Text>
-          </Text>
-          <Text style={styles.label}>
-            Webseite:{" "}
-            <Text style={styles.text} onPress={() => Linking.openURL("https://dulliag.de/")}>
-              https://dulliag.de
+  render() {
+    const { apiKey } = this.state;
+    return (
+      <View style={styles.container}>
+        <ScrollView horizontal={false} showsVerticalScrollIndicator={true}>
+          <View style={styles.section}>
+            <Text style={styles.heading}>Informationen</Text>
+            <Text style={styles.label}>
+              Name: <Text style={styles.text}>{expo.name}</Text>
             </Text>
-          </Text>
-          <Text style={styles.label}>
-            Quellcode:{" "}
-            <Text
-              style={styles.text}
-              onPress={() => Linking.openURL("https://github.com/tklein1801/A3RLRPG-Infoapp/")}
-            >
-              GitHub
+            <Text style={styles.label}>
+              Webseite:{" "}
+              <Text style={styles.text} onPress={() => Linking.openURL(this.website)}>
+                {this.website}
+              </Text>
             </Text>
-          </Text>
-          <Text style={styles.label}>
-            Version: <Text style={styles.text}>{expo.version}</Text>
-          </Text>
-        </View>
+            <Text style={styles.label}>
+              Quellcode:{" "}
+              <Text style={styles.text} onPress={() => Linking.openURL(this.issues)}>
+                GitHub
+              </Text>
+            </Text>
+            <Text style={styles.label}>
+              Version: <Text style={styles.text}>{expo.version}</Text>
+            </Text>
+          </View>
 
-        <View style={styles.section}>
-          <View style={styles.formControl}>
-            <Text style={styles.heading}>API-Key</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={(value) => setApiKey(value)}
-              placeholder={"API-Key eingeben"}
-              value={apiKey}
-            />
-            <View
-              style={{
-                width: "100%",
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                marginTop: 10,
-              }}
-            >
-              <TouchableOpacity activeOpacity={0.9} onPress={saveNewKey}>
-                <Text style={{ ...styles.button, ...styles.save }}>Speichern</Text>
-              </TouchableOpacity>
+          <View style={styles.section}>
+            <View style={styles.formControl}>
+              <Text style={styles.heading}>API-Key</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={(value) => this.setState({ apiKey: value })}
+                placeholder={"API-Key eingeben"}
+                value={apiKey}
+              />
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  marginTop: 10,
+                }}
+              >
+                <TouchableOpacity activeOpacity={0.9} onPress={this.saveNewKey}>
+                  <Text style={{ ...styles.button, ...styles.save }}>Speichern</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
-    </View>
-  );
-};
-
-export default SettingsScreen;
+        </ScrollView>
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {

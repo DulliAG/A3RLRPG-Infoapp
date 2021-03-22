@@ -24,7 +24,13 @@ export default class ChangelogScreen extends Component {
 
   _renderAccordion = (changelog) => {
     const { version, release_at } = changelog;
-    return <ChangelogAccordion title={`Update ${version} • ${release_at}`} data={changelog} />;
+    return (
+      <ChangelogAccordion
+        key={changelog.id}
+        title={`Update ${version} • ${release_at}`}
+        data={changelog}
+      />
+    );
   };
 
   async componentDidMount() {
