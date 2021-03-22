@@ -12,13 +12,13 @@ const INITIAL_ROUTE_NAME = "Profile";
 
 const ProfileScreen = () => {
   const routes = [
-    { name: "Profile", title: "Profil", component: Profile, icon: "ios-contact" },
-    { name: "Vehicles", title: "Fahrzeuge", component: Vehicles, icon: "ios-car" },
+    { name: "Profile", title: "Profil", component: Profile, icon: "account-circle-outline" },
+    { name: "Vehicles", title: "Fahrzeuge", component: Vehicles, icon: "garage-open" },
     {
       name: "Houses",
       title: "Häuser",
       component: House,
-      icon: "ios-home",
+      icon: "home-city-outline",
     },
   ];
 
@@ -37,6 +37,7 @@ const ProfileScreen = () => {
       {routes.map((route) => {
         return (
           <BottomTab.Screen
+            key={route.name}
             name={route.name}
             component={route.component}
             options={{

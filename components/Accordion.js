@@ -9,7 +9,7 @@ import {
   Platform,
   UIManager,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 class ChangelogAccordion extends Component {
   constructor() {
@@ -41,7 +41,11 @@ class ChangelogAccordion extends Component {
       <View>
         <TouchableOpacity style={styles.row} activeOpacity={0.9} onPress={this.toggle}>
           <Text style={styles.title}>{title}</Text>
-          <Ionicons name={expanded ? "ios-arrow-up" : "ios-arrow-down"} size={24} color="#333" />
+          <MaterialCommunityIcons
+            name={expanded ? "arrow-up-circle-outline" : "arrow-down-circle-outline"}
+            size={24}
+            color="#333"
+          />
         </TouchableOpacity>
 
         {expanded && (

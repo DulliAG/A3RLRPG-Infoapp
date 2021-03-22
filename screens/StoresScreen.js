@@ -19,13 +19,13 @@ const StoreScreen = () => {
       name: "Vehicles",
       title: "Fahrzeuge",
       component: VehicleStore,
-      icon: "ios-car",
+      icon: "car-sports",
     },
     {
       name: "Items",
       title: "Gegenstände",
       component: ItemStore,
-      icon: "ios-cart",
+      icon: "cart-outline",
     },
   ];
 

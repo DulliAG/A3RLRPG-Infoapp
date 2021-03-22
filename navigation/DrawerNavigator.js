@@ -15,7 +15,7 @@ import {
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Drawer = createDrawerNavigator();
 const INITIAL_ROUTE_NAME = "Home";
@@ -24,43 +24,43 @@ const Routes = [
     name: "Home",
     title: "Serverliste",
     component: HomeScreen,
-    icon: "ios-home",
+    icon: "home-outline",
   },
   {
     name: "Profile",
     title: "Profil",
     component: ProfileScreen,
-    icon: "ios-contact",
+    icon: "account-circle-outline",
   },
   {
     name: "Stores",
     title: "Händler",
     component: StoreScreen,
-    icon: "md-cart",
+    icon: "cart-outline",
   },
   {
     name: "Market",
     title: "Markt",
     component: MarketScreen,
-    icon: "ios-trending-up",
+    icon: "trending-up",
   },
   {
     name: "CBS",
     title: "CBS",
     component: CBSScreen,
-    icon: "ios-construct",
+    icon: "hammer",
   },
   {
     name: "Changelogs",
     title: "Changelogs",
     component: ChangelogScreen,
-    icon: "ios-journal",
+    icon: "format-list-bulleted",
   },
   {
     name: "Settings",
     title: "Einstellungen",
     component: SettingsScreen,
-    icon: "ios-settings",
+    icon: "settings-outline",
   },
 ];
 
@@ -87,7 +87,7 @@ export default function DrawerNavigator(props) {
             options={{
               drawerLabel: route.title,
               drawerIcon: ({ focused }) => (
-                <Ionicons
+                <MaterialCommunityIcons
                   name={route.icon}
                   size={24}
                   color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
