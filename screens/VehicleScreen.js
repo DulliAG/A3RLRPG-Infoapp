@@ -10,7 +10,7 @@ import NoKey from "../components/NoKey";
 
 const reallifeRPG = new ReallifeAPI();
 
-export default class Vehicles extends Component {
+export default class VehicleScreen extends Component {
   constructor() {
     super();
     this.state = {
@@ -21,12 +21,12 @@ export default class Vehicles extends Component {
   }
 
   _renderVehicleData = (vehicle) => {
-    const vehiclePlate = vehicle.plate,
+    var status, fraction;
+    var vehiclePlate = vehicle.plate,
       formattedPlate = `${vehiclePlate.substring(0, 2)} ${vehiclePlate.substring(
         2,
         4
       )} ${vehiclePlate.substring(4, 8)}`;
-    let status, fraction;
     // Vehicle status
     if (vehicle.active === 1) {
       status = <Badge style={{ backgroundColor: "#ffc107" }}>Ausgeparkt</Badge>;
@@ -200,9 +200,9 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   item: {
-    width: "90%",
+    width: "95%",
     textAlign: "center",
-    marginLeft: "5%",
+    marginLeft: "2.5%",
     paddingHorizontal: 20,
     paddingVertical: 8,
     marginTop: 5,
