@@ -4,7 +4,10 @@ import { expo } from "../app.json";
 // Routes
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import VehicleScreen from "../screens/VehicleScreen";
+import HouseScreen from "../screens/HouseScreen";
 import StoreScreen from "../screens/StoresScreen";
+import ContactScreen from "../screens/ContactScreen";
 import MarketScreen from "../screens/MarketScreen";
 import CBSScreen from "../screens/CommunityBuildingScreen";
 import ChangelogScreen from "../screens/ChangelogScreen";
@@ -16,7 +19,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Drawer = createDrawerNavigator();
 const INITIAL_ROUTE_NAME = "Home";
@@ -25,7 +28,7 @@ const Routes = [
     name: "Home",
     title: "Serverliste",
     component: HomeScreen,
-    icon: "home-outline",
+    icon: "server",
   },
   {
     name: "Profile",
@@ -34,10 +37,28 @@ const Routes = [
     icon: "account-circle-outline",
   },
   {
+    name: "Vehicle",
+    title: "Fahrzeuge",
+    component: VehicleScreen,
+    icon: "car-pickup",
+  },
+  {
+    name: "House",
+    title: "Häuser",
+    component: HouseScreen,
+    icon: "home-city-outline",
+  },
+  {
     name: "Stores",
     title: "Händler",
     component: StoreScreen,
     icon: "cart-outline",
+  },
+  {
+    name: "Contact",
+    title: "Kontakte",
+    component: ContactScreen,
+    icon: "contacts",
   },
   {
     name: "Market",
@@ -96,7 +117,7 @@ const CustomDrawerComponents = (props) => {
         </View>
       </DrawerContentScrollView>
       <View style={styles.bottomDrawerSection}>
-        <Text>Version: {expo.version}</Text>
+        <Text style={{ color: Colors.tabIconDefault }}>Version: {expo.version}</Text>
       </View>
     </>
   );
