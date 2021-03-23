@@ -18,12 +18,12 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { Modalize } from "react-native-modalize";
 import { TouchableHighlight, TouchableWithoutFeedback } from "react-native-gesture-handler";
-import NoKey from "./NoKey";
+import NoKey from "../components/NoKey";
 
 const reallifeRPG = new ReallifeAPI();
 const notifyHandler = new NotifyHandler();
 
-export default class Houses extends Component {
+export default class HouseScreen extends Component {
   constructor() {
     super();
     this.state = {
@@ -280,7 +280,6 @@ const Label = Styled.Text`
   text-align: center;
   font-weight: bold;
 `;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -295,9 +294,9 @@ const styles = StyleSheet.create({
     width: "35%",
   },
   item: {
-    width: "90%",
+    width: "95%",
     textAlign: "center",
-    marginLeft: "5%",
+    marginLeft: "2.5%",
     paddingHorizontal: 20,
     paddingVertical: 8,
     marginTop: 5,
@@ -307,7 +306,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 });
-
 const modal = StyleSheet.create({
   content: {
     padding: 20,
