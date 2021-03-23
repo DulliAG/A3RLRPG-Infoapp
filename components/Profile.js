@@ -207,8 +207,8 @@ const Row = Styled.View`
   flex-wrap: wrap;
 `;
 const Card = Styled.View`
-  width: 90%;
-  margin: 18px 5%
+  width: 95%;
+  margin: 18px 2.5%
   padding: 20px;
   background-color: white;
   border-radius: 8px;

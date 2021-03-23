@@ -92,9 +92,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   section: {
-    width: "90%",
+    width: "95%",
     marginTop: 10,
-    marginLeft: "5%",
+    marginLeft: "2.5%",
   },
   formControl: {
     width: "100%",

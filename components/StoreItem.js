@@ -171,9 +171,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   item: {
-    width: "90%",
+    width: "95%",
     textAlign: "center",
-    marginLeft: "5%",
+    marginLeft: "2.5%",
     paddingHorizontal: 20,
     paddingVertical: 8,
     marginTop: 5,

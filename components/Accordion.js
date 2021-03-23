@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     height: 56,
-    paddingHorizontal: "5%",
+    paddingHorizontal: "2.5%",
     backgroundColor: "white",
     borderTopWidth: 0.5,
     borderBottomWidth: 0.5,
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingVertical: 16,
-    paddingHorizontal: "5%",
+    paddingHorizontal: "2.5%",
     backgroundColor: "#f8f9fa",
   },
 });

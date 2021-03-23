@@ -182,7 +182,7 @@ export default class MarketItem extends React.Component {
 const Item = Styled.View`
   flex-direction: row;
   align-items: center;
-  width: 90%;
+  width: 95%;
   margin: 5px auto;
   padding: 5px 10px;
   background-color: #fff;

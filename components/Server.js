@@ -68,7 +68,7 @@ export class ServerList extends React.Component {
                     <Server
                       id={server.Id}
                       width={
-                        server.length > 1 ? Layout.window.width * 0.85 : Layout.window.width * 0.9
+                        server.length > 1 ? Layout.window.width * 0.85 : Layout.window.width * 0.95
                       }
                       name={server.Servername}
                       online={server.Playercount}
@@ -153,7 +153,7 @@ export class PlayerList extends React.Component {
 
     return (
       <View style={{ flex: 1 }}>
-        <ScrollView style={{ paddingHorizontal: "5%" }} showsVerticalScrollIndicator={true}>
+        <ScrollView style={{ paddingHorizontal: "2.5%" }} showsVerticalScrollIndicator={true}>
           <View
             style={{
               flexDirection: "row",
@@ -190,7 +190,7 @@ const InfoContainer = Styled.View`
 
 const Heading = Styled.Text`
   width: 100%;
-  margin-left: 5%;
+  margin-left: 2.5%;
   margin-bottom: 5px;
   font-size: 20px;
   font-weight: bold;
@@ -198,7 +198,7 @@ const Heading = Styled.Text`
 `;
 
 const Card = Styled.View`
-  margin-left: 20px;
+  margin-left: 10px;
   padding: 15px 20px;
   border-radius: 8px;
   background-color: white;

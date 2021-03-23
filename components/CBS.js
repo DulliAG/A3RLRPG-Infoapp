@@ -182,9 +182,9 @@ const ProgressBar = styled.View`
 
 const styles = StyleSheet.create({
   card: {
-    width: "90%",
+    width: "95%",
     marginTop: 16,
-    marginLeft: "5%",
+    marginLeft: "2.5%",
     borderRadius: 8,
     borderTopWidth: 5,
     borderTopColor: Colors.tabIconSelected,
