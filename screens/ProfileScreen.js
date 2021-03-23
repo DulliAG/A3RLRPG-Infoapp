@@ -1,9 +1,9 @@
 import React from "react";
 // Routes
-import Profile from "../components/Profile";
-import Vehicles from "../components/Vehicles";
-import House from "../components/Houses";
+import BankAccountScreen from "./BankAccountScreen";
+import CompanyScreen from "./CompanyScreen";
 // Components
+import Profile from "../components/Profile";
 import TabBarIcon from "../components/TabBarIcon";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -13,13 +13,13 @@ const INITIAL_ROUTE_NAME = "Profile";
 const ProfileScreen = () => {
   const routes = [
     { name: "Profile", title: "Profil", component: Profile, icon: "account-circle-outline" },
-    { name: "Vehicles", title: "Fahrzeuge", component: Vehicles, icon: "garage-open" },
     {
-      name: "Houses",
-      title: "Häuser",
-      component: House,
-      icon: "home-city-outline",
+      name: "BankAccounts",
+      title: "Konten",
+      component: BankAccountScreen,
+      icon: "credit-card-outline",
     },
+    { name: "Company", title: "Unternehmen", component: CompanyScreen, icon: "store" },
   ];
 
   return (
