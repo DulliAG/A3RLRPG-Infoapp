@@ -44,6 +44,7 @@ const StoreScreen = () => {
       {routes.map((route) => {
         return (
           <BottomTab.Screen
+            key={route.name}
             name={route.name}
             component={route.component}
             options={{
