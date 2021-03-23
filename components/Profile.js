@@ -30,6 +30,15 @@ export default class Profile extends React.Component {
     this.responseListener = createRef();
   }
 
+  _renderPhoneNumber = (phone) => {
+    return (
+      <ProfileStats key={phone.phone}>
+        <Label>{phone.note !== "default" ? phone.note : "Standardnummer"}</Label>
+        <Content>{phone.phone}</Content>
+      </ProfileStats>
+    );
+  };
+
   refresh = async () => {
     this.setState({ refreshing: true });
     const apiKey = await reallifeRPG.getApiKey();
@@ -88,7 +97,7 @@ export default class Profile extends React.Component {
               <Text>Run Push Notification</Text>
             </TouchableOpacity> */
 
-    if (loading && !refreshing) {
+    if (loading || refreshing) {
       return <Spinner size="large" />;
     } else {
       // If profile equals null the key wasn't set
@@ -110,7 +119,8 @@ export default class Profile extends React.Component {
                 bg={Colors.tabIconSelected}
               />
             ) : null}
-            <Card>
+
+            <Card style={{ marginTop: 18 }}>
               <AvatarContainer>
                 <Image
                   style={styles.avatar}
@@ -192,6 +202,15 @@ export default class Profile extends React.Component {
                 <Content>{profile.last_seen.date}</Content>
               </ProfileStats>
             </Card>
+
+            <Card>
+              <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 8 }}>
+                Handynummern
+              </Text>
+              {profile.phones.map((phoneNumber) => {
+                return this._renderPhoneNumber(phoneNumber);
+              })}
+            </Card>
           </ScrollView>
         );
       } else {
@@ -208,7 +227,9 @@ const Row = Styled.View`
 `;
 const Card = Styled.View`
   width: 95%;
-  margin: 18px 2.5%
+  margin-right: 2.5%;
+  margin-left: 2.5%;
+  margin-bottom: 18px;
   padding: 20px;
   background-color: white;
   border-radius: 8px;
