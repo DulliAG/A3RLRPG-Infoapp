@@ -31,7 +31,7 @@ export default class CompanyScreen extends Component {
             />
             <Text>{company.bank_1}</Text>
           </View>
-          <View style={[styles.contactInformation, styles.row]}>
+          <View style={[styles.companyInformation, styles.row]}>
             <MaterialCommunityIcons
               style={styles.companyIcon}
               name="credit-card-outline"
@@ -45,7 +45,7 @@ export default class CompanyScreen extends Component {
             <MaterialCommunityIcons style={styles.companyIcon} name="cellphone-android" size={24} />
             <Text>{company.phone}</Text>
           </View>
-          <View style={[styles.contactInformation, styles.row]}>
+          <View style={[styles.companyInformation, styles.row]}>
             <MaterialCommunityIcons style={styles.companyIcon} name="clock-outline" size={24} />
             <Text>{company.created_at}</Text>
           </View>
@@ -68,9 +68,11 @@ export default class CompanyScreen extends Component {
     const apiKey = await reallifeRPG.getApiKey();
     if (apiKey !== null && apiKey !== "") {
       const profile = await reallifeRPG.getProfile(apiKey);
-      var companyList = profile.data[0].company_owned.filter((company) => {
+      var ownedCompanies = profile.data[0].company_owned;
+      var companyList = ownedCompanies.filter((company) => {
         return company.disabled == 0;
       });
+      console.log(companyList);
       this.setState({ loading: false, companies: companyList, apiKey: apiKey });
     } else {
       this.setState({ loading: false, apiKey: false });
@@ -93,7 +95,7 @@ export default class CompanyScreen extends Component {
             >
               {companies.length > 0 ? (
                 companies.map((company) => {
-                  return company.disabled == 2 && this._renderCompany(company);
+                  return this._renderCompany(company);
                 })
               ) : (
                 <View style={styles.companyCard}>
