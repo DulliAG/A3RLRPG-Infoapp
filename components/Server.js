@@ -58,6 +58,8 @@ export class ServerList extends React.Component {
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
             >
               {server.map((server, index) => {
+                var width =
+                  server.length > 1 ? Layout.window.width * 0.95 : Layout.window.width * 0.8;
                 return (
                   <TouchableWithoutFeedback
                     key={index}
@@ -67,9 +69,7 @@ export class ServerList extends React.Component {
                   >
                     <Server
                       id={server.Id}
-                      width={
-                        server.length > 1 ? Layout.window.width * 0.85 : Layout.window.width * 0.95
-                      }
+                      width={width}
                       name={server.Servername}
                       online={server.Playercount}
                       slots={server.Slots}
