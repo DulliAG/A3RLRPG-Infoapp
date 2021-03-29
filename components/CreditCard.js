@@ -1,25 +1,34 @@
 import React from "react";
 import RLRPG_LOGO from "../assets/images/rlrpg-logo.png";
 // Components
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
+import Text from "./CustomText";
 
 const CreditCard = (props) => {
   const { company, iban, owner, balance } = props;
   return (
     <View style={[styles.creditCard, company ? styles.company : styles.private]}>
-      <Text style={styles.bankName}>NH-Bank</Text>
+      <Text type="Bold" style={styles.bankName}>
+        NH-Bank
+      </Text>
       <Image style={styles.logo} source={RLRPG_LOGO} />
       <View style={styles.formGroup}>
-        <Text style={styles.label}>IBAN</Text>
+        <Text type="SemiBold" style={styles.label}>
+          IBAN
+        </Text>
         <Text style={styles.field}>{iban}</Text>
       </View>
       <View style={{ ...styles.row, justifyContent: "space-between", marginTop: 16 }}>
         <View style={{ ...styles.formGroup, width: "55%" }}>
-          <Text style={styles.label}>Inhaber</Text>
+          <Text type="SemiBold" style={styles.label}>
+            Inhaber
+          </Text>
           <Text style={styles.field}>{owner}</Text>
         </View>
         <View style={{ ...styles.formGroup, width: "40%" }}>
-          <Text style={styles.label}>Kontostand</Text>
+          <Text type="SemiBold" style={styles.label}>
+            Kontostand
+          </Text>
           <Text style={styles.field}>{balance}</Text>
         </View>
       </View>
@@ -50,7 +59,6 @@ const styles = StyleSheet.create({
   },
   bankName: {
     marginBottom: 12,
-    fontWeight: "bold",
     fontSize: 22,
     color: "#fff",
   },
@@ -61,7 +69,6 @@ const styles = StyleSheet.create({
   },
   formGroup: {},
   label: {
-    fontWeight: "bold",
     fontSize: 14,
     color: "#fff",
   },

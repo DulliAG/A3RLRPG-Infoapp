@@ -3,11 +3,69 @@ import { ReallifeAPI } from "../ApiHandler";
 import Layout from "../constants/Layout";
 import Styled from "styled-components";
 // Components
-import { StyleSheet, View, Text, RefreshControl, ToastAndroid, Alert } from "react-native";
+import { StyleSheet, View, RefreshControl, ToastAndroid } from "react-native";
+import Text from "./CustomText";
 import { ScrollView, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import Spinner from "../components/Spinner";
 
 const reallifeRPG = new ReallifeAPI();
+
+const Server = (props) => {
+  const { id, name, width, online, slots, sides } = props;
+  if (id <= 3) {
+    return (
+      <Card key={name} style={{ width: width }}>
+        <View>
+          <Text type="Bold" style={styles.servername}>
+            {name}
+          </Text>
+          <Text type="Bold" style={styles.online}>
+            Online: {online} / {slots}
+          </Text>
+        </View>
+        <View style={styles.fractionContainer}>
+          <View style={styles.fractionCard}>
+            <Text type="SemiBold">Zivilisten: </Text>
+            <Text>{sides.civ}</Text>
+          </View>
+
+          <View style={styles.fractionCard}>
+            <Text type="SemiBold">Polizei: </Text>
+            <Text>{sides.cop}</Text>
+          </View>
+
+          <View style={styles.fractionCard}>
+            <Text type="SemiBold">Medic: </Text>
+            <Text>{sides.medic}</Text>
+          </View>
+
+          <View style={styles.fractionCard}>
+            <Text type="SemiBold">RAC: </Text>
+            <Text>{sides.rac}</Text>
+          </View>
+        </View>
+      </Card>
+    );
+  } else {
+    return (
+      <Card key={name}>
+        <View>
+          <Text type="Bold" style={styles.servername}>
+            {name}
+          </Text>
+          <Text type="SemiBold" style={styles.online}>
+            Online: {online} / {slots}
+          </Text>
+        </View>
+      </Card>
+    );
+  }
+};
+
+const Player = (props) => {
+  const { playername } = props;
+  return <Text style={styles.item}>{playername}</Text>;
+};
 
 export class ServerList extends React.Component {
   constructor() {
@@ -51,7 +109,9 @@ export class ServerList extends React.Component {
       return (
         <View style={{ flex: 1 }}>
           <ServerContainer>
-            <Heading>Serverliste</Heading>
+            <Text type="Bold" style={styles.heading}>
+              Serverliste
+            </Text>
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}
@@ -59,7 +119,7 @@ export class ServerList extends React.Component {
             >
               {server.map((server, index) => {
                 var width =
-                  server.length > 1 ? Layout.window.width * 0.95 : Layout.window.width * 0.8;
+                  server.length > 1 ? Layout.window.width * 0.8 : Layout.window.width * 0.96;
                 return (
                   <TouchableWithoutFeedback
                     key={index}
@@ -86,61 +146,12 @@ export class ServerList extends React.Component {
             </ScrollView>
           </ServerContainer>
           <InfoContainer style={{ flex: 1, marginTop: 10 }}>
-            <Heading>Spielerliste</Heading>
+            <Text type="Bold" style={styles.heading}>
+              Spielerliste
+            </Text>
             <PlayerList players={selectedServer.Players} />
           </InfoContainer>
         </View>
-      );
-    }
-  }
-}
-
-export class Server extends React.Component {
-  render() {
-    const { id, name, width, online, slots, sides } = this.props;
-
-    if (id <= 3) {
-      return (
-        <Card key={name} style={{ width: width }}>
-          <View>
-            <Servername>{name}</Servername>
-            <Online>
-              Online: {online} / {slots}
-            </Online>
-          </View>
-          <View style={styles.fractionContainer}>
-            <View style={styles.fractionCard}>
-              <Strong>Zivilisten: </Strong>
-              <Text>{sides.civ}</Text>
-            </View>
-
-            <View style={styles.fractionCard}>
-              <Strong>Polizei: </Strong>
-              <Text>{sides.cop}</Text>
-            </View>
-
-            <View style={styles.fractionCard}>
-              <Strong>Medic: </Strong>
-              <Text>{sides.medic}</Text>
-            </View>
-
-            <View style={styles.fractionCard}>
-              <Strong>RAC: </Strong>
-              <Text>{sides.rac}</Text>
-            </View>
-          </View>
-        </Card>
-      );
-    } else {
-      return (
-        <Card key={name}>
-          <View>
-            <Servername>{name}</Servername>
-            <Online>
-              Online: {online} / {slots}
-            </Online>
-          </View>
-        </Card>
       );
     }
   }
@@ -164,11 +175,7 @@ export class PlayerList extends React.Component {
           >
             {players.length >= 1 ? (
               players.map((player) => {
-                return (
-                  <Text key={player} style={styles.item}>
-                    {player}
-                  </Text>
-                );
+                return <Player key={player} playername={player} />;
               })
             ) : (
               <Text style={{ ...styles.item }}>Keine Spieler gefunden</Text>
@@ -188,15 +195,6 @@ const InfoContainer = Styled.View`
   margin-top: 10px;
 `;
 
-const Heading = Styled.Text`
-  width: 100%;
-  margin-left: 2.5%;
-  margin-bottom: 5px;
-  font-size: 20px;
-  font-weight: bold;
-  color: black;
-`;
-
 const Card = Styled.View`
   margin-left: 10px;
   padding: 15px 20px;
@@ -206,22 +204,21 @@ const Card = Styled.View`
   border-color: #2f95dc;
 `;
 
-const Servername = Styled.Text`
-  font-size: 20px;
-  font-weight: bold;
-  color: black;
-`;
-
-const Strong = Styled.Text`
-  font-weight: bold;
-`;
-
-const Online = Styled.Text`
-  font-size: 15px;
-  font-weight: bold;
-`;
-
 const styles = StyleSheet.create({
+  heading: {
+    width: "100%",
+    marginLeft: "2.5%",
+    marginBottom: 5,
+    fontSize: 20,
+    color: "#000",
+  },
+  servername: {
+    fontSize: 20,
+    color: "#000",
+  },
+  online: {
+    fontSize: 15,
+  },
   container: {
     flex: 1,
   },

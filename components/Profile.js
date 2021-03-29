@@ -5,7 +5,8 @@ import { NotifyHandler } from "../NotifyHandler";
 import { ReallifeAPI } from "../ApiHandler";
 import Layout from "../constants/Layout";
 // Components
-import { StyleSheet, Text, Image, RefreshControl } from "react-native";
+import { StyleSheet, Image, View, RefreshControl } from "react-native";
+import Text from "../components/CustomText";
 import CustomAlert from "./CustomAlert";
 import Styled from "styled-components";
 import Spinner from "../components/Spinner";
@@ -120,18 +121,20 @@ export default class Profile extends React.Component {
               />
             ) : null}
 
-            <Card style={{ marginTop: 18 }}>
-              <AvatarContainer>
+            <View style={{ ...styles.card, marginTop: 18 }}>
+              <View style={styles.avatarContainer}>
                 <Image
                   style={styles.avatar}
                   source={{
                     uri: profile.avatar_full,
                   }}
                 />
-              </AvatarContainer>
+              </View>
 
-              <Row>
-                <Level>Level {profile.level}</Level>
+              <View style={styles.row}>
+                <Text type="SemiBold" style={styles.level}>
+                  Level {profile.level}
+                </Text>
                 <LevelBar>
                   <LevelProgress
                     style={{
@@ -139,11 +142,16 @@ export default class Profile extends React.Component {
                     }}
                   />
                 </LevelBar>
-              </Row>
+              </View>
 
-              <Row style={{ marginTop: 18 }}>
+              <View style={{ ...styles.row, marginTop: 18 }}>
                 <Text
-                  style={{ width: "100%", textAlign: "center", fontWeight: "bold", fontSize: 16 }}
+                  style={{
+                    width: "100%",
+                    textAlign: "center",
+                    fontFamily: "OpenSans-SemiBold",
+                    fontSize: 16,
+                  }}
                 >
                   Fraktionen
                 </Text>
@@ -161,7 +169,7 @@ export default class Profile extends React.Component {
                   <Ionicons name="ios-construct" size={24} color="black" style={styles.icon} />
                   <Badge>Level {profile.adaclevel}</Badge>
                 </Fraction>
-              </Row>
+              </View>
 
               <ProfileStats style={{ marginTop: 18 }}>
                 <Label>Name</Label>
@@ -201,16 +209,16 @@ export default class Profile extends React.Component {
                 <Label>Zuletzt Online</Label>
                 <Content>{profile.last_seen.date}</Content>
               </ProfileStats>
-            </Card>
+            </View>
 
-            <Card>
-              <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 8 }}>
+            <View style={styles.card}>
+              <Text type="SemiBold" style={{ fontSize: 18, marginBottom: 8 }}>
                 Handynummern
               </Text>
               {profile.phones.map((phoneNumber) => {
                 return this._renderPhoneNumber(phoneNumber);
               })}
-            </Card>
+            </View>
           </ScrollView>
         );
       } else {
@@ -220,32 +228,6 @@ export default class Profile extends React.Component {
   }
 }
 
-const Row = Styled.View`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-`;
-const Card = Styled.View`
-  width: 95%;
-  margin-right: 2.5%;
-  margin-left: 2.5%;
-  margin-bottom: 18px;
-  padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  border-top-width: 5px;
-  border-color: ${Colors.tabIconSelected};
-`;
-const AvatarContainer = Styled.View`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;  
-`;
-const Level = Styled.Text`
-  margin-bottom: 0;  
-  font-weight: bold;
-`;
 const LevelBar = Styled.View`
   width: 100%;
   height: 25px;
@@ -270,6 +252,7 @@ const Badge = Styled.Text`
   width: 75%;
   margin: 0 auto;
   padding: 4px;
+  font-family: "OpenSans-Regular";
   font-size: 14px;
   border-radius: 6px;
   background-color: ${Colors.tabIconSelected};
@@ -282,14 +265,37 @@ const ProfileStats = Styled.View`
 `;
 const Label = Styled.Text`
   margin-bottom: 0;
+  font-family: "OpenSans-SemiBold";
   font-size: 14px;
-  font-weight: bold;
 `;
 const Content = Styled.Text`
-  font-size: 16px;
+  font-family: "OpenSans-Regular";
+  font-size: 14px;
 `;
 
 const styles = StyleSheet.create({
+  row: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  card: {
+    width: "95%",
+    marginRight: "2.5%",
+    marginLeft: "2.5%",
+    marginBottom: 18,
+    padding: 20,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    borderTopWidth: 5,
+    borderColor: Colors.tabIconSelected,
+  },
+  avatarContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
   avatar: {
     width: Layout.window.width * 0.3,
     height: Layout.window.width * 0.3,
@@ -297,6 +303,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 4,
     borderColor: Colors.tabIconSelected,
+  },
+  level: {
+    marginBottom: 0,
   },
   icon: {
     textAlign: "center",

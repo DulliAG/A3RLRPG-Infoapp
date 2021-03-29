@@ -4,15 +4,12 @@ import { ReallifeAPI } from "../ApiHandler";
 // Components
 import Spinner from "../components/Spinner";
 import NoKey from "../components/NoKey";
-import { View, ScrollView, StyleSheet, Text, RefreshControl } from "react-native";
+import { View, ScrollView, StyleSheet, RefreshControl } from "react-native";
+import Text from "../components/CustomText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const reallifeRPG = new ReallifeAPI();
 
-/**
- *
- * @param {object} props
- */
 const Badge = (props) => {
   const { text, backgroundColor } = props;
   return (
@@ -22,10 +19,6 @@ const Badge = (props) => {
   );
 };
 
-/**
- *
- * @param {object} props
- */
 const FuelBar = (props) => {
   const { fuelLevel } = props;
   var radius = fuelLevel == 100 ? 8 : 0;
@@ -102,7 +95,9 @@ export default class VehicleScreen extends Component {
             <View style={styles.tableCell}>{status}</View>
             <View style={styles.tableCell}>{side}</View>
             <View style={styles.tableCell}>
-              <Text style={styles.vehicleName}>{name}</Text>
+              <Text type="SemiBold" style={styles.vehicleName}>
+                {name}
+              </Text>
             </View>
             <View style={styles.tableCell}>
               <Badge text={formattedPlate} backgroundColor={Colors.tabIconSelected} />
@@ -187,7 +182,6 @@ const styles = StyleSheet.create({
   },
   tableCell: { marginHorizontal: 8 },
   vehicleName: {
-    fontWeight: "bold",
     fontSize: 14,
   },
 });
@@ -203,7 +197,7 @@ const badge = StyleSheet.create({
   },
 });
 const fuelBar = StyleSheet.create({
-  container: { width: 100, height: 25, backgroundColor: "#f8f9fa", borderRadius: 8 },
+  container: { width: 100, height: 28, backgroundColor: "#f8f9fa", borderRadius: 8 },
   bar: {
     height: "100%",
     backgroundColor: "#dc3545",

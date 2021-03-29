@@ -3,12 +3,12 @@ import React, { Component } from "react";
 import {
   View,
   TouchableOpacity,
-  Text,
   StyleSheet,
   LayoutAnimation,
   Platform,
   UIManager,
 } from "react-native";
+import Text from "../components/CustomText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 class ChangelogAccordion extends Component {
@@ -40,7 +40,9 @@ class ChangelogAccordion extends Component {
     return (
       <View>
         <TouchableOpacity style={styles.row} activeOpacity={0.9} onPress={this.toggle}>
-          <Text style={styles.title}>{title}</Text>
+          <Text type="SemiBold" style={styles.title}>
+            {title}
+          </Text>
           <MaterialCommunityIcons
             name={expanded ? "arrow-up-circle-outline" : "arrow-down-circle-outline"}
             size={24}
@@ -50,19 +52,31 @@ class ChangelogAccordion extends Component {
 
         {expanded && (
           <View style={styles.contentContainer}>
-            {change_mission.length >= 1 && <Text style={styles.label}>Mission</Text>}
+            {change_mission.length >= 1 && (
+              <Text type="SemiBold" style={styles.label}>
+                Mission
+              </Text>
+            )}
             {change_mission.length >= 1 &&
               change_mission.map((change) => {
                 return this._renderChange(change);
               })}
 
-            {change_map.length >= 1 && <Text style={{ ...styles.label, marginTop: 6 }}>Karte</Text>}
+            {change_map.length >= 1 && (
+              <Text type="SemiBold" style={{ ...styles.label, marginTop: 6 }}>
+                Karte
+              </Text>
+            )}
             {change_map.length >= 1 &&
               change_map.map((change) => {
                 return this._renderChange(change);
               })}
 
-            {change_mod.length >= 1 && <Text style={{ ...styles.label, marginTop: 6 }}>Mod</Text>}
+            {change_mod.length >= 1 && (
+              <Text type="SemiBold" style={{ ...styles.label, marginTop: 6 }}>
+                Mod
+              </Text>
+            )}
             {change_mod.length >= 1 &&
               change_mod.map((change) => {
                 return this._renderChange(change);
@@ -94,12 +108,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 14,
-    fontWeight: "bold",
     color: "black",
   },
   label: {
     fontSize: 14,
-    fontWeight: "bold",
     color: "black",
   },
   contentContainer: {

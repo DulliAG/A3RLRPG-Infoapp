@@ -13,13 +13,14 @@ import CBSScreen from "../screens/CommunityBuildingScreen";
 import ChangelogScreen from "../screens/ChangelogScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 // Components
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Text from "../components/CustomText";
 
 const Drawer = createDrawerNavigator();
 const INITIAL_ROUTE_NAME = "Home";
@@ -107,13 +108,15 @@ const CustomDrawerComponents = (props) => {
                   justifyContent: "center",
                 }}
               >
-                <Text style={styles.username}>{username}</Text>
+                <Text type="SemiBold" style={styles.username}>
+                  {username}
+                </Text>
                 <Text style={styles.playerId}>{playerId}</Text>
               </View>
             </View>
           </View>
 
-          <DrawerItemList {...props} />
+          <DrawerItemList {...props} labelStyle={{ fontFamily: "OpenSans-Regular" }} />
         </View>
       </DrawerContentScrollView>
       <View style={styles.bottomDrawerSection}>
@@ -164,7 +167,7 @@ export default function DrawerNavigator(props) {
               },
               headerTintColor: "black",
               headerTitleStyle: {
-                fontWeight: "bold",
+                fontFamily: "OpenSans-SemiBold",
                 flexGrow: 1,
                 alignSelf: "center",
                 marginLeft: -55,
@@ -189,13 +192,9 @@ const styles = StyleSheet.create({
   },
   username: {
     fontSize: 16,
-    marginTop: 3,
-    marginBottom: 4,
-    fontWeight: "bold",
   },
   playerId: {
     fontSize: 15,
-    lineHeight: 14,
     color: "#ccc",
   },
   bottomDrawerSection: {

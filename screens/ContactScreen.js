@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { ReallifeAPI } from "../ApiHandler";
 // Components
-import { RefreshControl, StyleSheet, View, Text, TextInput } from "react-native";
+import { RefreshControl, StyleSheet, View, TextInput } from "react-native";
+import Text from "../components/CustomText";
 import { ScrollView } from "react-native-gesture-handler";
 import Spinner from "../components/Spinner";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -17,7 +18,9 @@ export default class ContactScreen extends Component {
   _renderContact = (contact) => {
     return (
       <View key={contact.id} style={styles.contactCard}>
-        <Text style={styles.contactName}>{contact.name}</Text>
+        <Text type="SemiBold" style={styles.contactName}>
+          {contact.name}
+        </Text>
         <View style={styles.row}>
           <View style={[styles.contactInformation, styles.row]}>
             <MaterialCommunityIcons style={styles.contactIcon} name="cellphone-android" size={24} />
@@ -89,7 +92,19 @@ export default class ContactScreen extends Component {
                 return this._renderContact(contact);
               })
             ) : (
-              <Text>Keine Kontakte gefunden</Text>
+              <Text
+                type="SemiBold"
+                style={{
+                  textAlign: "center",
+                  backgroundColor: "#fff",
+                  borderRadius: 8,
+                  width: "95%",
+                  marginLeft: "2.5%",
+                  paddingVertical: 8,
+                }}
+              >
+                Keine Kontakte gefunden
+              </Text>
             )}
           </ScrollView>
         </View>
@@ -113,6 +128,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ededed",
     borderRadius: 8,
+    fontFamily: "OpenSans-Regular",
   },
   contactCard: {
     width: "95%",
@@ -125,7 +141,6 @@ const styles = StyleSheet.create({
   contactName: {
     textAlign: "center",
     marginBottom: 4,
-    fontWeight: "bold",
     fontSize: 16,
   },
   row: {

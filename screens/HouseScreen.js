@@ -6,15 +6,8 @@ import { NotifyHandler } from "../NotifyHandler";
 // Components
 import Spinner from "../components/Spinner";
 import CustomAlert from "../components/CustomAlert";
-import {
-  View,
-  ScrollView,
-  StyleSheet,
-  Text,
-  RefreshControl,
-  Linking,
-  ToastAndroid,
-} from "react-native";
+import { View, ScrollView, StyleSheet, RefreshControl, Linking, ToastAndroid } from "react-native";
+import Text from "../components/CustomText";
 import { Ionicons } from "@expo/vector-icons";
 import { Modalize } from "react-native-modalize";
 import { TouchableHighlight, TouchableWithoutFeedback } from "react-native-gesture-handler";

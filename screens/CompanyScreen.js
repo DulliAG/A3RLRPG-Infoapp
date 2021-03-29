@@ -2,12 +2,43 @@ import React, { Component } from "react";
 import { ReallifeAPI } from "../ApiHandler";
 // Components
 import Spinner from "../components/Spinner";
-import CreditCard from "../components/CreditCard";
 import NoKey from "../components/NoKey";
-import { View, StyleSheet, Text, ScrollView, RefreshControl } from "react-native";
+import { View, StyleSheet, ScrollView, RefreshControl } from "react-native";
+import Text from "../components/CustomText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const reallifeRPG = new ReallifeAPI();
+
+const Company = (props) => {
+  const { company } = props;
+  return (
+    <View key={company.id} style={styles.companyCard}>
+      <Text type="SemiBold" style={styles.companyName}>
+        {company.name}
+      </Text>
+      <View style={styles.row}>
+        <View style={[styles.companyInformation, styles.row]}>
+          <MaterialCommunityIcons style={styles.companyIcon} name="credit-card-outline" size={24} />
+          <Text>{company.bank_1}</Text>
+        </View>
+        <View style={[styles.companyInformation, styles.row]}>
+          <MaterialCommunityIcons style={styles.companyIcon} name="credit-card-outline" size={24} />
+          <Text>{company.bank_2}</Text>
+        </View>
+      </View>
+      <View style={styles.row}>
+        <View style={[styles.companyInformation, styles.row]}>
+          <MaterialCommunityIcons style={styles.companyIcon} name="cellphone-android" size={24} />
+          <Text>{company.phone}</Text>
+        </View>
+        <View style={[styles.companyInformation, styles.row]}>
+          <MaterialCommunityIcons style={styles.companyIcon} name="clock-outline" size={24} />
+          <Text>{company.created_at}</Text>
+        </View>
+      </View>
+    </View>
+  );
+};
 
 export default class CompanyScreen extends Component {
   constructor() {
@@ -17,42 +48,6 @@ export default class CompanyScreen extends Component {
       refreshing: false,
     };
   }
-
-  _renderCompany = (company) => {
-    return (
-      <View key={company.id} style={styles.companyCard}>
-        <Text style={styles.companyName}>{company.name}</Text>
-        <View style={styles.row}>
-          <View style={[styles.companyInformation, styles.row]}>
-            <MaterialCommunityIcons
-              style={styles.companyIcon}
-              name="credit-card-outline"
-              size={24}
-            />
-            <Text>{company.bank_1}</Text>
-          </View>
-          <View style={[styles.companyInformation, styles.row]}>
-            <MaterialCommunityIcons
-              style={styles.companyIcon}
-              name="credit-card-outline"
-              size={24}
-            />
-            <Text>{company.bank_2}</Text>
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={[styles.companyInformation, styles.row]}>
-            <MaterialCommunityIcons style={styles.companyIcon} name="cellphone-android" size={24} />
-            <Text>{company.phone}</Text>
-          </View>
-          <View style={[styles.companyInformation, styles.row]}>
-            <MaterialCommunityIcons style={styles.companyIcon} name="clock-outline" size={24} />
-            <Text>{company.created_at}</Text>
-          </View>
-        </View>
-      </View>
-    );
-  };
 
   refresh = async () => {
     this.setState({ refreshing: true });
@@ -95,11 +90,11 @@ export default class CompanyScreen extends Component {
             >
               {companies.length > 0 ? (
                 companies.map((company) => {
-                  return this._renderCompany(company);
+                  return <Company company={company} />;
                 })
               ) : (
                 <View style={styles.companyCard}>
-                  <Text style={{ ...styles.companyName, marginBottom: 0 }}>
+                  <Text type="SemiBold" style={{ ...styles.companyName, marginBottom: 0 }}>
                     Keine Unternehmen gefunden
                   </Text>
                 </View>
@@ -130,7 +125,6 @@ const styles = StyleSheet.create({
   companyName: {
     textAlign: "center",
     marginBottom: 4,
-    fontWeight: "bold",
     fontSize: 18,
   },
   row: {

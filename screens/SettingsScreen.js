@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { expo } from "../app.json";
 // Components
-import { View, StyleSheet, TouchableOpacity, Text, Linking, TextInput } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Linking, TextInput } from "react-native";
+import Text from "../components/CustomText";
 import { ScrollView } from "react-native-gesture-handler";
 import { ReallifeAPI } from "../ApiHandler";
 
@@ -36,30 +37,34 @@ export default class SettingsScreen extends Component {
       <View style={styles.container}>
         <ScrollView horizontal={false} showsVerticalScrollIndicator={true}>
           <View style={styles.section}>
-            <Text style={styles.heading}>Informationen</Text>
-            <Text style={styles.label}>
+            <Text type="SemiBold" style={styles.heading}>
+              Informationen
+            </Text>
+            <Text type="SemiBold" style={styles.label}>
               Name: <Text style={styles.text}>{expo.name}</Text>
             </Text>
-            <Text style={styles.label}>
+            <Text type="SemiBold" style={styles.label}>
               Webseite:{" "}
               <Text style={styles.text} onPress={() => Linking.openURL(this.website)}>
                 {this.website}
               </Text>
             </Text>
-            <Text style={styles.label}>
+            <Text type="SemiBold" style={styles.label}>
               Quellcode:{" "}
               <Text style={styles.text} onPress={() => Linking.openURL(this.issues)}>
                 GitHub
               </Text>
             </Text>
-            <Text style={styles.label}>
+            <Text type="SemiBold" style={styles.label}>
               Version: <Text style={styles.text}>{expo.version}</Text>
             </Text>
           </View>
 
           <View style={styles.section}>
             <View style={styles.formControl}>
-              <Text style={styles.heading}>API-Key</Text>
+              <Text type="SemiBold" style={styles.heading}>
+                API-Key
+              </Text>
               <TextInput
                 style={styles.input}
                 onChangeText={(value) => this.setState({ apiKey: value })}
@@ -102,13 +107,10 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 16,
-    fontWeight: "bold",
     lineHeight: 22,
     color: "#333",
   },
-  label: {
-    fontWeight: "bold",
-  },
+  label: {},
   text: {
     fontWeight: "normal",
   },
@@ -119,6 +121,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#ededed",
+    fontFamily: "OpenSans-Regular",
   },
   button: {
     paddingVertical: 10,

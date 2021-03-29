@@ -5,7 +5,8 @@ import Colors from "../constants/Colors";
 import Styled from "styled-components";
 // Component
 import Spinner from "../components/Spinner";
-import { Image, ScrollView, RefreshControl } from "react-native";
+import { Image, ScrollView, RefreshControl, StyleSheet } from "react-native";
+import Text from "../components/CustomText";
 import CustomAlert from "./CustomAlert";
 
 const reallifeRPG = new ReallifeAPI();
@@ -189,30 +190,26 @@ const Item = Styled.View`
   border-left-width: 5px;
   border-color: #2f95dc;
   border-radius: 8px;
-  `;
-
+`;
 const Info = Styled.View`
   flex-direction: row;
   align-items: center;
   width: 60%;
 `;
-
 const Itemname = Styled.Text`
   margin-left: 5px;
-  font-weight: bold;
+  font-family: "OpenSans-SemiBold";
   font-size: 16px;
 `;
-
 const PriceContainer = Styled.View`
   width: 40%;
 `;
-
 const Row = Styled.View`
   flex-direction: row;
 `;
 const Strong = Styled.Text`
   width: 50%;
-  font-weight: bold;
+  font-family: "OpenSans-SemiBold";
   font-size: 14px;
 `;
 

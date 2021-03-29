@@ -2,7 +2,8 @@ import React from "react";
 import Colors from "../constants/Colors";
 // Components
 import styled from "styled-components";
-import { View, StyleSheet, Text, Image } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
+import Text from "./CustomText";
 
 const CommunityProject = (props) => {
   const project = props.project;
@@ -31,7 +32,9 @@ const CommunityProject = (props) => {
           borderBottomRightRadius: 8,
         }}
       />
-      <Text style={styles.projectName}>{project.title}</Text>
+      <Text type="SemiBold" style={styles.projectName}>
+        {project.title}
+      </Text>
     </View>
   );
 };
@@ -48,7 +51,7 @@ const ProjectModal = (props) => {
       />
       <Text style={{ ...styles.item, marginBottom: 10 }}>{project.desc}</Text>
 
-      <Text style={styles.modalLabel}>
+      <Text type="SemiBold" style={styles.modalLabel}>
         Gesammelt {project.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} € von{" "}
         {project.funding_required.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €
       </Text>
@@ -61,7 +64,9 @@ const ProjectModal = (props) => {
         />
       </ProgressContainer>
 
-      <Text style={styles.modalLabel}>Gesammelte Materialien</Text>
+      <Text type="SemiBold" style={styles.modalLabel}>
+        Gesammelte Materialien
+      </Text>
       <View style={styles.materialRow}>
         <Text style={styles.material}>
           <Image
@@ -194,7 +199,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     padding: 16,
     fontSize: 16,
-    fontWeight: "bold",
     color: "black",
   },
   modalImage: {
@@ -206,7 +210,6 @@ const styles = StyleSheet.create({
   },
   modalLabel: {
     marginTop: 8,
-    fontWeight: "bold",
   },
   materialRow: {
     flexDirection: "row",

@@ -4,7 +4,8 @@ import { ReallifeAPI } from "../ApiHandler";
 import styled from "styled-components";
 // Components
 import Spinner from "./Spinner";
-import { View, StyleSheet, Text, ScrollView, RefreshControl } from "react-native";
+import { View, StyleSheet, ScrollView, RefreshControl } from "react-native";
+import Text from "./CustomText";
 import { Modalize } from "react-native-modalize";
 import { FlatList } from "react-native-gesture-handler";
 
@@ -27,23 +28,29 @@ export default class Store extends Component {
     if (category === "vehicles") {
       return (
         <ShopItem>
-          <ItemName>{item.name}</ItemName>
+          <Text type="SemiBold" style={styles.itemname}>
+            {item.name}
+          </Text>
           <Row>
-            <ItemInformation>Level: {item.level}</ItemInformation>
-            <ItemLevel>{item.v_space} Kg</ItemLevel>
-            <ItemPrice>{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €</ItemPrice>
+            <Text style={styles.level}>Level: {item.level}</Text>
+            <Text style={styles.information}>{item.v_space} Kg</Text>
+            <Text type="SemiBold" style={styles.price}>
+              {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €
+            </Text>
           </Row>
         </ShopItem>
       );
     } else if (category === "items") {
       return (
         <ShopItem>
-          <ItemName>{item.name}</ItemName>
+          <Text type="SemiBold" style={styles.itemname}>
+            {item.name}
+          </Text>
           <Row>
-            <ItemInformation style={{ width: "50%" }}>Level: {item.level}</ItemInformation>
-            <ItemPrice style={{ width: "50%" }}>
+            <Text style={{ width: "50%" }}>Level: {item.level}</Text>
+            <Text type="SemiBold" style={{ ...styles.price, width: "50%" }}>
               {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €
-            </ItemPrice>
+            </Text>
           </Row>
         </ShopItem>
       );
@@ -147,25 +154,9 @@ const Row = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
 `;
-const ItemName = styled.Text`
-  display: flex;
-  width: 100%;
-  padding-top: 8px;
-  font-weight: bold;
-`;
 const ItemInformation = styled.Text`
   width: ${100 / 3}%;
 `;
-const ItemLevel = styled.Text`
-  text-align: center;
-  width: ${100 / 3}%;
-`;
-const ItemPrice = styled.Text`
-  width: ${100 / 3}%;
-  text-align: right;
-  font-weight: bold;
-`;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -182,6 +173,22 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 8,
   },
+  itemname: {
+    display: "flex",
+    width: "100%",
+    paddingTop: 8,
+  },
+  information: {
+    textAlign: "center",
+    width: `${100 / 3}%`,
+  },
+  level: {
+    width: `${100 / 3}%`,
+  },
+  price: {
+    width: `${100 / 3}%`,
+    textAlign: "right",
+  },
 });
 
 const modal = StyleSheet.create({
@@ -192,7 +199,6 @@ const modal = StyleSheet.create({
     marginBottom: 2,
     textAlign: "center",
     fontSize: 16,
-    fontWeight: "600",
     color: "#ccc",
   },
 });
