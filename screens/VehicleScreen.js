@@ -1,14 +1,47 @@
-import React, { Component, createRef } from "react";
+import React, { Component } from "react";
 import Colors from "../constants/Colors";
-import Styled from "styled-components";
 import { ReallifeAPI } from "../ApiHandler";
 // Components
-import { View, ScrollView, StyleSheet, Text, RefreshControl } from "react-native";
 import Spinner from "../components/Spinner";
-import { Modalize } from "react-native-modalize";
 import NoKey from "../components/NoKey";
+import { View, ScrollView, StyleSheet, Text, RefreshControl } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const reallifeRPG = new ReallifeAPI();
+
+/**
+ *
+ * @param {object} props
+ */
+const Badge = (props) => {
+  const { text, backgroundColor } = props;
+  return (
+    <Text style={{ ...badge.container, ...badge.text, backgroundColor: backgroundColor }}>
+      {text}
+    </Text>
+  );
+};
+
+/**
+ *
+ * @param {object} props
+ */
+const FuelBar = (props) => {
+  const { fuelLevel } = props;
+  var radius = fuelLevel == 100 ? 8 : 0;
+  return (
+    <View style={fuelBar.container}>
+      <View
+        style={{
+          ...fuelBar.bar,
+          width: fuelLevel,
+          borderTopRightRadius: radius,
+          borderBottomRightRadius: radius,
+        }}
+      />
+    </View>
+  );
+};
 
 export default class VehicleScreen extends Component {
   constructor() {
@@ -17,84 +50,74 @@ export default class VehicleScreen extends Component {
       loading: true,
       refreshing: false,
     };
-    this.modalizeRef = createRef(null);
   }
+  _renderRow(vehicle) {
+    var icon, status, name, side, plate, formattedPlate, driven, fuel;
 
-  _renderVehicleData = (vehicle) => {
-    var status, fraction;
-    var vehiclePlate = vehicle.plate,
-      formattedPlate = `${vehiclePlate.substring(0, 2)} ${vehiclePlate.substring(
-        2,
-        4
-      )} ${vehiclePlate.substring(4, 8)}`;
-    // Vehicle status
+    plate = vehicle.plate;
+    formattedPlate = `${plate.substring(0, 2)} ${plate.substring(2, 4)} ${plate.substring(4, 8)}`;
+
+    name = vehicle.vehicle_data.name;
+    driven = vehicle.kilometer_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    fuel = vehicle.fuel * 100;
+
+    if (vehicle.type === "Ship") {
+      icon = "ship-wheel";
+    } else if (vehicle.type === "Air") {
+      icon = "airplane";
+    } else {
+      icon = "car-pickup";
+    }
+
     if (vehicle.active === 1) {
-      status = <Badge style={{ backgroundColor: "#ffc107" }}>Ausgeparkt</Badge>;
+      status = <Badge text="Ausgeparkt" backgroundColor="#ffc107" />;
     } else if (vehicle.impound === 1) {
-      status = <Badge style={{ backgroundColor: "#dc3545" }}>Beschlagnahmt</Badge>;
+      status = <Badge text="Beschlagnahmt" backgroundColor="#dc3545" />;
     } else {
-      status = <Badge style={{ backgroundColor: "#28a745" }}>Geparkt</Badge>;
+      status = <Badge text="Geparkt" backgroundColor="#28a745" />;
     }
-    // Fraction
+
     if (vehicle.side === "COP") {
-      fraction = <Badge>Polizei</Badge>;
+      side = <Badge text="Polizei" backgroundColor="#1a83ff" />;
     } else if (vehicle.side === "EAST") {
-      fraction = <Badge style={{ backgroundColor: "#ffc107" }}>RAC</Badge>;
+      side = <Badge text="RAC" backgroundColor={Colors.warningBackground} />;
     } else if (vehicle.side === "MEDIC" || vehicle.side === "GUER") {
-      fraction = <Badge style={{ backgroundColor: "#dc3545" }}>Medics</Badge>;
+      side = <Badge text="Abramier" backgroundColor="#dc3545" />;
     } else {
-      fraction = <Badge style={{ backgroundColor: "#28a745" }}>Zivilisten</Badge>;
+      side = <Badge text="Zivilist" backgroundColor="#28a745" />;
     }
 
-    return (
-      <View>
-        <View style={{ ...styles.row, alignItems: "center", marginTop: 9 }}>
-          <Con3 style={{ borderRightWidth: 1, borderColor: "#ededed" }}>
-            <Label>Status</Label>
-            {status}
-          </Con3>
-          <Con3 style={{ borderRightWidth: 1, borderColor: "#ededed" }}>
-            <Label>Fraktion</Label>
-            {fraction}
-          </Con3>
-          <Con3>
-            <Label>Kennzeichen</Label>
-            <Badge>{formattedPlate}</Badge>
-          </Con3>
-        </View>
-
-        <Label style={{ marginTop: 8 }}>Tank {`${(vehicle.fuel * 100).toFixed(0)}%`}</Label>
-        <FuelBar>
-          <FuelProgress
-            style={{
-              width: `${vehicle.fuel * 100}%`,
-            }}
-          />
-        </FuelBar>
-
-        <Text style={{ fontWeight: "bold", textAlign: "center", marginTop: 8 }}>
-          Gekauft am {vehicle.created_at}
-        </Text>
-      </View>
-    );
-  };
-
-  _renderVehicle = (vehicle) => {
-    if (vehicle.alive) {
+    if (vehicle.alive === 1) {
       return (
-        <Text key={vehicle.id} style={styles.item} onPress={() => this.openVehicleModal(vehicle)}>
-          {vehicle.vehicle_data.name}
-        </Text>
+        <ScrollView
+          key={vehicle.id}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={styles.table}
+        >
+          <View style={styles.tableRow}>
+            <View style={styles.tableCell}>
+              <MaterialCommunityIcons name={icon} size={24} color="#000" />
+            </View>
+            <View style={styles.tableCell}>{status}</View>
+            <View style={styles.tableCell}>{side}</View>
+            <View style={styles.tableCell}>
+              <Text style={styles.vehicleName}>{name}</Text>
+            </View>
+            <View style={styles.tableCell}>
+              <Badge text={formattedPlate} backgroundColor={Colors.tabIconSelected} />
+            </View>
+            <View style={styles.tableCell}>
+              <Text>{driven} Km</Text>
+            </View>
+            <View style={styles.tableCell}>
+              <FuelBar fuelLevel={fuel} />
+            </View>
+          </View>
+        </ScrollView>
       );
     }
-  };
-
-  openVehicleModal = (vehicle) => {
-    this.setState({ selectedVehicle: vehicle });
-    this.modalizeRef.current?.open();
-  };
-
-  closeVehicleModal = () => this.modalizeRef.current?.close();
+  }
 
   refresh = async () => {
     this.setState({ refreshing: true });
@@ -118,7 +141,7 @@ export default class VehicleScreen extends Component {
   }
 
   render() {
-    const { loading, refreshing, vehicles, selectedVehicle } = this.state;
+    const { loading, refreshing, vehicles } = this.state;
 
     if (loading || refreshing) {
       return <Spinner size="large" />;
@@ -133,20 +156,10 @@ export default class VehicleScreen extends Component {
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
               style={styles.container}
             >
-              {vehicles.map((vehicle, index) => {
-                return this._renderVehicle(vehicle);
+              {vehicles.map((vehicle) => {
+                return this._renderRow(vehicle);
               })}
             </ScrollView>
-            <Modalize ref={this.modalizeRef} adjustToContentHeight={true}>
-              <View style={modal.content}>
-                <Text style={modal.heading}>
-                  {selectedVehicle !== undefined
-                    ? selectedVehicle.vehicle_data.name.toUpperCase()
-                    : null}
-                </Text>
-                {selectedVehicle !== undefined ? this._renderVehicleData(selectedVehicle) : null}
-              </View>
-            </Modalize>
           </View>
         );
       } else {
@@ -156,71 +169,45 @@ export default class VehicleScreen extends Component {
   }
 }
 
-const Con3 = Styled.View`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: ${100 / 3}%;
-`;
-const Label = Styled.Text`
-  text-align: center;
-  width: 100%;
-  margin-bottom: 0;
-  font-size: 14px;
-  font-weight: bold;
-`;
-const Badge = Styled.Text`
-  text-align: center;
-  padding: 4px;
-  font-size: 14px;
-  border-radius: 6px;
-  background-color: ${Colors.tabIconSelected};
-  color: white;
-`;
-const FuelBar = Styled.View`
-  width: 100%;
-  height: 25px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-`;
-const FuelProgress = Styled.View`
-  height: 100%;
-  background-color: #dc3545;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-`;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  row: {
+  table: {
+    backgroundColor: "yellow",
+  },
+  tableRow: {
     display: "flex",
     flexDirection: "row",
-    flexWrap: "wrap",
+    alignItems: "center",
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ededed",
+    backgroundColor: "white",
   },
-  item: {
-    width: "95%",
-    textAlign: "center",
-    marginLeft: "2.5%",
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    marginTop: 5,
-    borderWidth: 1,
-    borderColor: "#ededed",
-    backgroundColor: "#fff",
-    borderRadius: 8,
+  tableCell: { marginHorizontal: 8 },
+  vehicleName: {
+    fontWeight: "bold",
+    fontSize: 14,
   },
 });
-const modal = StyleSheet.create({
-  content: {
-    padding: 20,
+const badge = StyleSheet.create({
+  container: {
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderRadius: 8,
   },
-  heading: {
-    marginBottom: 2,
-    textAlign: "center",
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#ccc",
+  text: {
+    fontSize: 14,
+    color: "#fff",
+  },
+});
+const fuelBar = StyleSheet.create({
+  container: { width: 100, height: 25, backgroundColor: "#f8f9fa", borderRadius: 8 },
+  bar: {
+    height: "100%",
+    backgroundColor: "#dc3545",
+    borderBottomLeftRadius: 8,
+    borderTopLeftRadius: 8,
   },
 });
