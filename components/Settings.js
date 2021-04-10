@@ -1,13 +1,12 @@
 import React, { Component, createRef } from "react";
+import { Updates } from "expo";
 import { ReallifeAPI } from "../ApiHandler";
-import { NotifyHandler } from "../NotifyHandler";
 // Components
 import { StyleSheet, View, TouchableOpacity, TextInput } from "react-native";
 import Text from "./CustomText";
 import { Modalize } from "react-native-modalize";
 
 const reallifeRPG = new ReallifeAPI();
-const notifyHandler = new NotifyHandler();
 
 export default class Settings extends Component {
   constructor() {
@@ -26,10 +25,12 @@ export default class Settings extends Component {
     const newKey = this.state.apiKey;
     reallifeRPG.saveApiKey(newKey);
     this.close();
+    Updates.reload();
   };
 
   async componentDidMount() {
-    this.setState({ apiKey: await reallifeRPG.getApiKey() });
+    var key = await reallifeRPG.getApiKey();
+    this.setState({ apiKey: key });
   }
 
   render() {

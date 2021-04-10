@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Updates } from "expo";
 import { expo } from "../app.json";
 // Components
 import { View, StyleSheet, TouchableOpacity, Linking, TextInput } from "react-native";
@@ -19,16 +20,20 @@ export default class SettingsScreen extends Component {
   }
 
   saveNewKey = async () => {
-    const { apiKey } = this.state;
-    reallifeRPG.saveApiKey(apiKey);
+    const { apiKey, savedKey } = this.state;
+    console.log(savedKey);
+    if (apiKey !== savedKey) {
+      reallifeRPG.saveApiKey(apiKey);
+      Updates.reload();
+    } else {
+      console.log("need to change ur key");
+    }
     // TODO Display an toast to show the user that the key was saved successfully
-    // this.close();
-    // We're gonna delete all scheduled push notifications because we're now selecting data from a new player
-    // notifyHandler.cancelAllScheduledNotification();
   };
 
   async componentDidMount() {
-    this.setState({ apiKey: await reallifeRPG.getApiKey() });
+    var key = await reallifeRPG.getApiKey();
+    this.setState({ apiKey: key, savedKey: key });
   }
 
   render() {
