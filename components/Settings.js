@@ -1,8 +1,9 @@
 import React, { Component, createRef } from "react";
-import { StyleSheet, View, TouchableOpacity, TextInput, Text } from "react-native";
 import { ReallifeAPI } from "../ApiHandler";
 import { NotifyHandler } from "../NotifyHandler";
 // Components
+import { StyleSheet, View, TouchableOpacity, TextInput } from "react-native";
+import Text from "./CustomText";
 import { Modalize } from "react-native-modalize";
 
 const reallifeRPG = new ReallifeAPI();
@@ -25,8 +26,6 @@ export default class Settings extends Component {
     const newKey = this.state.apiKey;
     reallifeRPG.saveApiKey(newKey);
     this.close();
-    // We're gonna delete all scheduled push notifications because we're now selecting data from a new player
-    // notifyHandler.cancelAllScheduledNotification();
   };
 
   async componentDidMount() {
@@ -38,7 +37,9 @@ export default class Settings extends Component {
       <Modalize ref={this.modalizeRef} adjustToContentHeight={true}>
         <View style={modal.content}>
           <Text style={modal.heading}>{"Einstellungen".toUpperCase()}</Text>
-          <Text style={modal.label}>API-Key</Text>
+          <Text type="SemiBold" style={modal.label}>
+            API-Key
+          </Text>
           <TextInput
             style={modal.input}
             onChangeText={(value) => this.setState({ apiKey: value })}
@@ -71,6 +72,7 @@ const modal = StyleSheet.create({
     padding: 20,
   },
   heading: {
+    textAlign: "center",
     marginBottom: 2,
     fontSize: 16,
     fontWeight: "600",

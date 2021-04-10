@@ -25,7 +25,7 @@ class App extends Component {
 
   async componentDidMount() {
     const apiKey = await RLRPG_API.getApiKey();
-    if (apiKey !== null || apiKey !== "") {
+    if (apiKey !== null && apiKey !== "") {
       try {
         var profile = await RLRPG_API.getProfile(apiKey);
         profile = profile.data[0];
@@ -35,8 +35,6 @@ class App extends Component {
           playerId: profile.pid,
         });
       } catch (err) {
-        // This means the saved api-key is invalid
-        // TODO Show an alert which informs the user about the validation about his saved key
         console.error(err);
       }
     } else {
