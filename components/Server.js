@@ -80,12 +80,12 @@ export class ServerList extends React.Component {
 
   refresh = async () => {
     this.setState({ refreshing: true });
-    const serverList = await reallifeRPG.getServerList();
-    this.setState({
-      server: serverList.data,
-      selectedServer: serverList.data[0],
-      refreshing: false,
-    });
+    var serverList = await reallifeRPG.getServerList();
+    serverList = serverList.data.filter(
+      (server) => !server.Servername.toLowerCase().includes("gungame")
+    );
+    this.setState({ servers: serverList, selectedServer: serverList[0], refreshing: false });
+
     ToastAndroid.showWithGravityAndOffset(
       "Serverliste aktualisert",
       ToastAndroid.LONG,
@@ -96,12 +96,15 @@ export class ServerList extends React.Component {
   };
 
   async componentDidMount() {
-    const serverList = await reallifeRPG.getServerList();
-    this.setState({ server: serverList.data, selectedServer: serverList.data[0], loading: false });
+    var serverList = await reallifeRPG.getServerList();
+    serverList = serverList.data.filter(
+      (server) => !server.Servername.toLowerCase().includes("gungame")
+    );
+    this.setState({ servers: serverList, selectedServer: serverList[0], loading: false });
   }
 
   render() {
-    const { loading, refreshing, server, selectedServer } = this.state;
+    const { loading, refreshing, servers, selectedServer } = this.state;
 
     if (loading && !refreshing) {
       return <Spinner size="large" />;
@@ -117,9 +120,9 @@ export class ServerList extends React.Component {
               showsHorizontalScrollIndicator={false}
               refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
             >
-              {server.map((server, index) => {
+              {servers.map((server, index) => {
                 var width =
-                  server.length > 1 ? Layout.window.width * 0.8 : Layout.window.width * 0.96;
+                  servers.length > 1 ? Layout.window.width * 0.8 : Layout.window.width * 0.95;
                 return (
                   <TouchableWithoutFeedback
                     key={index}
@@ -164,7 +167,7 @@ export class PlayerList extends React.Component {
 
     return (
       <View style={{ flex: 1 }}>
-        <ScrollView style={{ paddingHorizontal: "2.5%" }} showsVerticalScrollIndicator={true}>
+        <ScrollView style={{ paddingHorizontal: "2.5%" }} showsVerticalScrollIndicator={false}>
           <View
             style={{
               flexDirection: "row",
@@ -201,7 +204,9 @@ const Card = Styled.View`
   border-radius: 8px;
   background-color: white;
   border-top-width: 5px;
-  border-color: #2f95dc;
+  border-width: 1px;
+  border-top-color: #2f95dc;
+  border-color: #ededed;
 `;
 
 const styles = StyleSheet.create({
