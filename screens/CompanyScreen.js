@@ -4,7 +4,8 @@ import Colors from "../constants/Colors";
 // Components
 import Spinner from "../components/Spinner";
 import NoKey from "../components/NoKey";
-import { View, StyleSheet, ScrollView, RefreshControl } from "react-native";
+import { Accordion } from "../components/Accordion";
+import { View, StyleSheet, ScrollView, RefreshControl, Image } from "react-native";
 import Text from "../components/CustomText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -42,7 +43,109 @@ const Company = (props) => {
   );
 };
 
-export default class CompanyScreen extends Component {
+class CompanyShopsScreen extends Component {
+  constructor() {
+    super();
+    this.state = {
+      loading: true,
+      refreshing: false,
+    };
+  }
+
+  refresh = async () => {};
+
+  async componentDidMount() {
+    var shopList = await reallifeRPG.getCompanyShops();
+    this.setState({ loading: false, shops: shopList.data });
+  }
+
+  render() {
+    const { loading, refreshing, shops } = this.state;
+
+    if (loading || refreshing) {
+      return <Spinner size="large" />;
+    } else {
+      shops.map((shop) => console.log(shop));
+      return (
+        <View style={styles.container}>
+          <ScrollView
+            refreshing={refreshing}
+            onRefresh={this.refresh}
+            progressBackgroundColor={Colors.refreshController}
+            colors={Colors.refreshControllerIndicator}
+          >
+            {shops.length > 0 ? (
+              shops.map((shop, index) => {
+                return (
+                  <Accordion key={index} title={shop.company.name}>
+                    {shop.shops.length > 0 ? (
+                      shop.shops.map((item) => {
+                        return (
+                          <View
+                            style={{
+                              ...styles.shopItem,
+                              display: "flex",
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <View
+                              style={{
+                                ...styles.row,
+                                alignItems: "center",
+                                fontSize: 16,
+                                marginLeft: 8,
+                              }}
+                            >
+                              <Image
+                                source={{
+                                  uri: `https://raw.githubusercontent.com/A3ReallifeRPG/RealLifeRPG-App/master/app/src/main/res/drawable/market_${item.item}.png`,
+                                }}
+                                style={{
+                                  width: 50,
+                                  height: 50,
+                                }}
+                              />
+                              <Text type="SemiBold">{item.item_localized}</Text>
+                            </View>
+                            <View></View>
+                            <View>
+                              <Text>
+                                {item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} Stück{" "}
+                                {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €
+                              </Text>
+                            </View>
+                          </View>
+                        );
+                      })
+                    ) : (
+                      <Text
+                        type="SemiBold"
+                        style={{ ...styles.shopItem, textAlign: "center", fontSize: 16 }}
+                      >
+                        Keine Angebote gefunden
+                      </Text>
+                    )}
+                  </Accordion>
+                );
+              })
+            ) : (
+              <Text
+                type="SemiBold"
+                style={{ ...styles.shopItem, fontSize: 16, textAlign: "center" }}
+              >
+                Keine Ankaufoptionen gefunden
+              </Text>
+            )}
+          </ScrollView>
+        </View>
+      );
+    }
+  }
+}
+
+class CompanyScreen extends Component {
   constructor() {
     super();
     this.state = {
@@ -69,7 +172,6 @@ export default class CompanyScreen extends Component {
       var companyList = ownedCompanies.filter((company) => {
         return company.disabled == 0;
       });
-      console.log(companyList);
       this.setState({ loading: false, companies: companyList, apiKey: apiKey });
     } else {
       this.setState({ loading: false, apiKey: false });
@@ -118,18 +220,23 @@ export default class CompanyScreen extends Component {
   }
 }
 
+export { CompanyShopsScreen };
+export default CompanyScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 16,
+    backgroundColor: "white",
   },
   companyCard: {
     width: "95%",
     marginHorizontal: "2.5%",
     marginBottom: 8,
     padding: 16,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.lightGray,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   companyName: {
     textAlign: "center",
@@ -149,5 +256,15 @@ const styles = StyleSheet.create({
   },
   companyIcon: {
     marginRight: 8,
+  },
+  shopItem: {
+    backgroundColor: Colors.lightGray,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 5,
+    marginBottom: 8,
+    marginHorizontal: "2.5%",
+    paddingVertical: 4,
+    paddingHorizontal: "2.5%",
   },
 });

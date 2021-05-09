@@ -96,6 +96,12 @@ class ReallifeAPI {
     return data;
   }
 
+  async getCompanyShops() {
+    const response = await fetch("https://api.realliferpg.de/v1/company_shops");
+    const data = await response.json();
+    return data;
+  }
+
   /**
    * Returns a list containing all offered items for an specific shop
    * @param {string} category Should be vehicles or items
