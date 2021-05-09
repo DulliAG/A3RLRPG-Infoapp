@@ -4,7 +4,8 @@ import { ReallifeAPI, DateFormatter } from "../ApiHandler";
 // Components
 import Spinner from "../components/Spinner";
 import { StyleSheet, View, RefreshControl } from "react-native";
-import { ChangelogAccordion } from "../components/Accordion";
+import Text from "../components/CustomText";
+import { Accordion } from "../components/Accordion";
 import { ScrollView } from "react-native-gesture-handler";
 
 const df = new DateFormatter();
@@ -18,22 +19,49 @@ export default class ChangelogScreen extends Component {
       refreshing: false,
     };
   }
+
+  _renderChanges = (heading, changes) => {
+    return (
+      <View
+        style={{
+          paddingHorizontal: "2.5%",
+          paddingVertical: 4,
+          marginTop: 8,
+          marginHorizontal: "2.5%",
+          borderWidth: 1,
+          borderColor: Colors.border,
+          backgroundColor: Colors.lightGray,
+          borderRadius: 5,
+        }}
+      >
+        <Text type="SemiBold" style={{ fontSize: 16 }}>
+          {heading}
+        </Text>
+        {changes.map((change, index) => {
+          return <Text key={index}>• {change}</Text>;
+        })}
+      </View>
+    );
+  };
+
+  _renderChangelog = (changelog) => {
+    var { version, release_at, change_mission, change_map, change_mod } = changelog;
+    var formattedReleaseDate = df.format(release_at);
+    var changelogHeading = `Update ${version} • ${formattedReleaseDate} Uhr`;
+
+    return (
+      <Accordion key={changelog.version} title={changelogHeading}>
+        {change_mission.length > 0 && this._renderChanges("Mission", change_mission)}
+        {change_map.length > 0 && this._renderChanges("Karte", change_map)}
+        {change_mod.length > 0 && this._renderChanges("Mod", change_mod)}
+      </Accordion>
+    );
+  };
+
   refresh = async () => {
     this.setState({ refreshing: true });
     const changelogs = await reallifeRPG.getChangelogs();
     this.setState({ changelogs: changelogs.data, refreshing: false });
-  };
-
-  _renderAccordion = (changelog) => {
-    const { version, release_at } = changelog;
-    var formattedReleaseDate = df.format(release_at);
-    return (
-      <ChangelogAccordion
-        key={changelog.id}
-        title={`Update ${version} • ${formattedReleaseDate} Uhr`}
-        data={changelog}
-      />
-    );
   };
 
   async componentDidMount() {
@@ -62,7 +90,7 @@ export default class ChangelogScreen extends Component {
             }
           >
             {changelogs.map((changelog) => {
-              return this._renderAccordion(changelog);
+              return this._renderChangelog(changelog);
             })}
           </ScrollView>
         </View>
@@ -74,6 +102,6 @@ export default class ChangelogScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "white",
   },
 });
