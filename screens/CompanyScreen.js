@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ReallifeAPI } from "../ApiHandler";
+import { ReallifeAPI, DateFormatter } from "../ApiHandler";
 // Components
 import Spinner from "../components/Spinner";
 import NoKey from "../components/NoKey";
@@ -7,6 +7,7 @@ import { View, StyleSheet, ScrollView, RefreshControl } from "react-native";
 import Text from "../components/CustomText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+const df = new DateFormatter();
 const reallifeRPG = new ReallifeAPI();
 
 const Company = (props) => {
@@ -33,7 +34,7 @@ const Company = (props) => {
         </View>
         <View style={[styles.companyInformation, styles.row]}>
           <MaterialCommunityIcons style={styles.companyIcon} name="clock-outline" size={24} />
-          <Text>{company.created_at}</Text>
+          <Text>{df.format(company.created_at)}</Text>
         </View>
       </View>
     </View>

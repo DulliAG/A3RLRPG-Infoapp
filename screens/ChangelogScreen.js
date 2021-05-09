@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { ReallifeAPI } from "../ApiHandler";
+import { ReallifeAPI, DateFormatter } from "../ApiHandler";
 // Components
 import Spinner from "../components/Spinner";
 import { StyleSheet, View, RefreshControl } from "react-native";
 import { ChangelogAccordion } from "../components/Accordion";
 import { ScrollView } from "react-native-gesture-handler";
 
+const df = new DateFormatter();
 const reallifeRPG = new ReallifeAPI();
 
 export default class ChangelogScreen extends Component {
@@ -24,10 +25,11 @@ export default class ChangelogScreen extends Component {
 
   _renderAccordion = (changelog) => {
     const { version, release_at } = changelog;
+    var formattedReleaseDate = df.format(release_at);
     return (
       <ChangelogAccordion
         key={changelog.id}
-        title={`Update ${version} • ${release_at}`}
+        title={`Update ${version} • ${formattedReleaseDate} Uhr`}
         data={changelog}
       />
     );

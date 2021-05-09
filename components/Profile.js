@@ -2,7 +2,7 @@ import React, { createRef } from "react";
 import * as Notifications from "expo-notifications";
 import Colors from "../constants/Colors";
 import { NotifyHandler } from "../NotifyHandler";
-import { ReallifeAPI } from "../ApiHandler";
+import { ReallifeAPI, DateFormatter } from "../ApiHandler";
 import Layout from "../constants/Layout";
 // Components
 import { StyleSheet, Image, View, RefreshControl } from "react-native";
@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import NoKey from "./NoKey";
 
+const df = new DateFormatter();
 const reallifeRPG = new ReallifeAPI();
 const notifyHandler = new NotifyHandler();
 
@@ -207,7 +208,7 @@ export default class Profile extends React.Component {
               </ProfileStats>
               <ProfileStats>
                 <Label>Zuletzt Online</Label>
-                <Content>{profile.last_seen.date}</Content>
+                <Content>{df.format(profile.last_seen.date)}</Content>
               </ProfileStats>
             </View>
 

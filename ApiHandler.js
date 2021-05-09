@@ -1,5 +1,27 @@
 import AsyncStorage from "@react-native-community/async-storage";
 
+class DateFormatter {
+  /**
+   *
+   * @param {string} dateString
+   * @returns {string}
+   */
+  format(dateString) {
+    var date = dateString.split(" ")[0];
+    var time = dateString.split(" ")[1];
+    var seperatedTime = {
+      year: date.split("-")[0],
+      month: date.split("-")[1],
+      day: date.split("-")[2],
+      hour: time.split(":")[0],
+      minute: time.split(":")[1],
+      second: time.split(":")[2],
+    };
+    let { day, month, year, hour, minute, second } = seperatedTime;
+    return `${day}.${month}.${year} ${hour}:${minute}`;
+  }
+}
+
 /**
  * Handle API-requests using ReallifeRPGs endpoints
  * Documentation: https://api.realliferpg.de
@@ -128,4 +150,4 @@ class ReallifeAPI {
   }
 }
 
-export { ReallifeAPI };
+export { DateFormatter, ReallifeAPI };
