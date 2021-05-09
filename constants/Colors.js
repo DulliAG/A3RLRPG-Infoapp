@@ -1,6 +1,8 @@
 const tintColor = "#2f95dc";
 
 export default {
+  border: "#ededed",
+  lightGray: "#f8f9fa",
   tintColor,
   tabIconDefault: "#ccc",
   tabIconSelected: tintColor,
