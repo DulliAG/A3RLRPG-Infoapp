@@ -218,15 +218,6 @@ export default class Profile extends React.Component {
                 <Content>{df.format(profile.last_seen.date)}</Content>
               </ProfileStats>
             </View>
-
-            <View style={styles.card}>
-              <Text type="SemiBold" style={{ fontSize: 18, marginBottom: 8 }}>
-                Handynummern
-              </Text>
-              {profile.phones.map((phoneNumber) => {
-                return this._renderPhoneNumber(phoneNumber);
-              })}
-            </View>
           </ScrollView>
         );
       } else {

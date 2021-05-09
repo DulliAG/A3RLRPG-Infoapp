@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import Colors from "../constants/Colors";
 import { ReallifeAPI } from "../ApiHandler";
 // Components
-import { RefreshControl, StyleSheet, View, TextInput } from "react-native";
+import { RefreshControl, StyleSheet, View } from "react-native";
 import Text from "../components/CustomText";
+import { Accordion } from "../components/Accordion";
 import { ScrollView } from "react-native-gesture-handler";
 import Spinner from "../components/Spinner";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -13,12 +14,15 @@ const reallifeRPG = new ReallifeAPI();
 export default class ContactScreen extends Component {
   constructor() {
     super();
-    this.state = { loading: true, refreshing: false, keyword: null };
+    this.state = {
+      loading: true,
+      refreshing: false,
+    };
   }
 
   _renderContact = (contact) => {
     return (
-      <View key={contact.id} style={styles.contactCard}>
+      <View key={contact.id} style={styles.contact}>
         <Text type="SemiBold" style={styles.contactName}>
           {contact.name}
         </Text>
@@ -40,38 +44,41 @@ export default class ContactScreen extends Component {
     );
   };
 
-  filterContact = (keyword) => {
-    const { contacts } = this.state;
-    var matches = contacts.filter((contact) => {
-      return contact.name.toLowerCase().includes(keyword.toLowerCase());
-    });
-    this.setState({ displayedContacts: matches });
-  };
-
   refresh = async () => {
     this.setState({ refreshing: true });
     const apiKey = await reallifeRPG.getApiKey();
-    const profile = await reallifeRPG.getProfile(apiKey);
-    var phonebook = profile.data[0].phonebooks[0].phonebook;
-    this.setState({ refreshing: false, contacts: phonebook, displayedContacts: phonebook });
+    if (apiKey !== null && apiKey !== "") {
+      const PlayerProfile = await reallifeRPG.getProfile(apiKey);
+      var profileData = PlayerProfile.data[0];
+      var phones = profileData.phones;
+      var phonebooks = profileData.phonebooks;
+      this.setState({
+        refreshing: false,
+        phones: phones,
+        phonebooks: phonebooks,
+        apiKey: apiKey,
+      });
+    }
   };
 
   async componentDidMount() {
     const apiKey = await reallifeRPG.getApiKey();
     if (apiKey !== null && apiKey !== "") {
-      const profile = await reallifeRPG.getProfile(apiKey);
-      var phonebook = profile.data[0].phonebooks[0].phonebook;
+      const PlayerProfile = await reallifeRPG.getProfile(apiKey);
+      var profileData = PlayerProfile.data[0];
+      var phones = profileData.phones;
+      var phonebooks = profileData.phonebooks;
       this.setState({
         loading: false,
-        contacts: phonebook,
-        displayedContacts: phonebook,
+        phones: phones,
+        phonebooks: phonebooks,
         apiKey: apiKey,
       });
     }
   }
 
   render() {
-    const { loading, refreshing, displayedContacts } = this.state;
+    const { loading, refreshing, phones, phonebooks } = this.state;
 
     if (loading || refreshing) {
       return <Spinner size="large" />;
@@ -90,29 +97,61 @@ export default class ContactScreen extends Component {
               />
             }
           >
-            <TextInput
-              style={styles.input}
-              onChangeText={(value) => this.filterContact(value)}
-              placeholder="Kontakt suchen"
-            />
-            {displayedContacts.length > 0 ? (
-              displayedContacts.map((contact) => {
-                return this._renderContact(contact);
+            <Accordion title="Handynummern" expanded={false}>
+              {phones.length > 0 ? (
+                phones.map((phone) => {
+                  return (
+                    <View
+                      style={{
+                        ...styles.contact,
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text type="SemiBold" style={styles.contactName}>
+                        {phone.note === "default" ? "Standardnummer" : phone.note}
+                      </Text>
+                      <Text>{phone.phone}</Text>
+                    </View>
+                  );
+                })
+              ) : (
+                <Text style={styles.contact}>Keine Handynummern gefunden</Text>
+              )}
+            </Accordion>
+
+            {phonebooks.length > 0 ? (
+              phonebooks.map((pb, index) => {
+                var side = pb.side;
+                var phonebookName;
+                if (side === "CIV") {
+                  phonebookName = "Zivilist";
+                } else if (side === "COP") {
+                  phonebookName = "Polizei";
+                } else if (side === "EAST") {
+                  phonebookName = "RAC";
+                } else if (side === "MEDIC" || side === "GUER") {
+                  phonebookName = "Abramier";
+                } else {
+                  phonebookName = "Unbekannt";
+                }
+                var contacts = pb.phonebook;
+                return (
+                  <Accordion title={phonebookName} expanded={index == 0}>
+                    {contacts.length > 0 ? (
+                      contacts.map((contact) => {
+                        return this._renderContact(contact);
+                      })
+                    ) : (
+                      <Text>Keine Kontakte gefunden</Text>
+                    )}
+                  </Accordion>
+                );
               })
             ) : (
-              <Text
-                type="SemiBold"
-                style={{
-                  textAlign: "center",
-                  backgroundColor: "#fff",
-                  borderRadius: 8,
-                  width: "95%",
-                  marginLeft: "2.5%",
-                  paddingVertical: 8,
-                }}
-              >
-                Keine Kontakte gefunden
-              </Text>
+              <Text>Keine Kontaktbücher gefunden</Text>
             )}
           </ScrollView>
         </View>
@@ -124,27 +163,17 @@ export default class ContactScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "white",
   },
-  input: {
-    width: "95%",
-    marginVertical: 16,
-    marginHorizontal: "2.5%",
-    paddingVertical: 7,
-    paddingHorizontal: 10,
-    backgroundColor: "#fff",
+  contact: {
+    backgroundColor: Colors.lightGray,
     borderWidth: 1,
-    borderColor: "#ededed",
-    borderRadius: 8,
-    fontFamily: "OpenSans-Regular",
-  },
-  contactCard: {
-    width: "95%",
-    marginHorizontal: "2.5%",
+    borderColor: Colors.border,
+    borderRadius: 5,
     marginBottom: 8,
-    padding: 16,
-    backgroundColor: "#fff",
-    borderRadius: 8,
+    marginHorizontal: "2.5%",
+    paddingVertical: 4,
+    paddingHorizontal: "2.5%",
   },
   contactName: {
     textAlign: "center",
@@ -156,6 +185,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
   },
+  phone: {},
   contactInformation: {
     width: "50%",
     justifyContent: "center",
