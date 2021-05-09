@@ -7,6 +7,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import VehicleScreen from "../screens/VehicleScreen";
 import HouseScreen from "../screens/HouseScreen";
 import StoreScreen from "../screens/StoresScreen";
+import { CompanyShopsScreen } from "../screens/CompanyScreen";
 import ContactScreen from "../screens/ContactScreen";
 import MarketScreen from "../screens/MarketScreen";
 import CBSScreen from "../screens/CommunityBuildingScreen";
@@ -39,9 +40,9 @@ const Routes = [
   },
   {
     name: "Vehicle",
-    title: "Fahrzeuge",
+    title: "Garage",
     component: VehicleScreen,
-    icon: "car-pickup",
+    icon: "garage",
   },
   {
     name: "House",
@@ -56,8 +57,14 @@ const Routes = [
     icon: "cart-outline",
   },
   {
+    name: "Company_Shops",
+    title: "Warenankauf",
+    component: CompanyShopsScreen,
+    icon: "factory",
+  },
+  {
     name: "Contact",
-    title: "Kontakte",
+    title: "Kontaktbuch",
     component: ContactScreen,
     icon: "contacts",
   },
