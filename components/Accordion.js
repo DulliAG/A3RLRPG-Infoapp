@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Colors from "../constants/Colors";
 // Components
 import {
   View,
@@ -10,6 +11,45 @@ import {
 } from "react-native";
 import Text from "../components/CustomText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+class Accordion extends Component {
+  constructor(props) {
+    super();
+    this.state = {
+      expanded: props.expanded || false,
+    };
+
+    if (Platform.OS === "android") {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+  }
+
+  toggle = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    this.setState({ expanded: !this.state.expanded });
+  };
+
+  render() {
+    const { expanded } = this.state;
+    const { title, children } = this.props;
+
+    return (
+      <View>
+        <TouchableOpacity style={styles.row} activeOpacity={0.9} onPress={this.toggle}>
+          <Text type="SemiBold" style={styles.title}>
+            {title}
+          </Text>
+          <MaterialCommunityIcons
+            name={expanded ? "arrow-up" : "arrow-down"}
+            size={24}
+            color="white"
+          />
+        </TouchableOpacity>
+        {expanded && <View style={styles.contentContainer}>{children}</View>}
+      </View>
+    );
+  }
+}
 
 class ChangelogAccordion extends Component {
   constructor() {
@@ -44,9 +84,9 @@ class ChangelogAccordion extends Component {
             {title}
           </Text>
           <MaterialCommunityIcons
-            name={expanded ? "arrow-up-circle-outline" : "arrow-down-circle-outline"}
+            name={expanded ? "arrow-up" : "arrow-down"}
             size={24}
-            color="#333"
+            color="white"
           />
         </TouchableOpacity>
 
@@ -88,7 +128,7 @@ class ChangelogAccordion extends Component {
   }
 }
 
-export { ChangelogAccordion };
+export { Accordion };
 
 const styles = StyleSheet.create({
   container: {
@@ -96,27 +136,36 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   row: {
+    // flexDirection: "row",
+    // justifyContent: "space-between",
+    // alignItems: "center",
+    // height: 56,
+    // paddingHorizontal: "2.5%",
+    // backgroundColor: "white",
+    // borderTopWidth: 0.5,
+    // borderBottomWidth: 0.5,
+    // borderColor: "#ededed",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: 56,
-    paddingHorizontal: "2.5%",
-    backgroundColor: "white",
-    borderTopWidth: 0.5,
-    borderBottomWidth: 0.5,
-    borderColor: "#ededed",
+    width: "95%",
+    height: 50,
+    paddingHorizontal: "5%",
+    marginLeft: "2.5%",
+    marginTop: 16,
+    backgroundColor: Colors.tabIconSelected,
+    borderRadius: 5,
   },
   title: {
     fontSize: 14,
-    color: "black",
+    color: "white",
   },
   label: {
     fontSize: 14,
     color: "black",
   },
   contentContainer: {
-    paddingVertical: 16,
-    paddingHorizontal: "2.5%",
-    backgroundColor: "#f8f9fa",
+    paddingTop: 8,
+    backgroundColor: "white",
   },
 });
