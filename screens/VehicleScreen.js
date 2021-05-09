@@ -148,7 +148,14 @@ export default class VehicleScreen extends Component {
             <ScrollView
               horizontal={false}
               showsVerticalScrollIndicator={true}
-              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={this.refresh}
+                  progressBackgroundColor={Colors.refreshController}
+                  colors={Colors.refreshControllerIndicator}
+                />
+              }
               style={styles.container}
             >
               {vehicles.map((vehicle) => {

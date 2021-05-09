@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Colors from "../constants/Colors";
 import { ReallifeAPI, DateFormatter } from "../ApiHandler";
 // Components
 import Spinner from "../components/Spinner";
@@ -51,7 +52,14 @@ export default class ChangelogScreen extends Component {
           <ScrollView
             horizontal={false}
             showsVerticalScrollIndicator={true}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={this.refresh}
+                progressBackgroundColor={Colors.refreshController}
+                colors={Colors.refreshControllerIndicator}
+              />
+            }
           >
             {changelogs.map((changelog) => {
               return this._renderAccordion(changelog);

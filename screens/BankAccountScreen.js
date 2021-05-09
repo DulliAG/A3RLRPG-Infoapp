@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Colors from "../constants/Colors";
 import { ReallifeAPI } from "../ApiHandler";
 // Components
 import Spinner from "../components/Spinner";
@@ -48,7 +49,14 @@ export default class BankAccountScreen extends Component {
             <ScrollView
               horizontal={false}
               showsVerticalScrollIndicator={true}
-              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={this.refresh}
+                  progressBackgroundColor={Colors.refreshController}
+                  colors={Colors.refreshControllerIndicator}
+                />
+              }
             >
               {profile.bank_main.map((acc) => {
                 return (

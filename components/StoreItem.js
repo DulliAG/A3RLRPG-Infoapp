@@ -1,5 +1,6 @@
 import React, { Component, createRef } from "react";
 import Layout from "../constants/Layout";
+import Colors from "../constants/Colors";
 import { ReallifeAPI } from "../ApiHandler";
 import styled from "styled-components";
 // Components
@@ -108,7 +109,14 @@ export default class Store extends Component {
           <ScrollView
             horizontal={false}
             showsVerticalScrollIndicator={true}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={this.refresh}
+                progressBackgroundColor={Colors.refreshController}
+                colors={Colors.refreshControllerIndicator}
+              />
+            }
           >
             {shops.length > 0 ? (
               shops.map((shop) => {

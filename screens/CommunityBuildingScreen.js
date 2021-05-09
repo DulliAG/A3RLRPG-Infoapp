@@ -1,4 +1,5 @@
 import React, { createRef } from "react";
+import Colors from "../constants/Colors";
 import { ReallifeAPI } from "../ApiHandler";
 // Components
 import Spinner from "../components/Spinner";
@@ -48,7 +49,14 @@ export default class CBSScreen extends React.Component {
         <View style={styles.container}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={this.refresh}
+                progressBackgroundColor={Colors.refreshController}
+                colors={Colors.refreshControllerIndicator}
+              />
+            }
           >
             {projects.length > 0 ? (
               projects.map((project, index) => {

@@ -136,7 +136,14 @@ export default class MarketItem extends React.Component {
         <ScrollView
           horizontal={false}
           showsVerticalScrollIndicator={true}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={this.refresh}
+              progressBackgroundColor={Colors.refreshController}
+              colors={Colors.refreshControllerIndicator}
+            />
+          }
         >
           <CustomAlert
             bg={Colors.noticeBackground}

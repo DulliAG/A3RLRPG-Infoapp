@@ -108,7 +108,14 @@ export default class Profile extends React.Component {
           <ScrollView
             horizontal={false}
             showsVerticalScrollIndicator={true}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={this.refresh}
+                progressBackgroundColor={Colors.refreshController}
+                colors={Colors.refreshControllerIndicator}
+              />
+            }
           >
             {profile.suspended == 1 ? (
               <CustomAlert msg="Du wurdest gebannt!" bg={Colors.tabIconSelected} />

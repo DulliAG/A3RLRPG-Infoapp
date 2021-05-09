@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Colors from "../constants/Colors";
 import { ReallifeAPI } from "../ApiHandler";
 // Components
 import { RefreshControl, StyleSheet, View, TextInput } from "react-native";
@@ -80,7 +81,14 @@ export default class ContactScreen extends Component {
           <ScrollView
             horizontal={false}
             showsVerticalScrollIndicator={true}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={this.refresh}
+                progressBackgroundColor={Colors.tabIconSelected}
+                colors={["white"]}
+              />
+            }
           >
             <TextInput
               style={styles.input}

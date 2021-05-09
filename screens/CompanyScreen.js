@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { ReallifeAPI, DateFormatter } from "../ApiHandler";
+import Colors from "../constants/Colors";
 // Components
 import Spinner from "../components/Spinner";
 import NoKey from "../components/NoKey";
@@ -87,7 +88,14 @@ export default class CompanyScreen extends Component {
             <ScrollView
               horizontal={false}
               showsVerticalScrollIndicator={true}
-              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={this.refresh}
+                  progressBackgroundColor={Colors.refreshController}
+                  colors={Colors.refreshControllerIndicator}
+                />
+              }
             >
               {companies.length > 0 ? (
                 companies.map((company) => {

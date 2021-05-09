@@ -1,6 +1,7 @@
 import React from "react";
 import { ReallifeAPI } from "../ApiHandler";
 import Layout from "../constants/Layout";
+import Colors from "../constants/Colors";
 import Styled from "styled-components";
 // Components
 import { StyleSheet, View, RefreshControl, ToastAndroid } from "react-native";
@@ -118,7 +119,14 @@ export class ServerList extends React.Component {
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}
-              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={this.refresh}
+                  progressBackgroundColor={Colors.refreshController}
+                  colors={Colors.refreshControllerIndicator}
+                />
+              }
             >
               {servers.map((server, index) => {
                 var width =
