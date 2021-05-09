@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Colors from "../constants/Colors";
 import { Updates } from "expo";
 import { expo } from "../app.json";
 // Components
@@ -25,8 +26,6 @@ export default class SettingsScreen extends Component {
     if (apiKey !== savedKey) {
       reallifeRPG.saveApiKey(apiKey);
       Updates.reload();
-    } else {
-      console.log("need to change ur key");
     }
     // TODO Display an toast to show the user that the key was saved successfully
   };

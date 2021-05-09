@@ -5,7 +5,7 @@ import { ReallifeAPI } from "../ApiHandler";
 import Spinner from "../components/Spinner";
 import CreditCard from "../components/CreditCard";
 import NoKey from "../components/NoKey";
-import { View, StyleSheet, Text, ScrollView, RefreshControl } from "react-native";
+import { View, StyleSheet, ScrollView, RefreshControl } from "react-native";
 
 const reallifeRPG = new ReallifeAPI();
 
@@ -106,5 +106,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 16,
+    backgroundColor: "white",
   },
 });
