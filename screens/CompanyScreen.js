@@ -4,6 +4,7 @@ import Colors from "../constants/Colors";
 // Components
 import Spinner from "../components/Spinner";
 import NoKey from "../components/NoKey";
+import { ArmaItemIcon } from "../components/ArmaItem";
 import { Accordion } from "../components/Accordion";
 import { View, StyleSheet, ScrollView, RefreshControl, Image } from "react-native";
 import Text from "../components/CustomText";
@@ -98,15 +99,7 @@ class CompanyShopsScreen extends Component {
                                 marginLeft: 8,
                               }}
                             >
-                              <Image
-                                source={{
-                                  uri: `https://raw.githubusercontent.com/A3ReallifeRPG/RealLifeRPG-App/master/app/src/main/res/drawable/market_${item.item}.png`,
-                                }}
-                                style={{
-                                  width: 50,
-                                  height: 50,
-                                }}
-                              />
+                              <ArmaItemIcon item={item.item} />
                               <Text type="SemiBold">{item.item_localized}</Text>
                             </View>
                             <View></View>

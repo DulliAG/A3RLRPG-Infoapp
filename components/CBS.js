@@ -4,6 +4,7 @@ import Colors from "../constants/Colors";
 import styled from "styled-components";
 import { View, StyleSheet, Image } from "react-native";
 import Text from "./CustomText";
+import { ArmaItemIcon } from "../components/ArmaItem";
 
 const CommunityProject = (props) => {
   const project = props.project;
@@ -41,6 +42,16 @@ const CommunityProject = (props) => {
 
 const ProjectModal = (props) => {
   const project = props.project;
+
+  const Item = (props) => {
+    return (
+      <Text style={styles.material}>
+        <ArmaItemIcon item={props.item} width={20} height={20} />
+        {props.delivered} / {props.required}
+      </Text>
+    );
+  };
+
   return (
     <View>
       <Image
@@ -68,96 +79,61 @@ const ProjectModal = (props) => {
         Gesammelte Materialien
       </Text>
       <View style={styles.materialRow}>
-        <Text style={styles.material}>
-          <Image
-            source={{
-              uri: `https://raw.githubusercontent.com/A3ReallifeRPG/RealLifeRPG-App/master/app/src/main/res/drawable/market_rock_u.png`,
-            }}
-            style={styles.itemIcon}
-          />
-          {project.delivered.rock_u} / {project.required.rock_u}
-        </Text>
-        <Text style={styles.material}>
-          <Image
-            source={{
-              uri: `https://raw.githubusercontent.com/A3ReallifeRPG/RealLifeRPG-App/master/app/src/main/res/drawable/market_wood_r.png`,
-            }}
-            style={styles.itemIcon}
-          />
-          {project.delivered.wood_r} / {project.required.wood_r}
-        </Text>
-        <Text style={styles.material}>
-          <Image
-            source={{
-              uri: `https://raw.githubusercontent.com/A3ReallifeRPG/RealLifeRPG-App/master/app/src/main/res/drawable/market_sand_u.png`,
-            }}
-            style={styles.itemIcon}
-          />
-          {project.delivered.sand_u} / {project.required.sand_u}
-        </Text>
-        <Text style={styles.material}>
-          <Image
-            source={{
-              uri: `https://raw.githubusercontent.com/A3ReallifeRPG/RealLifeRPG-App/master/app/src/main/res/drawable/market_rock_r.png`,
-            }}
-            style={styles.itemIcon}
-          />
-          {project.delivered.rock_r} / {project.required.rock_r}
-        </Text>
-        <Text style={styles.material}>
-          <Image
-            source={{
-              uri: `https://raw.githubusercontent.com/A3ReallifeRPG/RealLifeRPG-App/master/app/src/main/res/drawable/market_clay_r.png`,
-            }}
-            style={styles.itemIcon}
-          />
-          {project.delivered.clay_r} / {project.required.clay_r}
-        </Text>
-        <Text style={styles.material}>
-          <Image
-            source={{
-              uri: `https://raw.githubusercontent.com/A3ReallifeRPG/RealLifeRPG-App/master/app/src/main/res/drawable/market_copper_r.png`,
-            }}
-            style={styles.itemIcon}
-          />
-          {project.delivered.copper_r} / {project.required.copper_r}
-        </Text>
-        <Text style={styles.material}>
-          <Image
-            source={{
-              uri: `https://raw.githubusercontent.com/A3ReallifeRPG/RealLifeRPG-App/master/app/src/main/res/drawable/market_iron_r.png`,
-            }}
-            style={styles.itemIcon}
-          />
-          {project.delivered.iron_r} / {project.required.iron_r}
-        </Text>
-        <Text style={styles.material}>
-          <Image
-            source={{
-              uri: `https://raw.githubusercontent.com/A3ReallifeRPG/RealLifeRPG-App/master/app/src/main/res/drawable/market_sand_r.png`,
-            }}
-            style={styles.itemIcon}
-          />
-          {project.delivered.sand_r} / {project.required.sand_r}
-        </Text>
-        <Text style={styles.material}>
-          <Image
-            source={{
-              uri: `https://raw.githubusercontent.com/A3ReallifeRPG/RealLifeRPG-App/master/app/src/main/res/drawable/market_plastic.png`,
-            }}
-            style={styles.itemIcon}
-          />
-          {project.delivered.plastic} / {project.required.plastic}
-        </Text>
-        <Text style={styles.material}>
-          <Image
-            source={{
-              uri: `https://raw.githubusercontent.com/A3ReallifeRPG/RealLifeRPG-App/master/app/src/main/res/drawable/market_steel.png`,
-            }}
-            style={styles.itemIcon}
-          />
-          {project.delivered.steel} / {project.required.steel}
-        </Text>
+        <Item
+          item="rock_u"
+          delivered={project.delivered.rock_u}
+          required={project.delivered.rock_u}
+        />
+
+        <Item
+          item="wood_r"
+          delivered={project.delivered.wood_r}
+          required={project.delivered.wood_r}
+        />
+
+        <Item
+          item="sand_u"
+          delivered={project.delivered.sand_u}
+          required={project.delivered.sand_u}
+        />
+
+        <Item
+          item="rock_r"
+          delivered={project.delivered.rock_r}
+          required={project.delivered.rock_r}
+        />
+
+        <Item
+          item="clay_r"
+          delivered={project.delivered.clay_r}
+          required={project.delivered.clay_r}
+        />
+
+        <Item
+          item="copper_r"
+          delivered={project.delivered.copper_r}
+          required={project.delivered.copper_r}
+        />
+
+        <Item
+          item="iron_r"
+          delivered={project.delivered.iron_r}
+          required={project.delivered.iron_r}
+        />
+
+        <Item
+          item="sand_r"
+          delivered={project.delivered.sand_r}
+          required={project.delivered.sand_r}
+        />
+
+        <Item
+          item="plastic"
+          delivered={project.delivered.plastic}
+          required={project.delivered.plastic}
+        />
+
+        <Item item="steel" delivered={project.delivered.steel} required={project.delivered.steel} />
       </View>
     </View>
   );
@@ -228,9 +204,5 @@ const styles = StyleSheet.create({
     borderColor: "#ededed",
     backgroundColor: "#f8f9fa",
     borderRadius: 8,
-  },
-  itemIcon: {
-    width: 20,
-    height: 20,
   },
 });

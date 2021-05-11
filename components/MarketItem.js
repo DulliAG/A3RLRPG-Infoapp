@@ -8,6 +8,7 @@ import Spinner from "../components/Spinner";
 import { Image, ScrollView, RefreshControl, StyleSheet } from "react-native";
 import Text from "../components/CustomText";
 import CustomAlert from "./CustomAlert";
+import { ArmaItemIcon } from "./ArmaItem";
 
 const reallifeRPG = new ReallifeAPI();
 
@@ -153,15 +154,7 @@ export default class MarketItem extends React.Component {
             return (
               <Item key={index}>
                 <Info>
-                  <Image
-                    source={{
-                      uri: `https://raw.githubusercontent.com/A3ReallifeRPG/RealLifeRPG-App/master/app/src/main/res/drawable/market_${item.item}.png`,
-                    }}
-                    style={{
-                      width: 50,
-                      height: 50,
-                    }}
-                  />
+                  <ArmaItemIcon item={item.item} />
                   <Itemname>{item.localized}</Itemname>
                 </Info>
                 <PriceContainer>
