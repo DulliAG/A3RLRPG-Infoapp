@@ -50,4 +50,4 @@ Dies ist **nicht** die **offizielle Infoapp** von [ReallifeRPG](https://reallife
 [ReallifeRPG API](https://api.realliferpg.de)
 [ReallifeRPG App Drawables](https://github.com/A3ReallifeRPG/RealLifeRPG-App/tree/master/app/src/main/res/drawable)
 
-_Alle weiteren genutzten Ressourcen können [hier](./package.json#L10) gefunden werden_
+_Alle weiteren genutzten Ressourcen können [hier](https://github.com/DulliAG/A3RLRPG-Infoapp/network/dependencies) gefunden werden_
