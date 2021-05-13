@@ -22,7 +22,7 @@ export default class ContactScreen extends Component {
 
   _renderContact = (contact) => {
     return (
-      <View key={contact.id} style={styles.contact}>
+      <View key={`${contact.number}`} style={styles.contact}>
         <Text type="SemiBold" style={styles.contactName}>
           {contact.name}
         </Text>
@@ -93,15 +93,31 @@ export default class ContactScreen extends Component {
                 refreshing={refreshing}
                 onRefresh={this.refresh}
                 progressBackgroundColor={Colors.tabIconSelected}
-                colors={["white"]}
+                colors={Colors.refreshControllerIndicator}
               />
             }
           >
             <Accordion title="Handynummern" expanded={false}>
               {phones.length > 0 ? (
                 phones.map((phone) => {
+                  var note;
+                  switch (phone.note) {
+                    case "default":
+                      note = "Standardnummer";
+                      break;
+
+                    case "bought":
+                      note = "Gekauft";
+                      break;
+
+                    default:
+                      note = phone.note;
+                      break;
+                  }
+
                   return (
                     <View
+                      key={phone.phone}
                       style={{
                         ...styles.contact,
                         display: "flex",
@@ -111,9 +127,9 @@ export default class ContactScreen extends Component {
                       }}
                     >
                       <Text type="SemiBold" style={styles.contactName}>
-                        {phone.note === "default" ? "Standardnummer" : phone.note}
+                        {note}
                       </Text>
-                      <Text>{phone.phone}</Text>
+                      <Text style={{ fontSize: 15 }}>{phone.phone}</Text>
                     </View>
                   );
                 })
@@ -139,7 +155,7 @@ export default class ContactScreen extends Component {
                 }
                 var contacts = pb.phonebook;
                 return (
-                  <Accordion title={phonebookName} expanded={index == 0}>
+                  <Accordion key={index} title={phonebookName} expanded={index == 0}>
                     {contacts.length > 0 ? (
                       contacts.map((contact) => {
                         return this._renderContact(contact);

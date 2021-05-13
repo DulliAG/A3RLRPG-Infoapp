@@ -5,8 +5,7 @@ import Colors from "../constants/Colors";
 import Styled from "styled-components";
 // Component
 import Spinner from "../components/Spinner";
-import { Image, ScrollView, RefreshControl, StyleSheet } from "react-native";
-import Text from "../components/CustomText";
+import { Image, ScrollView, RefreshControl } from "react-native";
 import CustomAlert from "./CustomAlert";
 import { ArmaItemIcon } from "./ArmaItem";
 
@@ -186,10 +185,14 @@ const Item = Styled.View`
   width: 95%;
   margin: 5px auto;
   padding: 5px 10px;
-  background-color: #fff;
+  background-color: ${Colors.lightGray};
+  border-width: 1px;
+  border-top-color: ${Colors.border};
+  border-right-color: ${Colors.border};
+  border-bottom-color: ${Colors.border};
   border-left-width: 5px;
-  border-color: #2f95dc;
-  border-radius: 8px;
+  border-left-color: ${Colors.tabIconSelected};
+  border-radius: 5px;
 `;
 const Info = Styled.View`
   flex-direction: row;

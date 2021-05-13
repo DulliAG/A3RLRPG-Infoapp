@@ -104,6 +104,9 @@ export default class HouseScreen extends Component {
       const profile = await reallifeRPG.getProfile(apiKey);
       const profileData = profile.data[0];
       var houseList = profileData.houses;
+      houseList = houseList.filter((house) => {
+        return house.disabled !== 1;
+      });
       var rentalList = profileData.rentals;
       this.setState({
         profile: profile.data[0],
@@ -273,16 +276,16 @@ export default class HouseScreen extends Component {
               />
 
               {houses.length > 0 ? (
-                houses.map((house) => {
-                  return <HouseAccordion house={house} />;
+                houses.map((house, index) => {
+                  return <HouseAccordion key={index} house={house} />;
                 })
               ) : (
                 <NoResults message="Keine Häuser gefunden" />
               )}
 
               {rentals.length > 0 ? (
-                rentals.map((rental) => {
-                  return <RentalAccordion rental={rental} />;
+                rentals.map((rental, index) => {
+                  return <RentalAccordion key={index} rental={rental} />;
                 })
               ) : (
                 <NoResults message="Keine Appartments gefunden" />

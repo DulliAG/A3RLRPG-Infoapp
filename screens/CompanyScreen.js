@@ -66,7 +66,6 @@ class CompanyShopsScreen extends Component {
     if (loading || refreshing) {
       return <Spinner size="large" />;
     } else {
-      shops.map((shop) => console.log(shop));
       return (
         <View style={styles.container}>
           <ScrollView
@@ -83,6 +82,7 @@ class CompanyShopsScreen extends Component {
                       shop.shops.map((item) => {
                         return (
                           <View
+                            key={`${index}${item.item}`}
                             style={{
                               ...styles.shopItem,
                               display: "flex",
@@ -115,7 +115,11 @@ class CompanyShopsScreen extends Component {
                     ) : (
                       <Text
                         type="SemiBold"
-                        style={{ ...styles.shopItem, textAlign: "center", fontSize: 16 }}
+                        style={{
+                          ...styles.shopItem,
+                          textAlign: "center",
+                          fontSize: 16,
+                        }}
                       >
                         Keine Angebote gefunden
                       </Text>
@@ -197,8 +201,8 @@ class CompanyScreen extends Component {
                   return <Company company={company} />;
                 })
               ) : (
-                <View style={styles.companyCard}>
-                  <Text type="SemiBold" style={{ ...styles.companyName, marginBottom: 0 }}>
+                <View style={{ ...styles.companyCard, marginTop: 16 }}>
+                  <Text type="SemiBold" style={{ ...styles.companyName }}>
                     Keine Unternehmen gefunden
                   </Text>
                 </View>
