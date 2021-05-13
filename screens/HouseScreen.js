@@ -1,4 +1,4 @@
-import React, { Component, createRef } from "react";
+import React, { Component } from "react";
 import Styled from "styled-components";
 import Colors from "../constants/Colors";
 import { ReallifeAPI } from "../ApiHandler";
@@ -6,10 +6,10 @@ import { NotifyHandler } from "../NotifyHandler";
 // Components
 import Spinner from "../components/Spinner";
 import CustomAlert from "../components/CustomAlert";
+import { Accordion } from "../components/Accordion";
 import { View, ScrollView, StyleSheet, RefreshControl, Linking, ToastAndroid } from "react-native";
 import Text from "../components/CustomText";
-import { Ionicons } from "@expo/vector-icons";
-import { Modalize } from "react-native-modalize";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableHighlight, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import NoKey from "../components/NoKey";
 
@@ -22,9 +22,7 @@ export default class HouseScreen extends Component {
     this.state = {
       loading: true,
       refreshing: false,
-      loadingModal: false,
     };
-    this.modalizeRef = createRef(null);
   }
 
   // TODO Check if this function works
@@ -89,102 +87,6 @@ export default class HouseScreen extends Component {
     );
   };
 
-  _renderModalContent = (selectedHouse) => {
-    // TODO Use an WebView with Modalize instead of redirecting to an browser
-    // https://github.com/jeremybarbet/react-native-modalize/blob/master/examples/expo/src/components/modals/FacebookWebView.js
-    let icon,
-      btnAction,
-      loading = false;
-    const { apiKey } = this.state;
-    const loc = selectedHouse.location.substring(1, selectedHouse.location.length - 1).split(",");
-
-    // FIXME Check if there aleady exists an scheduled notification & if yes we change the icon and make them deletable
-    if (loading) {
-      return <Spinner />;
-    } else {
-      return (
-        <View>
-          <Label>
-            {`Gewartet für ${selectedHouse.payed_for / 24} ${
-              selectedHouse.payed_for / 24 > 1 ? "Tage" : "Tag"
-            }`}
-          </Label>
-          <View style={styles.row}>
-            <View style={styles.btnContainer}>
-              <Label>Position</Label>
-              <TouchableHighlight
-                style={modal.btn}
-                underlayColor="#ededed"
-                onPress={() =>
-                  Linking.openURL(`https://info.realliferpg.de/map?x=${loc[0]}&y=${loc[1]}`)
-                }
-              >
-                <Ionicons
-                  name="ios-map"
-                  size={24}
-                  color="black"
-                  style={{ textAlign: "center", paddingVertical: 15 }}
-                />
-              </TouchableHighlight>
-            </View>
-            {/* 
-            FIXME After we solved 
-            <View style={styles.btnContainer}>
-            <Label>Benachrichtigung</Label>
-            <TouchableHighlight style={modal.btn} underlayColor="#ededed" onPress={btnAction}>
-              <Ionicons
-                name={"ios-notifications"}
-                size={24}
-                color="black"
-                style={{ textAlign: "center", paddingVertical: 15 }}
-              />
-            </TouchableHighlight>
-          </View> */}
-          </View>
-        </View>
-      );
-    }
-  };
-
-  _renderRental = (rental) => {
-    return <Text key={rental.id} style={styles.item} onPress={() => this.openModal(rental)}></Text>;
-    return (
-      <TouchableWithoutFeedback key={rental.id} onPress={() => this.openModal(rental)}>
-        <Card key={rental.id} style={{ marginTop: 18, padding: 20 }}>
-          <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-            Appartment Nr. {rental.id}
-          </Text>
-        </Card>
-      </TouchableWithoutFeedback>
-    );
-  };
-
-  _renderHouse = (house) => {
-    return (
-      <Text key={house.id} style={styles.item} onPress={() => this.openModal(house)}>
-        Haus Nr. {house.id}
-      </Text>
-    );
-    return (
-      <TouchableWithoutFeedback key={house.id} onPress={() => this.openModal(house)}>
-        <Card key={house.id} style={{ marginTop: 18, padding: 20 }}>
-          <Text style={{ textAlign: "center", fontWeight: "bold" }}>Haus Nr. {house.id}</Text>
-        </Card>
-      </TouchableWithoutFeedback>
-    );
-  };
-
-  _renderPlaceholder = (message) => {
-    return <Text style={styles.item}>{message}</Text>;
-  };
-
-  openModal = (house) => {
-    this.setState({ selectedHouse: house });
-    this.modalizeRef.current?.open();
-  };
-
-  closeModal = () => this.modalizeRef.current?.close();
-
   refresh = async () => {
     this.setState({ refreshing: true });
     const apiKey = await reallifeRPG.getApiKey();
@@ -200,22 +102,157 @@ export default class HouseScreen extends Component {
     const apiKey = await reallifeRPG.getApiKey();
     if (apiKey !== null) {
       const profile = await reallifeRPG.getProfile(apiKey);
-      this.setState({ profile: profile.data[0], apiKey: apiKey, loading: false });
+      const profileData = profile.data[0];
+      var houseList = profileData.houses;
+      var rentalList = profileData.rentals;
+      this.setState({
+        profile: profile.data[0],
+        houses: houseList,
+        rentals: rentalList,
+        apiKey: apiKey,
+        loading: false,
+      });
     } else {
-      this.setState({ profile: null, loading: false });
+      this.setState({ apiKey: null, loading: false });
     }
   }
 
   render() {
-    const { loading, refreshing, loadingModal, profile, selectedHouse } = this.state;
+    const { loading, refreshing, apiKey, houses, rentals } = this.state;
+
+    const HouseAccordion = (props) => {
+      const { house } = props;
+      var payedForDays = house.payed_for / 24;
+      var payedFor = `Gewartet für ${payedForDays} ${payedForDays > 1 ? "Tage" : "Tag"}`;
+      var loc = house.location.substring(1, house.location.length - 1).split(",");
+      return (
+        <Accordion title={`Haus ${house.id}`}>
+          <View style={styles.a}>
+            <Text type="SemiBold" style={{ textAlign: "center", fontSize: 14 }}>
+              {payedFor}
+            </Text>
+
+            <View style={styles.row}>
+              <View style={styles.btnContainer}>
+                <Text type="SemiBold" style={{ textAlign: "center" }}>
+                  Position
+                </Text>
+                <TouchableHighlight
+                  style={modal.btn}
+                  underlayColor={Colors.border}
+                  onPress={() =>
+                    Linking.openURL(`https://info.realliferpg.de/map?x=${loc[0]}&y=${loc[1]}`)
+                  }
+                >
+                  <MaterialCommunityIcons
+                    name="map-search-outline"
+                    size={24}
+                    color="black"
+                    style={{ textAlign: "center", paddingVertical: 15 }}
+                  />
+                </TouchableHighlight>
+              </View>
+
+              {/* <View style={styles.btnContainer}>
+                <Text type="SemiBold" style={{ textAlign: "center" }}>
+                  Benachrichtigung
+                </Text>
+                <TouchableHighlight
+                  style={modal.btn}
+                  underlayColor="#ededed"
+                  onPress={() =>
+                    Linking.openURL(`https://info.realliferpg.de/map?x=${loc[0]}&y=${loc[1]}`)
+                  }
+                >
+                  <MaterialCommunityIcons
+                    name="bell-plus-outline"
+                    size={24}
+                    color="black"
+                    style={{ textAlign: "center", paddingVertical: 15 }}
+                  />
+                </TouchableHighlight>
+              </View> */}
+            </View>
+          </View>
+        </Accordion>
+      );
+    };
+
+    const RentalAccordion = (props) => {
+      const { rental } = props;
+      var payedForDays = rental.payed_for / 24;
+      var payedFor = `Gewartet für ${payedForDays} ${payedForDays > 1 ? "Tage" : "Tag"}`;
+      var loc = rental.location.substring(1, rental.location.length - 1).split(",");
+      return (
+        <Accordion title={`Appartment ${rental.id}`}>
+          <View style={styles.a}>
+            <Text type="SemiBold" style={{ textAlign: "center", fontSize: 14 }}>
+              {payedFor}
+            </Text>
+
+            <View style={styles.row}>
+              <View style={styles.btnContainer}>
+                <Text type="SemiBold" style={{ textAlign: "center" }}>
+                  Position
+                </Text>
+                <TouchableHighlight
+                  style={modal.btn}
+                  underlayColor={Colors.border}
+                  onPress={() =>
+                    Linking.openURL(`https://info.realliferpg.de/map?x=${loc[0]}&y=${loc[1]}`)
+                  }
+                >
+                  <MaterialCommunityIcons
+                    name="map-search-outline"
+                    size={24}
+                    color="black"
+                    style={{ textAlign: "center", paddingVertical: 15 }}
+                  />
+                </TouchableHighlight>
+              </View>
+
+              {/* <View style={styles.btnContainer}>
+                <Text type="SemiBold" style={{ textAlign: "center" }}>
+                  Benachrichtigung
+                </Text>
+                <TouchableHighlight
+                  style={modal.btn}
+                  underlayColor="#ededed"
+                  onPress={() =>
+                    Linking.openURL(`https://info.realliferpg.de/map?x=${loc[0]}&y=${loc[1]}`)
+                  }
+                >
+                  <MaterialCommunityIcons
+                    name="bell-plus-outline"
+                    size={24}
+                    color="black"
+                    style={{ textAlign: "center", paddingVertical: 15 }}
+                  />
+                </TouchableHighlight>
+              </View> */}
+            </View>
+          </View>
+        </Accordion>
+      );
+    };
+
+    const NoResults = (props) => {
+      const { message } = props;
+      return (
+        <View style={styles.a}>
+          <Text type="SemiBold" style={{ textAlign: "center" }}>
+            {message}
+          </Text>
+        </View>
+      );
+    };
 
     if (loading || refreshing) {
       return <Spinner size="large" />;
     } else {
-      // If profile equals null the key wasn't set
-      if (profile !== null) {
+      if (apiKey !== null) {
         return (
-          <View style={{ flex: 1 }}>
+          <View style={styles.container}>
             <ScrollView
               horizontal={false}
               showsVerticalScrollIndicator={true}
@@ -234,30 +271,23 @@ export default class HouseScreen extends Component {
                 }
                 bg={Colors.tabIconSelected}
               />
-              {profile.houses.length > 0
-                ? profile.houses.map((house) => {
-                    return this._renderHouse(house);
-                  })
-                : this._renderPlaceholder("Kein Haus gefunden")}
 
-              {profile.rentals.length > 0
-                ? profile.rentals.map((rental) => {
-                    return this._renderRental(rental);
-                  })
-                : this._renderPlaceholder("Kein Appartment gefunden")}
+              {houses.length > 0 ? (
+                houses.map((house) => {
+                  return <HouseAccordion house={house} />;
+                })
+              ) : (
+                <NoResults message="Keine Häuser gefunden" />
+              )}
+
+              {rentals.length > 0 ? (
+                rentals.map((rental) => {
+                  return <RentalAccordion rental={rental} />;
+                })
+              ) : (
+                <NoResults message="Keine Appartments gefunden" />
+              )}
             </ScrollView>
-            <Modalize ref={this.modalizeRef} adjustToContentHeight={true}>
-              <View style={modal.content}>
-                <Text style={modal.heading}>
-                  {selectedHouse !== undefined
-                    ? selectedHouse.players !== undefined
-                      ? `Haus ${selectedHouse.id}`.toUpperCase()
-                      : `Appartment ${selectedHouse.id}`.toUpperCase()
-                    : null}
-                </Text>
-                {selectedHouse !== undefined ? this._renderModalContent(selectedHouse) : null}
-              </View>
-            </Modalize>
           </View>
         );
       } else {
@@ -283,6 +313,17 @@ const Label = Styled.Text`
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
+  },
+  a: {
+    marginTop: 8,
+    marginHorizontal: "2.5%",
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+    backgroundColor: Colors.lightGray,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 5,
   },
   row: {
     display: "flex",
@@ -291,7 +332,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   btnContainer: {
-    width: "35%",
+    width: "40%",
   },
   item: {
     width: "95%",
