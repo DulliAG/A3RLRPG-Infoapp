@@ -4,10 +4,20 @@ import Colors from "../constants/Colors";
 import styled from "styled-components";
 import { View, StyleSheet, Image } from "react-native";
 import Text from "./CustomText";
+import { Accordion } from "../components/Accordion";
 import { ArmaItemIcon } from "../components/ArmaItem";
 
+const Item = (props) => {
+  return (
+    <Text style={styles.material}>
+      <ArmaItemIcon item={props.item} width={20} height={20} />
+      {props.delivered} / {props.required}
+    </Text>
+  );
+};
+
 const CommunityProject = (props) => {
-  const project = props.project;
+  const { project, expanded } = props;
   // We won't use the original image-height because it would be to big for mobile devices
   // var img = {
   //   width: 0,
@@ -20,122 +30,96 @@ const CommunityProject = (props) => {
   //   },
   //   (err) => console.error(err)
   // );
+  let fundingProgress = parseInt((project.amount * 100) / project.funding_required).toFixed(0);
+  let itemList = [
+    "rock_u",
+    "wood_r",
+    "sand_u",
+    "rock_r",
+    "clay_r",
+    "copper_r",
+    "iron_r",
+    "sand_r",
+    "plastic",
+    "steel",
+  ];
   return (
-    <View style={styles.card}>
-      <Image
-        source={{
-          uri: project.image,
-        }}
-        style={{
-          width: "100%",
-          height: 120,
-          borderBottomLeftRadius: 8,
-          borderBottomRightRadius: 8,
-        }}
-      />
-      <Text type="SemiBold" style={styles.projectName}>
-        {project.title}
-      </Text>
-    </View>
-  );
-};
-
-const ProjectModal = (props) => {
-  const project = props.project;
-
-  const Item = (props) => {
-    return (
-      <Text style={styles.material}>
-        <ArmaItemIcon item={props.item} width={20} height={20} />
-        {props.delivered} / {props.required}
-      </Text>
-    );
-  };
-
-  return (
-    <View>
-      <Image
-        source={{
-          uri: project.image,
-        }}
-        style={styles.modalImage}
-      />
-      <Text style={{ ...styles.item, marginBottom: 10 }}>{project.desc}</Text>
-
-      <Text type="SemiBold" style={styles.modalLabel}>
-        Gesammelt {project.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} € von{" "}
-        {project.funding_required.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €
-      </Text>
-      <ProgressContainer>
-        <ProgressBar
+    <Accordion title={project.title} expanded={expanded}>
+      <View style={{ marginHorizontal: "2.5%" }}>
+        <Image
+          source={{ uri: project.image }}
           style={{
-            width: `${(project.amount * 100) / project.funding_required}%`,
-            backgroundColor: Colors.tabIconSelected,
+            width: "100%",
+            height: 120,
+            borderRadius: 5,
+            borderWidth: 1,
+            borderColor: Colors.border,
           }}
         />
-      </ProgressContainer>
-
-      <Text type="SemiBold" style={styles.modalLabel}>
-        Gesammelte Materialien
-      </Text>
-      <View style={styles.materialRow}>
-        <Item
-          item="rock_u"
-          delivered={project.delivered.rock_u}
-          required={project.delivered.rock_u}
-        />
-
-        <Item
-          item="wood_r"
-          delivered={project.delivered.wood_r}
-          required={project.delivered.wood_r}
-        />
-
-        <Item
-          item="sand_u"
-          delivered={project.delivered.sand_u}
-          required={project.delivered.sand_u}
-        />
-
-        <Item
-          item="rock_r"
-          delivered={project.delivered.rock_r}
-          required={project.delivered.rock_r}
-        />
-
-        <Item
-          item="clay_r"
-          delivered={project.delivered.clay_r}
-          required={project.delivered.clay_r}
-        />
-
-        <Item
-          item="copper_r"
-          delivered={project.delivered.copper_r}
-          required={project.delivered.copper_r}
-        />
-
-        <Item
-          item="iron_r"
-          delivered={project.delivered.iron_r}
-          required={project.delivered.iron_r}
-        />
-
-        <Item
-          item="sand_r"
-          delivered={project.delivered.sand_r}
-          required={project.delivered.sand_r}
-        />
-
-        <Item
-          item="plastic"
-          delivered={project.delivered.plastic}
-          required={project.delivered.plastic}
-        />
-
-        <Item item="steel" delivered={project.delivered.steel} required={project.delivered.steel} />
       </View>
-    </View>
+      <View
+        style={{
+          marginTop: 8,
+          marginHorizontal: "2.5%",
+          padding: 16,
+          backgroundColor: Colors.lightGray,
+          borderWidth: 1,
+          borderColor: Colors.border,
+          borderRadius: 5,
+        }}
+      >
+        <Text>{project.desc}</Text>
+      </View>
+      <View
+        style={{
+          marginTop: 8,
+          marginHorizontal: "2.5%",
+          padding: 16,
+          backgroundColor: Colors.lightGray,
+          borderWidth: 1,
+          borderColor: Colors.border,
+          borderRadius: 5,
+        }}
+      >
+        <ProgressContainer>
+          <ProgressBar
+            style={{
+              width: fundingProgress + "%",
+              backgroundColor: Colors.tabIconSelected,
+            }}
+          />
+        </ProgressContainer>
+        <View style={{ marginTop: 8, flexDirection: "row", justifyContent: "space-between" }}>
+          <Text>{project.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €</Text>
+          <Text>{fundingProgress} %</Text>
+          <Text>{project.funding_required.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €</Text>
+        </View>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          marginTop: 8,
+          marginHorizontal: "2.5%",
+          padding: 16,
+          backgroundColor: Colors.lightGray,
+          borderWidth: 1,
+          borderColor: Colors.border,
+          borderRadius: 5,
+        }}
+      >
+        {itemList.map((item, index) => {
+          return (
+            <Item
+              key={index}
+              item={item}
+              delivered={project.delivered[item]}
+              required={project.delivered[item]}
+            />
+          );
+        })}
+      </View>
+    </Accordion>
   );
 };
 
@@ -147,14 +131,14 @@ const NoProjects = () => {
   );
 };
 
-export { CommunityProject, ProjectModal, NoProjects };
+export { CommunityProject, NoProjects };
 
 const ProgressContainer = styled.View`
   width: 100%;
   height: 25px;
   margin: 0 auto;
   border-radius: 5px;
-  background-color: #ededed;
+  background-color: ${Colors.border};
 `;
 const ProgressBar = styled.View`
   height: 100%;
@@ -177,32 +161,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "black",
   },
-  modalImage: {
-    width: "100%",
-    height: 120,
-    marginTop: 16,
-    marginBottom: 8,
-    borderRadius: 8,
-  },
-  modalLabel: {
-    marginTop: 8,
-  },
   materialRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
     width: "100%",
     marginTop: 5,
+    backgroundColor: "yellow",
   },
   material: {
+    // textAlign: "center",
+    // width: "49%",
+    // paddingHorizontal: 20,
+    // paddingVertical: 8,
+    // marginBottom: 5,
+    // borderWidth: 1,
+    // borderColor: Colors.border,
+    // backgroundColor: "red",
+    // borderRadius: 8,
+    width: "50%",
+    paddingVertical: 4,
     textAlign: "center",
-    width: "49%",
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    marginBottom: 5,
-    borderWidth: 1,
-    borderColor: "#ededed",
-    backgroundColor: "#f8f9fa",
-    borderRadius: 8,
   },
 });

@@ -1,16 +1,15 @@
-import React, { createRef } from "react";
+import React, { Component } from "react";
 import Colors from "../constants/Colors";
 import { ReallifeAPI } from "../ApiHandler";
 // Components
 import Spinner from "../components/Spinner";
-import { CommunityProject, ProjectModal, NoProjects } from "../components/CBS";
-import { View, StyleSheet, Text, RefreshControl } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { Modalize } from "react-native-modalize";
+import { CommunityProject, NoProjects } from "../components/CBS";
+import { View, StyleSheet, RefreshControl } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 const reallifeRPG = new ReallifeAPI();
 
-export default class CBSScreen extends React.Component {
+export default class CBSScreen extends Component {
   constructor() {
     super();
     this.state = {
@@ -18,15 +17,7 @@ export default class CBSScreen extends React.Component {
       refreshing: false,
       selected: null,
     };
-    this.modalizeRef = createRef(null);
   }
-
-  openModal = (project) => {
-    this.setState({ selected: project });
-    this.modalizeRef.current?.open();
-  };
-
-  closeModal = () => this.modalizeRef.current?.close();
 
   async refresh() {
     this.setState({ refreshing: true });
@@ -40,7 +31,7 @@ export default class CBSScreen extends React.Component {
   }
 
   render() {
-    const { loading, refreshing, projects, selected } = this.state;
+    const { loading, refreshing, projects } = this.state;
 
     if (loading || refreshing) {
       return <Spinner size="large" />;
@@ -60,26 +51,12 @@ export default class CBSScreen extends React.Component {
           >
             {projects.length > 0 ? (
               projects.map((project, index) => {
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    activeOpacity={0.9}
-                    onPress={() => this.openModal(project)}
-                  >
-                    <CommunityProject project={project} />
-                  </TouchableOpacity>
-                );
+                return <CommunityProject key={index} project={project} expanded={index == 0} />;
               })
             ) : (
               <NoProjects />
             )}
           </ScrollView>
-          <Modalize ref={this.modalizeRef} adjustToContentHeight={true}>
-            <View style={modal.content}>
-              <Text style={modal.heading}>{selected !== null && selected.title.toUpperCase()}</Text>
-              {selected !== null && <ProjectModal project={selected} />}
-            </View>
-          </Modalize>
         </View>
       );
     }
@@ -89,19 +66,6 @@ export default class CBSScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
-  },
-});
-
-const modal = StyleSheet.create({
-  content: {
-    padding: 20,
-  },
-  heading: {
-    marginBottom: 2,
-    textAlign: "center",
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#ccc",
+    backgroundColor: "#fff",
   },
 });
