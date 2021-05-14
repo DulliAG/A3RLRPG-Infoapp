@@ -111,7 +111,7 @@ export class ServerList extends React.Component {
       return <Spinner size="large" />;
     } else {
       return (
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
           <ServerContainer>
             <Text type="Bold" style={styles.heading}>
               Serverliste
@@ -209,15 +209,19 @@ const InfoContainer = Styled.View`
 const Card = Styled.View`
   margin-left: 10px;
   padding: 15px 20px;
-  border-radius: 8px;
-  background-color: white;
+  border-radius: 5px;
+  background-color: ${Colors.lightGray};
   border-top-width: 5px;
   border-width: 1px;
-  border-top-color: #2f95dc;
-  border-color: #ededed;
+  border-top-color: ${Colors.tabIconSelected};
+  border-color: ${Colors.border};
 `;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
   heading: {
     width: "100%",
     marginLeft: "2.5%",
@@ -231,9 +235,6 @@ const styles = StyleSheet.create({
   },
   online: {
     fontSize: 15,
-  },
-  container: {
-    flex: 1,
   },
   fractionContainer: {
     flexDirection: "row",
@@ -250,8 +251,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginTop: 5,
     borderWidth: 1,
-    borderColor: "#ededed",
-    backgroundColor: "#fff",
-    borderRadius: 8,
+    borderColor: Colors.border,
+    backgroundColor: Colors.lightGray,
+    borderRadius: 5,
   },
 });
