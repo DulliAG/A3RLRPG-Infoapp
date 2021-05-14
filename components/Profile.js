@@ -1,7 +1,5 @@
-import React, { createRef } from "react";
-import * as Notifications from "expo-notifications";
+import React from "react";
 import Colors from "../constants/Colors";
-import { NotifyHandler } from "../NotifyHandler";
 import { ReallifeAPI, DateFormatter } from "../ApiHandler";
 import Layout from "../constants/Layout";
 // Components
@@ -16,7 +14,50 @@ import NoKey from "./NoKey";
 
 const df = new DateFormatter();
 const reallifeRPG = new ReallifeAPI();
-const notifyHandler = new NotifyHandler();
+
+const Side = (props) => {
+  const { icon, level } = props;
+  return (
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        width: 100 / 3.2 + "%",
+        padding: 8,
+        backgroundColor: Colors.lightGray,
+        borderWidth: 1,
+        borderColor: Colors.border,
+        borderRadius: 5,
+      }}
+    >
+      <Ionicons name={icon} size={24} color="black" style={styles.icon} />
+      <Badge>Level {level}</Badge>
+    </View>
+  );
+};
+
+const PlayerStats = (props) => {
+  const { label, text } = props;
+  return (
+    <View
+      style={{
+        marginBottom: 8,
+        marginHorizontal: "2.5%",
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 8,
+        backgroundColor: Colors.lightGray,
+        borderWidth: 1,
+        borderColor: Colors.border,
+      }}
+    >
+      <Label>{label}</Label>
+      <Content>{text}</Content>
+    </View>
+  );
+};
 
 export default class Profile extends React.Component {
   constructor() {
@@ -24,22 +65,8 @@ export default class Profile extends React.Component {
     this.state = {
       loading: true,
       refreshing: false,
-      profile: null,
-      expoPushToken: "",
-      notification: false,
     };
-    this.notificationListener = createRef();
-    this.responseListener = createRef();
   }
-
-  _renderPhoneNumber = (phone) => {
-    return (
-      <ProfileStats key={phone.phone}>
-        <Label>{phone.note !== "default" ? phone.note : "Standardnummer"}</Label>
-        <Content>{phone.phone}</Content>
-      </ProfileStats>
-    );
-  };
 
   refresh = async () => {
     this.setState({ refreshing: true });
@@ -60,44 +87,10 @@ export default class Profile extends React.Component {
     } else {
       this.setState({ loading: false });
     }
-
-    // Run Push Notifications
-    // notifyHandler
-    //   .registerForPushNotificationsAsync()
-    //   .then((token) => this.setState({ expoPushToken: token }));
-    // // registerForPushNotificationsAsync().then((token) => this.setState({ expoPushToken: token }));
-    // this.notificationListener.current = Notifications.addNotificationReceivedListener(
-    //   (notification) => {
-    //     this.setState({ notification: notification });
-    //   }
-    // );
-    // this.responseListener.current = Notifications.addNotificationResponseReceivedListener(
-    //   (response) => {
-    //     console.log(response);
-    //   }
-    // );
   }
 
   render() {
     const { loading, refreshing, profile } = this.state;
-
-    /* <TouchableOpacity
-              style={{ width: "50%", height: 50, backgroundColor: "red" }}
-              onPress={() => {
-                console.log("Run Push Notification");
-                notifyHandler.schedulePushNotification(
-                  "Hauswartungs Erinnerung",
-                  "Dein Haus ${ID} ist noch für 7 Tage gewartet!",
-                  { data: "goes here" },
-                  {
-                    seconds: 1,
-                    repeats: false,
-                  }
-                );
-              }}
-            >
-              <Text>Run Push Notification</Text>
-            </TouchableOpacity> */
 
     if (loading || refreshing) {
       return <Spinner size="large" />;
@@ -117,20 +110,21 @@ export default class Profile extends React.Component {
               />
             }
           >
-            {profile.suspended == 1 ? (
+            {profile.suspended == 1 && (
               <CustomAlert msg="Du wurdest gebannt!" bg={Colors.tabIconSelected} />
-            ) : null}
-            {profile.jail_time >= 1 ? (
+            )}
+
+            {profile.jail_time >= 1 && (
               <CustomAlert
                 msg={`Du sitzt derzeit im Bundesgefänigs von Nordholm ein. Deine Inhaftierung dauert noch ${
                   profile.jail_time / 2
                 } Monate an!`}
                 bg={Colors.tabIconSelected}
               />
-            ) : null}
+            )}
 
-            <View style={{ ...styles.card, marginTop: 18 }}>
-              <View style={styles.avatarContainer}>
+            <View style={styles.container}>
+              <View style={{ ...styles.avatarContainer, marginTop: 16 }}>
                 <Image
                   style={styles.avatar}
                   source={{
@@ -139,84 +133,72 @@ export default class Profile extends React.Component {
                 />
               </View>
 
-              <View style={styles.row}>
+              <View style={{ ...styles.row, marginHorizontal: "2.5%" }}>
                 <Text type="SemiBold" style={styles.level}>
                   Level {profile.level}
                 </Text>
-                <LevelBar>
-                  <LevelProgress
-                    style={{
-                      width: `${profile.level_progress}%`,
-                    }}
-                  />
-                </LevelBar>
-              </View>
-
-              <View style={{ ...styles.row, marginTop: 18 }}>
-                <Text
+                <View
                   style={{
                     width: "100%",
-                    textAlign: "center",
-                    fontFamily: "OpenSans-SemiBold",
-                    fontSize: 16,
+                    height: 25,
+                    backgroundColor: Colors.lightGray,
+                    borderWidth: 1,
+                    borderColor: Colors.border,
+                    borderRadius: 5,
                   }}
                 >
-                  Fraktionen
-                </Text>
-                <Fraction style={{ borderRightWidth: 1, borderColor: "#ededed" }}>
-                  <Ionicons name="ios-ribbon" size={24} color="black" style={styles.icon} />
-                  <Badge>Level {profile.coplevel}</Badge>
-                </Fraction>
-
-                <Fraction style={{ borderRightWidth: 1, borderColor: "#ededed" }}>
-                  <Ionicons name="ios-medkit" size={24} color="black" style={styles.icon} />
-                  <Badge>Level {profile.mediclevel}</Badge>
-                </Fraction>
-
-                <Fraction>
-                  <Ionicons name="ios-construct" size={24} color="black" style={styles.icon} />
-                  <Badge>Level {profile.adaclevel}</Badge>
-                </Fraction>
+                  <View
+                    style={{
+                      width: `${profile.level_progress}%`,
+                      height: "100%",
+                      backgroundColor: Colors.tabIconSelected,
+                      borderTopLeftRadius: 5,
+                      borderBottomLeftRadius: 5,
+                    }}
+                  />
+                </View>
               </View>
 
-              <ProfileStats style={{ marginTop: 18 }}>
-                <Label>Name</Label>
-                <Content>{profile.name}</Content>
-              </ProfileStats>
-              <ProfileStats>
-                <Label>Player Id</Label>
-                <Content>{profile.pid}</Content>
-              </ProfileStats>
-              <ProfileStats>
-                <Label>Bargeld</Label>
-                <Content>{profile.cash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €</Content>
-              </ProfileStats>
-              <ProfileStats>
-                <Label>Kontostand</Label>
-                <Content>
-                  {profile.bankacc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €
-                </Content>
-              </ProfileStats>
-              <ProfileStats>
-                <Label>Quest Fortschritt</Label>
-                <Content>{profile.quest_row} / 39</Content>
-              </ProfileStats>
-              <ProfileStats>
-                <Label>Skillpunkte</Label>
-                <Content>{profile.skillpoint} Verfügbar</Content>
-              </ProfileStats>
-              <ProfileStats>
-                <Label>Aktive Spielzeit</Label>
-                <Content>{(profile.play_time.active / 60).toFixed(2)} Stunden</Content>
-              </ProfileStats>
-              <ProfileStats>
-                <Label>Gesamte Spielzeit</Label>
-                <Content>{(profile.play_time.total / 60).toFixed(2)} Stunden</Content>
-              </ProfileStats>
-              <ProfileStats>
-                <Label>Zuletzt Online</Label>
-                <Content>{df.format(profile.last_seen.date)}</Content>
-              </ProfileStats>
+              <View style={{ marginTop: 16 }}>
+                <Text type="SemiBold" style={{ textAlign: "center", fontSize: 16 }}>
+                  Fraktionen
+                </Text>
+
+                <View
+                  style={{
+                    ...styles.row,
+                    justifyContent: "space-between",
+                    marginHorizontal: "2.5%",
+                    marginBottom: 16,
+                  }}
+                >
+                  <Side icon="ios-ribbon" level={profile.coplevel} />
+                  <Side icon="ios-medkit" level={profile.mediclevel} />
+                  <Side icon="ios-construct" level={profile.adaclevel} />
+                </View>
+
+                <PlayerStats label="Name" text={profile.name} />
+                <PlayerStats label="Player Id" text={profile.pid} />
+                <PlayerStats
+                  label="Bargeld"
+                  text={`${profile.cash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €`}
+                />
+                <PlayerStats
+                  label="Kontostand"
+                  text={`${profile.bankacc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} €`}
+                />
+                <PlayerStats label="Quest Fortschritt" text={`${profile.quest_row} / 39`} />
+                <PlayerStats label="Skillpunkte" text={`${profile.skillpoint} Verfügbar`} />
+                <PlayerStats
+                  label="Aktive Spielzeit"
+                  text={`${(profile.play_time.active / 60).toFixed(2)} Stunden`}
+                />
+                <PlayerStats
+                  label="Gesamte Spielzeit"
+                  text={`${(profile.play_time.total / 60).toFixed(2)} Stunden`}
+                />
+                <PlayerStats label="Zuletzt Online" text={df.format(profile.last_seen.date)} />
+              </View>
             </View>
           </ScrollView>
         );
@@ -227,28 +209,9 @@ export default class Profile extends React.Component {
   }
 }
 
-const LevelBar = Styled.View`
-  width: 100%;
-  height: 25px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-`;
-const LevelProgress = Styled.View`
-  height: 100%;
-  background-color: ${Colors.tabIconSelected};
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-`;
-const Fraction = Styled.View`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: ${100 / 3}%;
-`;
 const Badge = Styled.Text`
   text-align: center;
-  width: 75%;
+  width: 90%;
   margin: 0 auto;
   padding: 4px;
   font-family: "OpenSans-Regular";
@@ -256,11 +219,6 @@ const Badge = Styled.Text`
   border-radius: 6px;
   background-color: ${Colors.tabIconSelected};
   color: white;
-`;
-const ProfileStats = Styled.View`
-  padding: 4px 0;
-  border-top-width: 1px;
-  border-color: #ededed;
 `;
 const Label = Styled.Text`
   margin-bottom: 0;
@@ -273,22 +231,16 @@ const Content = Styled.Text`
 `;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
   row: {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
   },
-  card: {
-    width: "95%",
-    marginRight: "2.5%",
-    marginLeft: "2.5%",
-    marginBottom: 18,
-    padding: 20,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    borderTopWidth: 5,
-    borderColor: Colors.tabIconSelected,
-  },
+
   avatarContainer: {
     display: "flex",
     flexDirection: "row",

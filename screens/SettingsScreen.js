@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Colors from "../constants/Colors";
 import { Updates } from "expo";
 import { expo } from "../app.json";
 // Components

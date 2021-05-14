@@ -6,6 +6,7 @@ import CompanyScreen from "./CompanyScreen";
 import Profile from "../components/Profile";
 import TabBarIcon from "../components/TabBarIcon";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Colors from "../constants/Colors";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Profile";
@@ -30,7 +31,7 @@ const ProfileScreen = () => {
           elevation: 0, // for android
           shadowOpacity: 0, // for iOS
           borderBottomWidth: 1,
-          borderBottomColor: "#ededed",
+          borderBottomColor: Colors.border,
         },
       }}
     >
