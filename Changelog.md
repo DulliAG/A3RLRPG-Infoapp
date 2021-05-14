@@ -8,8 +8,10 @@
 
 #### Geändert
 
-- **Farbschema** wurde angepasst
+- **Design** wurde angepasst
   - **RefreshController** wurde farblich angepasst
+  - Rundungen verringert
+  - Farben angepasst
 - Neue Links wurden beim Drawer hinzugefügt
 - **Changelogs**
   - Neue Accordion Komponente wird verwendet
@@ -18,8 +20,10 @@
   - **Handynummern** werden nun hier angezeigt
   - Suchleiste entfernt
   - Es werden nun alle Kontaktbücher angezeigt
+- Bilder der **ReallifeRPG Icons** wurden auf den DulliAG Webserver verschoben und werden nun über eine Komponente abgerufen
+- **Häuser & Appartments** werden nun mithilfe von Accordions dargestellt
 
 #### Entfernt
 
 - **Handynummern** wurden vom Profil entfernt
-- **ChangelogAccordion** wurde entfernt und durch eine neue mehrfach anwendbare Komponente ersetzt
+- **Changelog Accordion** wurde entfernt und durch eine neue mehrfach anwendbare Komponente ersetzt
