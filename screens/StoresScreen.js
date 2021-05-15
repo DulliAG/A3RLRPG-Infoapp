@@ -1,4 +1,5 @@
 import React from "react";
+import Colors from "../constants/Colors";
 // Components
 import Store from "../components/StoreItem";
 import TabBarIcon from "../components/TabBarIcon";
@@ -37,7 +38,7 @@ const StoreScreen = () => {
           elevation: 0, // for android
           shadowOpacity: 0, // for iOS
           borderBottomWidth: 1,
-          borderBottomColor: "#ededed",
+          borderBottomColor: Colors.border,
         },
       }}
     >

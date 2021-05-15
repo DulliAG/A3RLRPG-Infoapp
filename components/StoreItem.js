@@ -5,6 +5,7 @@ import { ReallifeAPI } from "../ApiHandler";
 import styled from "styled-components";
 // Components
 import Spinner from "./Spinner";
+import { Accordion } from "./Accordion";
 import { View, StyleSheet, ScrollView, RefreshControl } from "react-native";
 import Text from "./CustomText";
 import { Modalize } from "react-native-modalize";
@@ -101,11 +102,11 @@ export default class Store extends Component {
     const { category } = this.props;
     const { loading, refreshing, loadingItems, shops, activeShop, shopItems } = this.state;
 
-    if (loading && !refreshing) {
+    if (loading || refreshing) {
       return <Spinner size="large" />;
     } else {
       return (
-        <View>
+        <View style={styles.container}>
           <ScrollView
             horizontal={false}
             showsVerticalScrollIndicator={true}
@@ -168,6 +169,7 @@ const ItemInformation = styled.Text`
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
   },
   item: {
     width: "95%",
@@ -177,9 +179,9 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginTop: 5,
     borderWidth: 1,
-    borderColor: "#ededed",
-    backgroundColor: "white",
-    borderRadius: 8,
+    borderColor: Colors.border,
+    backgroundColor: Colors.lightGray,
+    borderRadius: 5,
   },
   itemname: {
     display: "flex",
