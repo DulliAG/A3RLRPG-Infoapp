@@ -12,7 +12,7 @@ npm-debug.*
 web-build/
 
 # credentials
-google-services.json
+# google-services.json
 
 # macOS
 .DS_Store
