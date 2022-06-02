@@ -1,5 +1,6 @@
 node_modules/
 .expo/
+.idea
 dist/
 npm-debug.*
 *.jks
@@ -11,7 +12,7 @@ npm-debug.*
 web-build/
 
 # credentials
-# google-services.json
+google-services.json
 
 # macOS
 .DS_Store
