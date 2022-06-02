@@ -7,6 +7,7 @@ import { ScrollLayout } from '../components/scroll-view.component';
 import { Server, ServerPlayer } from '../components/server.component';
 import { Spinner } from '../components/spinner.component';
 import { IServerList, ReallifeRPGService } from '../services/realliferpg.service';
+import { NoContent } from '../components/no-content.component';
 
 export const ServerList: React.FC = () => {
   const ReallifeService = new ReallifeRPGService();
@@ -63,11 +64,15 @@ export const ServerList: React.FC = () => {
             })}
           </ScrollLayout>
         </View>
-        <View style={{ margin: 15 }}>
+        <View style={{ margin: 15, flexGrow: 1 }}>
           <Title>Spielerliste</Title>
-          {players.map((player, index) => (
-            <ServerPlayer key={index} player={player} />
-          ))}
+          <View style={{ flexGrow: 1 }}>
+            {players.length > 0 ? (
+              players.map((player, index) => <ServerPlayer key={index} player={player} />)
+            ) : (
+              <NoContent text="Keine Spieler gefunden" />
+            )}
+          </View>
         </View>
       </ScrollLayout>
     </Layout>
