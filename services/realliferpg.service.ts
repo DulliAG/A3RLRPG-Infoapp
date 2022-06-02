@@ -75,7 +75,6 @@ export class ReallifeRPGService {
     });
   }
 
-  // FIXME: Ad correct type-declarations
   getProfile(): Promise<Profile.IProfile> {
     return new Promise((res, rej) => {
       fetch('https://api.realliferpg.de/v1/player/' + this._apiKey)
@@ -117,6 +116,15 @@ export class ReallifeRPGService {
       fetch('https://api.realliferpg.de/v1/info/items/' + shoptype)
         .then((response) => response.json())
         .then((result: IItemShop) => res(result))
+        .catch((err) => rej(err));
+    });
+  }
+
+  getCompanyShops(): Promise<ICompanyShops> {
+    return new Promise((res, rej) => {
+      fetch('https://api.realliferpg.de/v1/company_shops')
+        .then((response) => response.json())
+        .then((result: ICompanyShops) => res(result))
         .catch((err) => rej(err));
     });
   }
@@ -300,7 +308,6 @@ export declare module MVehicle {
 }
 
 export declare module Profile {
-  // FIXME: Add missing interfaces
   interface IProfile {
     data: IProfileData[];
     requested_at: number;
@@ -358,11 +365,52 @@ export declare module Profile {
     houses: IHouse[];
     rentals: any[];
     buildings: any[];
-    phones: any[];
+    phones: IPhone[];
     company_owned: ICompany[];
-    phonebooks: any[];
+    phonebooks: IPhoneBooks[];
     licenses: ILicense[];
     bank_main: IBankAccount[];
+  }
+
+  interface IPhone {
+    pid: string;
+    phone: string;
+    note: 'default' | 'bought' | string;
+    side: string;
+    idNR: number;
+    disabled: 0 | 1;
+    created_at: string;
+    updated_at: string;
+  }
+
+  interface IPhoneBooks {
+    pid: string;
+    idNR: number;
+    phonebook: IPhoneBookContact[];
+    updated_at: string;
+    created_at: string;
+    laravel_through_key: string;
+    side: string;
+    identity: IID;
+  }
+
+  interface IPhoneBookContact {
+    number: string;
+    name: string;
+    type: string;
+    special: '1' | '0';
+    iban: string;
+  }
+
+  interface IID {
+    id: number;
+    pid: string;
+    side: string;
+    name: string;
+    created_at: string;
+    id_birthday: string;
+    id_nationality: string;
+    rac_membership: string;
   }
 
   interface ICompany {
@@ -382,8 +430,8 @@ export declare module Profile {
     created_by: string;
     created_at: string;
     updated_at: string;
-    bank_details: Record<string, IBankAccount>;
-    shops: any[];
+    bank_details?: Record<'bank_1' | 'bank_2', IBankAccount>;
+    shops?: any[];
   }
 
   interface IBankAccount {
@@ -479,4 +527,25 @@ export interface IItemShopItem {
   shopname: string;
   shoptype: string;
   name: string;
+}
+
+export interface ICompanyShops {
+  data: ICompanyShop[];
+  requested_at: number;
+}
+
+export interface ICompanyShop {
+  industrial_area_id: number;
+  company: {
+    id: number;
+    name: string;
+    owner: string;
+  };
+  pos: string;
+  shops: {
+    item: string;
+    item_localized: string;
+    amount: number;
+    price: number;
+  }[];
 }

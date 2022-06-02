@@ -32,6 +32,11 @@ Dies ist **nicht** die **offizielle Infoapp** von [ReallifeRPG](https://reallife
   Für ein Beispiel siehe <a href="https://app.dulliag.de">A3RLRPG-Infopanel</a>
 </details>
 
+<details>
+  <summary>💡 Dark-Theme</summary>
+  Dunkles Farbschema für die App
+</details>
+
 ## :calendar: Geplante Features
 
 <details>
@@ -40,16 +45,16 @@ Dies ist **nicht** die **offizielle Infoapp** von [ReallifeRPG](https://reallife
   Außerdem wenn ein neuer Changelog erschien ist
 </details>
 
-<details>
-  <summary>💡 Dark-Theme</summary>
-  Dunkles Farbschema für die App
-</details>
-
 ## Installation
 
 ## :link: Ressourcen
 
-[ReallifeRPG API](https://api.realliferpg.de)
-[ReallifeRPG App Drawables](https://github.com/A3ReallifeRPG/RealLifeRPG-App/tree/master/app/src/main/res/drawable)
+| Ressource                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------- |
+| [ReallifeRPG API](https://api.realliferpg.de)                                                                       |
+| [ReallifeRPG App Drawables](https://github.com/A3ReallifeRPG/RealLifeRPG-App/tree/master/app/src/main/res/drawable) |
+| [Expo](https://docs.expo.dev/)                                                                                      |
+| [React Native](https://reactnative.dev/)                                                                            |
+| [React Native Paper](https://callstack.github.io/react-native-paper/drawer-item.html)                               |
 
 _Alle weiteren genutzten Ressourcen können [hier](https://github.com/DulliAG/A3RLRPG-Infoapp/network/dependencies) gefunden werden_

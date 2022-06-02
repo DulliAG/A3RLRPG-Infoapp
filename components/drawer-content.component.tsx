@@ -4,9 +4,9 @@ import { useTheme, Title, Caption, Drawer } from 'react-native-paper';
 import { ImageBackground, View, Image } from 'react-native';
 
 interface CustomDrawerContentProps extends DrawerContentComponentProps {
-  avatar?: string;
-  name?: string;
-  pid?: string;
+  avatar: string;
+  name: string;
+  pid: string;
 }
 
 export const CustomDrawerContent: React.FC<CustomDrawerContentProps> = (props) => {
@@ -30,7 +30,7 @@ export const CustomDrawerContent: React.FC<CustomDrawerContentProps> = (props) =
           >
             <Image
               source={{
-                uri: props.avatar || 'https://files.dulliag.de/share/arma3_x64_HZPy6Cnudh.png',
+                uri: props.avatar,
               }}
               style={{ width: 75, height: 75, marginLeft: 10, borderRadius: theme.roundness }}
             />
