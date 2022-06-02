@@ -308,7 +308,6 @@ export declare module MVehicle {
 }
 
 export declare module Profile {
-  // FIXME: Add missing interfaces
   interface IProfile {
     data: IProfileData[];
     requested_at: number;
@@ -366,11 +365,52 @@ export declare module Profile {
     houses: IHouse[];
     rentals: any[];
     buildings: any[];
-    phones: any[];
+    phones: IPhone[];
     company_owned: ICompany[];
-    phonebooks: any[];
+    phonebooks: IPhoneBooks[];
     licenses: ILicense[];
     bank_main: IBankAccount[];
+  }
+
+  interface IPhone {
+    pid: string;
+    phone: string;
+    note: 'default' | 'bought' | string;
+    side: string;
+    idNR: number;
+    disabled: 0 | 1;
+    created_at: string;
+    updated_at: string;
+  }
+
+  interface IPhoneBooks {
+    pid: string;
+    idNR: number;
+    phonebook: IPhoneBookContact[];
+    updated_at: string;
+    created_at: string;
+    laravel_through_key: string;
+    side: string;
+    identity: IID;
+  }
+
+  interface IPhoneBookContact {
+    number: string;
+    name: string;
+    type: string;
+    special: '1' | '0';
+    iban: string;
+  }
+
+  interface IID {
+    id: number;
+    pid: string;
+    side: string;
+    name: string;
+    created_at: string;
+    id_birthday: string;
+    id_nationality: string;
+    rac_membership: string;
   }
 
   interface ICompany {

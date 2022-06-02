@@ -8,6 +8,7 @@ import { Settings } from '../screens/settings.screen';
 import { Properties } from '../screens/property.screen';
 import { TraderNavigator } from './trader.navigation';
 import { CompanyShops } from '../screens/company-shops.screen';
+import { Contacts } from '../screens/contacts.screen';
 
 export const INITIAL_ROUTE_NAME = 'Serverliste';
 
@@ -48,12 +49,12 @@ export const ROUTES = [
     icon: 'factory',
     component: CompanyShops,
   },
-  // {
-  //   name: 'contacts',
-  //   title: 'Kontaktbuch',
-  //   icon: 'contacts',
-  //   component: Demo,
-  // },
+  {
+    name: 'contacts',
+    title: 'Kontaktbuch',
+    icon: 'contacts',
+    component: Contacts,
+  },
   {
     name: 'market',
     title: 'Markt',
