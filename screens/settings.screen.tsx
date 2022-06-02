@@ -1,10 +1,9 @@
 import * as React from 'react';
-import * as Clipboard from 'expo-clipboard';
+// import * as Clipboard from 'expo-clipboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Linking, View } from 'react-native';
+import { Linking, ScrollView, View } from 'react-native';
 import { Divider, TextInput, Title, Text, Button, Snackbar } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
-import { ScrollLayout } from '../components/scroll-view.component';
 import { Spinner } from '../components/spinner.component';
 import { name, version } from '../package.json';
 import { KeyContext } from '../context/KeyContext';
@@ -93,7 +92,7 @@ export const Settings: React.FC = () => {
   if (loading) return <Spinner />;
   return (
     <Layout>
-      <ScrollLayout>
+      <ScrollView>
         <View style={{ margin: 15 }}>
           <Title>Informationen</Title>
           <Label label="Name" value={name} />
@@ -126,7 +125,7 @@ export const Settings: React.FC = () => {
         </View>
 
         {/* TODO: Hinzufügen einer Option zum einstellen von Push-Benachrichtigungen */}
-      </ScrollLayout>
+      </ScrollView>
       <Snackbar
         visible={snackbar.show}
         action={snackbar.action}

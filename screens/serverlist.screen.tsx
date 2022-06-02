@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Title, TouchableRipple } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
 import DeviceLayout from '../constants/Layout';
-import { ScrollLayout } from '../components/scroll-view.component';
 import { Server, ServerPlayer } from '../components/server.component';
 import { Spinner } from '../components/spinner.component';
 import { IServerList, ReallifeRPGService } from '../services/realliferpg.service';
 import { NoContent } from '../components/no-content.component';
+import { RefreshControl } from '../components/refresh-control.component';
 
 export const ServerList: React.FC = () => {
   const ReallifeService = new ReallifeRPGService();
@@ -40,9 +40,11 @@ export const ServerList: React.FC = () => {
   if (loading) return <Spinner />;
   return (
     <Layout>
-      <ScrollLayout refreshing={refreshing} handleRefresh={handleRefresh}>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      >
         <View style={{ marginHorizontal: 15, marginTop: 15 }}>
-          <ScrollLayout horizontal={true} showsHorizontalScrollIndicator={false}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {servers?.data.map((server, index) => {
               return (
                 <TouchableRipple
@@ -62,7 +64,7 @@ export const ServerList: React.FC = () => {
                 </TouchableRipple>
               );
             })}
-          </ScrollLayout>
+          </ScrollView>
         </View>
         <View style={{ margin: 15, flexGrow: 1 }}>
           <Title>Spielerliste</Title>
@@ -74,7 +76,7 @@ export const ServerList: React.FC = () => {
             )}
           </View>
         </View>
-      </ScrollLayout>
+      </ScrollView>
     </Layout>
   );
 };

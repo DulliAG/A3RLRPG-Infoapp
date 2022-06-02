@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { ActivityIndicator, DataTable, List, useTheme } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
 import { NoContent } from '../components/no-content.component';
-import { ScrollLayout } from '../components/scroll-view.component';
+import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
 import { IItemShopItem, IShopType, ReallifeRPGService } from '../services/realliferpg.service';
 
@@ -48,7 +48,9 @@ export const ItemTrader: React.FC = () => {
   // FIXME: Performance muss beim render der Tabelle verbessert werden
   return (
     <Layout>
-      <ScrollLayout refreshing={refreshing} handleRefresh={handleRefresh}>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      >
         {itemShops.length > 0 ? (
           <List.AccordionGroup expandedId={selectedShop} onAccordionPress={handleAccordionPress}>
             {itemShops.map((shop, index) => (
@@ -84,7 +86,7 @@ export const ItemTrader: React.FC = () => {
         ) : (
           <NoContent />
         )}
-      </ScrollLayout>
+      </ScrollView>
     </Layout>
   );
 };

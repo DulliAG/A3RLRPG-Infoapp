@@ -5,7 +5,8 @@ import { Profile, ReallifeRPGService } from '../services/realliferpg.service';
 import { CreditCard } from '../components/credit-card.component';
 import { KeyContext } from '../context/KeyContext';
 import { NoContent } from '../components/no-content.component';
-import { ScrollLayout } from '../components/scroll-view.component';
+import { ScrollView } from 'react-native';
+import { RefreshControl } from '../components/refresh-control.component';
 
 export interface IBankAccount {
   iban: string;
@@ -100,14 +101,15 @@ export const Banking: React.FC = () => {
   if (loading) return <Spinner />;
   return (
     <Layout>
-      {/* FIXME: Add refreshControl */}
-      <ScrollLayout refreshing={refreshing} handleRefresh={handleRefresh}>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      >
         {bankAccounts.length > 0 ? (
           bankAccounts.map((account, index) => <CreditCard key={index} {...account} />)
         ) : (
           <NoContent />
         )}
-      </ScrollLayout>
+      </ScrollView>
     </Layout>
   );
 };

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { List, ProgressBar, Text, useTheme } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
 import { NoContent } from '../components/no-content.component';
-import { ScrollLayout } from '../components/scroll-view.component';
+import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
 import { KeyContext } from '../context/KeyContext';
 import { MVehicle, ReallifeRPGService } from '../services/realliferpg.service';
@@ -56,7 +56,9 @@ export const Garage: React.FC = () => {
   if (loading) return <Spinner />;
   return (
     <Layout>
-      <ScrollLayout refreshing={refreshing} handleRefresh={handleRefresh}>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      >
         {garage?.data.length > 0 ? (
           <List.AccordionGroup>
             {garage?.data.map((vehicle, index) => {
@@ -138,7 +140,7 @@ export const Garage: React.FC = () => {
         ) : (
           <NoContent />
         )}
-      </ScrollLayout>
+      </ScrollView>
     </Layout>
   );
 };

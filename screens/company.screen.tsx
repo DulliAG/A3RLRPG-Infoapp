@@ -1,9 +1,10 @@
 import * as React from 'react';
+import { ScrollView } from 'react-native';
 import { List } from 'react-native-paper';
 import { Company } from '../components/company.component';
 import { Layout } from '../components/layout.component';
 import { NoContent } from '../components/no-content.component';
-import { ScrollLayout } from '../components/scroll-view.component';
+import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
 import { KeyContext } from '../context/KeyContext';
 import { Profile, ReallifeRPGService } from '../services/realliferpg.service';
@@ -37,7 +38,9 @@ export const Companies: React.FC = () => {
   if (loading) return <Spinner />;
   return (
     <Layout>
-      <ScrollLayout refreshing={refreshing} handleRefresh={handleRefresh}>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      >
         {companies.length > 0 ? (
           <List.AccordionGroup>
             {companies.map((company, index) => (
@@ -47,7 +50,7 @@ export const Companies: React.FC = () => {
         ) : (
           <NoContent />
         )}
-      </ScrollLayout>
+      </ScrollView>
     </Layout>
   );
 };

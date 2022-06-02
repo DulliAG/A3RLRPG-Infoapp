@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { ActivityIndicator, DataTable, List, useTheme } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
 import { NoContent } from '../components/no-content.component';
-import { ScrollLayout } from '../components/scroll-view.component';
+import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
 import { IShopType, IVehicleShopItem, ReallifeRPGService } from '../services/realliferpg.service';
 
@@ -47,7 +47,9 @@ export const VehicleTrader: React.FC = () => {
   if (loading) return <Spinner />;
   return (
     <Layout>
-      <ScrollLayout refreshing={refreshing} handleRefresh={handleRefresh}>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      >
         {vehicleShops.length > 0 ? (
           <List.AccordionGroup expandedId={selectedShop} onAccordionPress={handleAccordionPress}>
             {vehicleShops.map((shop, index) => (
@@ -85,7 +87,7 @@ export const VehicleTrader: React.FC = () => {
         ) : (
           <NoContent />
         )}
-      </ScrollLayout>
+      </ScrollView>
     </Layout>
   );
 };

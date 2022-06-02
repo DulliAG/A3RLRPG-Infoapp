@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { View } from 'react-native';
-import { Chip, List, Text, Title, useTheme } from 'react-native-paper';
+import { ScrollView, View } from 'react-native';
+import { Chip, List, Text, useTheme } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
 import { NoContent } from '../components/no-content.component';
-import { ScrollLayout } from '../components/scroll-view.component';
+import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
 import { KeyContext } from '../context/KeyContext';
 import { Profile, ReallifeRPGService } from '../services/realliferpg.service';
@@ -35,7 +35,9 @@ export const Properties: React.FC = () => {
   return (
     <Layout>
       {houses.length > 0 ? (
-        <ScrollLayout refreshing={refreshing} handleRefresh={handleRefresh}>
+        <ScrollView
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+        >
           <List.AccordionGroup>
             {houses.map((house, index) => (
               <List.Accordion
@@ -75,7 +77,7 @@ export const Properties: React.FC = () => {
               </List.Accordion>
             ))}
           </List.AccordionGroup>
-        </ScrollLayout>
+        </ScrollView>
       ) : (
         <NoContent />
       )}

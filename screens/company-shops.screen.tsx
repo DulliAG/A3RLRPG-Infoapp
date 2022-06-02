@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Spinner } from '../components/spinner.component';
 import { Layout } from '../components/layout.component';
 import { ICompanyShop, ReallifeRPGService } from '../services/realliferpg.service';
-import { Image, View } from 'react-native';
+import { Image, ScrollView, View } from 'react-native';
 import { KeyContext } from '../context/KeyContext';
 import { NoContent } from '../components/no-content.component';
-import { ScrollLayout } from '../components/scroll-view.component';
 import { List, Text, useTheme } from 'react-native-paper';
+import { RefreshControl } from '../components/refresh-control.component';
 
 export const CompanyShops: React.FC = () => {
   const theme = useTheme();
@@ -34,7 +34,9 @@ export const CompanyShops: React.FC = () => {
   if (loading) return <Spinner />;
   return (
     <Layout>
-      <ScrollLayout refreshing={refreshing} handleRefresh={handleRefresh}>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      >
         <List.AccordionGroup>
           {companies.length > 0 ? (
             companies.map((company, index) => (
@@ -86,7 +88,7 @@ export const CompanyShops: React.FC = () => {
             <NoContent />
           )}
         </List.AccordionGroup>
-      </ScrollLayout>
+      </ScrollView>
     </Layout>
   );
 };
