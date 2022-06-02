@@ -55,7 +55,6 @@ export const Changelogs: React.FC = () => {
                     id={id}
                     title={'v' + version}
                     description={format(release, 'dd.MM.yyyy')}
-                    style={{ borderTopWidth: 1, borderColor: theme.colors.border }}
                   >
                     {change_mission.length > 0 && (
                       <List.Section>

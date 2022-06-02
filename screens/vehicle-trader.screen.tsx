@@ -51,20 +51,10 @@ export const VehicleTrader: React.FC = () => {
         {vehicleShops.length > 0 ? (
           <List.AccordionGroup expandedId={selectedShop} onAccordionPress={handleAccordionPress}>
             {vehicleShops.map((shop, index) => (
-              <List.Accordion
-                key={index}
-                id={shop.shoptype}
-                title={shop.shopname}
-                style={{
-                  borderColor: theme.colors.border,
-                  borderBottomWidth: 1,
-                }}
-              >
+              <List.Accordion key={index} id={shop.shoptype} title={shop.shopname}>
                 <View
                   style={{
                     padding: loadingShop ? 15 : 0,
-                    borderBottomColor: theme.colors.border,
-                    borderBottomWidth: 1,
                   }}
                 >
                   {loadingShop ? (
