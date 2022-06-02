@@ -382,8 +382,8 @@ export declare module Profile {
     created_by: string;
     created_at: string;
     updated_at: string;
-    bank_details: Record<string, IBankAccount>;
-    shops: any[];
+    bank_details?: Record<'bank_1' | 'bank_2', IBankAccount>;
+    shops?: any[];
   }
 
   interface IBankAccount {
