@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
-import { List, Text } from 'react-native-paper';
+import { List } from 'react-native-paper';
 import { Company } from '../components/company.component';
 import { Layout } from '../components/layout.component';
 import { NoContent } from '../components/no-content.component';
@@ -20,7 +19,6 @@ export const Companies: React.FC = () => {
     setRefreshing(true);
     ReallifeService.getProfile()
       .then((result) => {
-        // FIXME: Add type declarations
         const data = result.data[0];
         const ownedCompanies = data.company_owned;
         setCompanies(ownedCompanies);
@@ -39,7 +37,7 @@ export const Companies: React.FC = () => {
   if (loading) return <Spinner />;
   return (
     <Layout>
-      <ScrollLayout>
+      <ScrollLayout refreshing={refreshing} handleRefresh={handleRefresh}>
         {companies.length > 0 ? (
           <List.AccordionGroup>
             {companies.map((company, index) => (

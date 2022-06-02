@@ -75,7 +75,6 @@ export class ReallifeRPGService {
     });
   }
 
-  // FIXME: Ad correct type-declarations
   getProfile(): Promise<Profile.IProfile> {
     return new Promise((res, rej) => {
       fetch('https://api.realliferpg.de/v1/player/' + this._apiKey)
