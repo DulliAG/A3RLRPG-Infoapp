@@ -18,7 +18,7 @@ import { KeyContext, KeyContextProvider } from './context/KeyContext';
 import useCachedResources from './hooks/useCachedRessources';
 import { LightTheme, DarkTheme } from './constants/Theme';
 import { Spinner } from './components/spinner.component';
-import Drawer from './navigation/drawer.navigation';
+import Drawer, { IDrawerProfile } from './navigation/drawer.navigation';
 
 const App: React.FC = () => {
   const ReallifeService = new ReallifeRPGService();
@@ -31,7 +31,7 @@ const App: React.FC = () => {
     action?: { label: string; onPress: () => void };
   }>({ show: false, text: 'placeholder' });
   const [key, setKey] = React.useState('');
-  const [profile, setProfile] = React.useState<Profile.IProfile>({} as Profile.IProfile);
+  const [profile, setProfile] = React.useState<IDrawerProfile>({} as IDrawerProfile);
   // const [notification, setNotification] = React.useState<any>(false);
   // const notificationListener = React.useRef<any>();
   // const responseListener = React.useRef<any>();
@@ -102,10 +102,19 @@ const App: React.FC = () => {
       .then((key) => {
         if (!key) {
           setShowModal(true);
+          setProfile({
+            avatar: 'https://files.dulliag.de/share/arma3_x64_HZPy6Cnudh.png',
+            name: 'Max Mustermann',
+            pid: '1234567890',
+          });
+          setLoading(false);
         } else {
           new ReallifeRPGService(key)
             .getProfile()
-            .then((result) => setProfile(result))
+            .then((result) => {
+              const data = result.data[0];
+              setProfile({ avatar: data.avatar_full, name: data.name, pid: data.pid });
+            })
             .catch((err) => console.log(err))
             .finally(() => setLoading(false));
           setApiKey(key);
@@ -118,7 +127,7 @@ const App: React.FC = () => {
   return (
     <NavigationContainer>
       <StatusBar style="light" />
-      <Drawer profile={profile} />
+      <Drawer {...profile} />
 
       <Portal>
         <Dialog visible={showModal} onDismiss={() => setShowModal(false)}>

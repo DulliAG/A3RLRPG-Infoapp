@@ -8,8 +8,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Profile } from '../services/realliferpg.service';
 
 const Drawer = createDrawerNavigator();
+export interface IDrawerProfile {
+  avatar: string;
+  name: string;
+  pid: string;
+}
 
-const DrawerComponent: React.FC<{ profile: Profile.IProfile }> = ({ profile }) => {
+const DrawerComponent: React.FC<IDrawerProfile> = ({ avatar, name, pid }) => {
   const theme = useTheme();
 
   return (
@@ -24,12 +29,7 @@ const DrawerComponent: React.FC<{ profile: Profile.IProfile }> = ({ profile }) =
         },
       }}
       drawerContent={(props) => (
-        <CustomDrawerContent
-          {...props}
-          avatar={profile?.data[0]?.avatar_full}
-          name={profile?.data[0]?.name}
-          pid={profile?.data[0]?.pid}
-        />
+        <CustomDrawerContent {...props} avatar={avatar} name={name} pid={pid} />
       )}
     >
       {ROUTES.map((route, index) => {
