@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Text, Avatar, Title, Subheading, Caption, Divider, Surface } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
+import { RefreshControl } from '../components/refresh-control.component';
 import { ScrollLayout } from '../components/scroll-view.component';
 import { Spinner } from '../components/spinner.component';
 import { KeyContext } from '../context/KeyContext';
@@ -11,9 +12,18 @@ export const Profile: React.FC = () => {
   const { apiKey } = React.useContext(KeyContext);
   const ReallifeService = new ReallifeRPGService(apiKey);
   const [loading, setLoading] = React.useState(true);
+  const [refreshing, setRefreshing] = React.useState(false);
   const [profileData, setProfileData] = React.useState<PlayerProfile.IProfile>(
     {} as PlayerProfile.IProfile
   );
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    ReallifeService.getProfile()
+      .then((result) => setProfileData(result))
+      .catch((err) => console.log(err))
+      .finally(() => setRefreshing(false));
+  };
 
   React.useEffect(() => {
     ReallifeService.getProfile()
@@ -38,7 +48,9 @@ export const Profile: React.FC = () => {
   } = profileData.data[0];
   return (
     <Layout>
-      <ScrollLayout>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      >
         <View
           style={{
             display: 'flex',
@@ -84,7 +96,7 @@ export const Profile: React.FC = () => {
             <Text>{last_seen.date}</Text>
           </>
         </View>
-      </ScrollLayout>
+      </ScrollView>
     </Layout>
   );
 };

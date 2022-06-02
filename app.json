@@ -2,7 +2,7 @@
   "expo": {
     "name": "A3RLRPG-Infoapp",
     "slug": "A3RLRPG-Infoapp",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "orientation": "portrait",
     "icon": "./assets/dag-blobbo.png",
     "userInterfaceStyle": "light",

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { FlatList, View } from 'react-native';
-import { List, useTheme, Text, Title, Subheading } from 'react-native-paper';
+import { FlatList, ScrollView, View } from 'react-native';
+import { List, useTheme, Text, Subheading } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
 import { NoContent } from '../components/no-content.component';
-import { ScrollLayout } from '../components/scroll-view.component';
+import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
 import { KeyContext } from '../context/KeyContext';
 import { Profile, ReallifeRPGService } from '../services/realliferpg.service';
@@ -38,7 +38,9 @@ export const Contacts: React.FC = () => {
   if (loading) return <Spinner />;
   return (
     <Layout>
-      <ScrollLayout refreshing={refreshing} handleRefresh={handleRefresh}>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      >
         <List.AccordionGroup>
           {profile.data[0].phonebooks.length > 0 ? (
             profile.data[0].phonebooks.map((phonebooks, index) => {
@@ -83,7 +85,7 @@ export const Contacts: React.FC = () => {
             <NoContent />
           )}
         </List.AccordionGroup>
-      </ScrollLayout>
+      </ScrollView>
     </Layout>
   );
 };

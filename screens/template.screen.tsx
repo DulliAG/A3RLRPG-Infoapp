@@ -1,7 +1,8 @@
 import * as React from 'react';
+import { ScrollView } from 'react-native';
 import { Text } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
-import { ScrollLayout } from '../components/scroll-view.component';
+import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
 
 export const Template: React.FC = () => {
@@ -15,9 +16,11 @@ export const Template: React.FC = () => {
   if (loading) return <Spinner />;
   return (
     <Layout>
-      <ScrollLayout refreshing={refreshing} handleRefresh={handleRefresh}>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      >
         <Text>Content goes here...</Text>
-      </ScrollLayout>
+      </ScrollView>
     </Layout>
   );
 };

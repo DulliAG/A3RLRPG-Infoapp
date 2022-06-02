@@ -4,8 +4,9 @@ import { IChangelog, ReallifeRPGService } from '../services/realliferpg.service'
 import { format } from 'date-fns';
 import { Spinner } from '../components/spinner.component';
 import { Layout } from '../components/layout.component';
-import { ScrollLayout } from '../components/scroll-view.component';
 import { NoContent } from '../components/no-content.component';
+import { RefreshControl } from '../components/refresh-control.component';
+import { ScrollView } from 'react-native';
 
 const ChangeCategory: React.FC<{ category: string }> = ({ category }) => {
   return <List.Subheader style={{ paddingVertical: 0 }}>{category}</List.Subheader>;
@@ -40,7 +41,9 @@ export const Changelogs: React.FC = () => {
   if (loading) return <Spinner />;
   return (
     <Layout>
-      <ScrollLayout refreshing={refreshing} handleRefresh={handleRefresh}>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      >
         {changelogs.data.length > 0 ? (
           <List.AccordionGroup>
             {/* FIXME: Performance verbessen indem der Inhalt eines Accordions nur gerednert wird
@@ -87,7 +90,7 @@ export const Changelogs: React.FC = () => {
         ) : (
           <NoContent />
         )}
-      </ScrollLayout>
+      </ScrollView>
     </Layout>
   );
 };
