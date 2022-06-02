@@ -44,7 +44,12 @@ export const ServerList: React.FC = () => {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
       >
         <View style={{ marginHorizontal: 15, marginTop: 15 }}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={DeviceLayout.window.width * 0.85}
+            snapToAlignment="center"
+          >
             {servers?.data.map((server, index) => {
               return (
                 <TouchableRipple
