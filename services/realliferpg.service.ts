@@ -120,6 +120,15 @@ export class ReallifeRPGService {
         .catch((err) => rej(err));
     });
   }
+
+  getCompanyShops(): Promise<ICompanyShops> {
+    return new Promise((res, rej) => {
+      fetch('https://api.realliferpg.de/v1/company_shops')
+        .then((response) => response.json())
+        .then((result: ICompanyShops) => res(result))
+        .catch((err) => rej(err));
+    });
+  }
 }
 
 export interface IChangelog {
@@ -479,4 +488,25 @@ export interface IItemShopItem {
   shopname: string;
   shoptype: string;
   name: string;
+}
+
+export interface ICompanyShops {
+  data: ICompanyShop[];
+  requested_at: number;
+}
+
+export interface ICompanyShop {
+  industrial_area_id: number;
+  company: {
+    id: number;
+    name: string;
+    owner: string;
+  };
+  pos: string;
+  shops: {
+    item: string;
+    item_localized: string;
+    amount: number;
+    price: number;
+  }[];
 }
