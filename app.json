@@ -2,31 +2,33 @@
   "expo": {
     "name": "A3RLRPG-Infoapp",
     "slug": "A3RLRPG-Infoapp",
-    "version": "1.3.0",
+    "version": "0.1.0",
     "orientation": "portrait",
-    "icon": "./assets/images/dag-blobbo.png",
-    "scheme": "myapp",
+    "icon": "./assets/dag-blobbo.png",
+    "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/images/dag-blobbo-small.png",
+      "image": "./assets/dag-blobbo-small.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#fff"
     },
-    "experiments": { "redesignedLogBox": true },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "sdkVersion": "38.0.0",
-    "android": {
-      "package": "de.dulliag.infoapp",
-      "permissions": [],
-      "useNextNotificationsApi": true,
-      "icon": "./assets/images/dag-blobbo.png"
-    },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
+    "android": {
+      "permissions": ["NOTIFICATIONS"],
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/dag-blobbo.png",
+        "backgroundColor": "#fff"
+      },
+      "package": "de.dulliag.A3RLRPGInfoapp"
+    },
     "web": {
-      "favicon": "./assets/images/dag-blobbo.png"
+      "favicon": "./assets/dag-blobbo.png"
     }
   }
 }

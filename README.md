@@ -45,6 +45,8 @@ Dies ist **nicht** die **offizielle Infoapp** von [ReallifeRPG](https://reallife
   Dunkles Farbschema für die App
 </details>
 
+## Installation
+
 ## :link: Ressourcen
 
 [ReallifeRPG API](https://api.realliferpg.de)

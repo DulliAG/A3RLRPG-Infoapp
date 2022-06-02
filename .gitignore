@@ -1,5 +1,6 @@
-node_modules/**/*
-.expo/*
+node_modules/
+.expo/
+dist/
 npm-debug.*
 *.jks
 *.p8
@@ -8,6 +9,9 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+
+# credentials
+# google-services.json
 
 # macOS
 .DS_Store
