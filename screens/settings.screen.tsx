@@ -31,7 +31,7 @@ export const Settings: React.FC = () => {
   const { apiKey } = React.useContext(KeyContext);
   // const [nativePushToken, setNativePushToken] = React.useState('');
   const [loading, setLoading] = React.useState(true);
-  const [key, setKey] = React.useState(apiKey);
+  const [key, setKey] = React.useState('');
   const [snackbar, setSnackbar] = React.useState<{
     show: boolean;
     text: string;
@@ -112,7 +112,7 @@ export const Settings: React.FC = () => {
           <TextInput
             mode="outlined"
             label="API-Schlüssel"
-            value={apiKey}
+            defaultValue={apiKey}
             onChangeText={(text) => setKey(text)}
           />
           <Button
