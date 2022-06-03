@@ -1,22 +1,12 @@
 import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 import { List, Text, useTheme } from 'react-native-paper';
+import { FuelBar } from '../components/fuelbar.component';
 import { Layout } from '../components/layout.component';
 import { NoContent } from '../components/no-content.component';
 import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
 import { KeyContext } from '../context/KeyContext';
-import { MVehicle, ReallifeRPGService } from '../services/realliferpg.service';
-
-const Fuel: React.FC<{ fuel: number }> = ({ fuel }) => {
-  const theme = useTheme();
-  return (
-    <ProgressBar
-      progress={fuel}
-      style={{ marginTop: 5, height: 25, borderRadius: theme.roundness }}
-    />
-  );
-};
 import { MVehicle, Profile, ReallifeRPGService } from '../services/realliferpg.service';
 
 const VehicleStats: React.FC<{ label: string; value: string }> = ({ label, value }) => {
@@ -144,7 +134,7 @@ export const Garage: React.FC = () => {
                     </View>
 
                     <Text style={{ fontWeight: 'bold', marginTop: 15 }}>Tank</Text>
-                    <Fuel fuel={Number(vehicle.fuel)} />
+                    <FuelBar fuel={Number(vehicle.fuel)} />
                   </View>
                 </List.Accordion>
               );
