@@ -7,6 +7,7 @@ import { Layout } from '../components/layout.component';
 import { Spinner } from '../components/spinner.component';
 import { name, version } from '../package.json';
 import { KeyContext } from '../context/KeyContext';
+import { ReallifeRPGService } from '../services/realliferpg.service';
 // import { getNativePushToken } from '../App';
 
 const Label: React.FC<{ label: string; value: string; redirect?: string }> = ({
@@ -27,7 +28,8 @@ const Label: React.FC<{ label: string; value: string; redirect?: string }> = ({
 };
 
 export const Settings: React.FC = () => {
-  const { apiKey } = React.useContext(KeyContext);
+  const ReallifeService = new ReallifeRPGService();
+  const { apiKey, setApiKey } = React.useContext(KeyContext);
   // const [nativePushToken, setNativePushToken] = React.useState('');
   const [loading, setLoading] = React.useState(true);
   const [key, setKey] = React.useState('');
@@ -38,27 +40,39 @@ export const Settings: React.FC = () => {
   }>({ show: false, text: 'placeholder' });
 
   const handleSave = () => {
-    AsyncStorage.setItem('@apiKey', key)
-      .then(() => {
-        setSnackbar((prev) => {
-          return {
-            ...prev,
-            show: true,
-            text: 'API-Schlüssel gespeichert',
-          };
-        });
+    ReallifeService.verifyKey(key)
+      .then((result) => {
+        if (result.status === 'Error') {
+          setSnackbar((prev) => {
+            return {
+              ...prev,
+              show: true,
+              text: 'Ungültiger API-Schlüssel',
+            };
+          });
+          return;
+        }
+        AsyncStorage.setItem('@apiKey', key)
+          .then(() => {
+            setApiKey(key);
+            setSnackbar((prev) => {
+              return {
+                ...prev,
+                show: true,
+                text: 'API-Schlüssel gespeichert',
+              };
+            });
+          })
+          .catch((err) => {
+            throw err;
+          });
       })
       .catch((err) => {
-        console.log(err);
         setSnackbar((prev) => {
           return {
             ...prev,
             show: true,
             text: 'Speichern fehlgeschlagen',
-            action: {
-              label: 'Erneut',
-              onPress: handleSave,
-            },
           };
         });
       });

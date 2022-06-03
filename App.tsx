@@ -13,7 +13,7 @@ import {
   TextInput,
   Snackbar,
 } from 'react-native-paper';
-import { Profile, ReallifeRPGService } from './services/realliferpg.service';
+import { ReallifeRPGService } from './services/realliferpg.service';
 import { KeyContext, KeyContextProvider } from './context/KeyContext';
 import useCachedResources from './hooks/useCachedRessources';
 import { LightTheme, DarkTheme } from './constants/Theme';
@@ -52,7 +52,7 @@ const App: React.FC = () => {
         AsyncStorage.setItem('@apiKey', key)
           .then(() => {
             setShowModal(false);
-            // setApiKey(key);
+            setApiKey(key);
             setSnackbar((prev) => {
               return {
                 ...prev,
