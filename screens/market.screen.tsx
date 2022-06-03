@@ -35,6 +35,7 @@ export const Market: React.FC = () => {
     <Layout>
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+        contentContainerStyle={{ flexGrow: 1 }}
       >
         {market.data.length > 0 ? (
           <List.Section>

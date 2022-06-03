@@ -43,6 +43,7 @@ export const Changelogs: React.FC = () => {
     <Layout>
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+        contentContainerStyle={{ flexGrow: 1 }}
       >
         {changelogs.data.length > 0 ? (
           <List.AccordionGroup>

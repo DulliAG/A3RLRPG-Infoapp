@@ -26,11 +26,7 @@ export const Contacts: React.FC = () => {
 
   React.useEffect(() => {
     ReallifeService.getProfile()
-      .then((result) => {
-        console.log(result.data[0].phonebooks);
-
-        setProfile(result);
-      })
+      .then((result) => setProfile(result))
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
   }, []);
@@ -40,6 +36,7 @@ export const Contacts: React.FC = () => {
     <Layout>
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+        contentContainerStyle={{ flexGrow: 1 }}
       >
         <List.AccordionGroup>
           {profile.data[0].phonebooks.length > 0 ? (
@@ -50,7 +47,7 @@ export const Contacts: React.FC = () => {
                   id={phonebooks.idNR}
                   title={'Telefonbuch ' + phonebooks.side}
                 >
-                  {phonebooks.phonebook.length > 0 ? (
+                  {phonebooks.phonebook.length > 10 ? (
                     <FlatList
                       data={phonebooks.phonebook}
                       renderItem={(props) => (
@@ -73,9 +70,6 @@ export const Contacts: React.FC = () => {
                       )}
                     />
                   ) : (
-                    // phonebooks.phonebook.map((contact, index) => (
-
-                    // ))
                     <NoContent />
                   )}
                 </List.Accordion>

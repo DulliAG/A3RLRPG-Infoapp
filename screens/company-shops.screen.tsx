@@ -36,6 +36,7 @@ export const CompanyShops: React.FC = () => {
     <Layout>
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+        contentContainerStyle={{ flexGrow: 1 }}
       >
         <List.AccordionGroup>
           {companies.length > 0 ? (
@@ -45,12 +46,7 @@ export const CompanyShops: React.FC = () => {
                 id={company.company.id + index}
                 title={company.company.name}
               >
-                <List.Section
-                  style={{
-                    borderBottomWidth: 1,
-                    borderBottomColor: theme.colors.border,
-                  }}
-                >
+                <List.Section>
                   {company.shops.length > 0 ? (
                     company.shops.map((item) => (
                       <List.Item
@@ -80,7 +76,7 @@ export const CompanyShops: React.FC = () => {
                             </View>
                           </View>
                         )}
-                        // style={{ borderBottomWidth: 1, borderBottomColor: theme.colors.border }}
+                        style={{ borderBottomWidth: 1, borderBottomColor: theme.colors.border }}
                       />
                     ))
                   ) : (
