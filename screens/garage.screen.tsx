@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ScrollView, View } from 'react-native';
-import { List, ProgressBar, Text, useTheme } from 'react-native-paper';
+import { List, Text, useTheme } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
 import { NoContent } from '../components/no-content.component';
 import { RefreshControl } from '../components/refresh-control.component';
@@ -17,6 +17,7 @@ const Fuel: React.FC<{ fuel: number }> = ({ fuel }) => {
     />
   );
 };
+import { MVehicle, Profile, ReallifeRPGService } from '../services/realliferpg.service';
 
 const VehicleStats: React.FC<{ label: string; value: string }> = ({ label, value }) => {
   return (
@@ -33,21 +34,33 @@ export const Garage: React.FC = () => {
   const ReallifeService = new ReallifeRPGService(apiKey);
   const [loading, setLoading] = React.useState(true);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [profile, setProfile] = React.useState<Profile.IProfile>({} as Profile.IProfile);
   const [garage, setGarage] = React.useState<MVehicle.IList>({} as MVehicle.IList);
 
   const handleRefresh = () => {
     setRefreshing(true);
-    ReallifeService.getGarage()
-      .then((list) => setGarage(list))
+    const getProfile = ReallifeService.getProfile();
+    const getGarage = ReallifeService.getGarage();
+
+    Promise.all([getProfile, getGarage])
+      .then(([profileData, garageData]) => {
+        setProfile(profileData);
+        garageData.data = garageData.data.filter((vehicle) => vehicle.alive !== -1);
+        setGarage(garageData);
+      })
       .catch((err) => console.log(err))
       .finally(() => setRefreshing(false));
   };
 
   React.useEffect(() => {
-    ReallifeService.getGarage()
-      .then((list) => {
-        list.data = list.data.filter((vehicle) => vehicle.alive !== -1);
-        setGarage(list);
+    const getProfile = ReallifeService.getProfile();
+    const getGarage = ReallifeService.getGarage();
+
+    Promise.all([getProfile, getGarage])
+      .then(([profileData, garageData]) => {
+        setProfile(profileData);
+        garageData.data = garageData.data.filter((vehicle) => vehicle.alive !== -1);
+        setGarage(garageData);
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
@@ -79,7 +92,7 @@ export const Garage: React.FC = () => {
 
               switch (vehicle.side) {
                 case 'COP':
-                  side = 'Polizei';
+                  side = Number(profile.data[0].coplevel) === 1 ? 'Justiz' : 'Polizei';
                   break;
                 case 'EAST':
                   side = 'RAC';
