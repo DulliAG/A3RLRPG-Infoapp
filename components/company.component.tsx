@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { format } from 'date-fns';
 import { View } from 'react-native';
-import { List, Text, Title } from 'react-native-paper';
+import { List, Text, Title, useTheme } from 'react-native-paper';
 import { Profile, ReallifeRPGService } from '../services/realliferpg.service';
 import { Row } from './credit-card.component';
 
@@ -22,22 +22,16 @@ export const Company: React.FC<Profile.ICompany> = ({
   bank_1,
   bank_2,
 }) => {
+  const theme = useTheme();
   return (
     <List.Accordion
       id={id}
       title={name}
-      style={{
-        // backgroundColor: 'white',
-        borderColor: 'rgba(0,0,0,0.25)',
-        borderBottomWidth: 1,
-      }}
+      style={{ borderBottomWidth: 1, borderBottomColor: theme.colors.border }}
     >
       <View
         style={{
           padding: 15,
-          // backgroundColor: 'white',
-          borderBottomColor: 'rgba(0,0,0,0.25)',
-          borderBottomWidth: 1,
         }}
       >
         <Title style={{ textAlign: 'center' }}>{name}</Title>

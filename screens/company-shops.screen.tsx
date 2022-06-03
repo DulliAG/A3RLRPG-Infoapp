@@ -45,7 +45,12 @@ export const CompanyShops: React.FC = () => {
                 id={company.company.id + index}
                 title={company.company.name}
               >
-                <List.Section>
+                <List.Section
+                  style={{
+                    borderBottomWidth: 1,
+                    borderBottomColor: theme.colors.border,
+                  }}
+                >
                   {company.shops.length > 0 ? (
                     company.shops.map((item) => (
                       <List.Item
@@ -75,7 +80,7 @@ export const CompanyShops: React.FC = () => {
                             </View>
                           </View>
                         )}
-                        style={{ borderBottomWidth: 1, borderBottomColor: theme.colors.border }}
+                        // style={{ borderBottomWidth: 1, borderBottomColor: theme.colors.border }}
                       />
                     ))
                   ) : (
