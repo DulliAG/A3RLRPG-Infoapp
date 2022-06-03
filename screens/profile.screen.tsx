@@ -1,9 +1,9 @@
+import { format } from 'date-fns';
 import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 import { Text, Avatar, Title, Subheading, Caption, Divider, Surface } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
 import { RefreshControl } from '../components/refresh-control.component';
-import { ScrollLayout } from '../components/scroll-view.component';
 import { Spinner } from '../components/spinner.component';
 import { KeyContext } from '../context/KeyContext';
 import { Profile as PlayerProfile, ReallifeRPGService } from '../services/realliferpg.service';
@@ -93,7 +93,7 @@ export const Profile: React.FC = () => {
           <Divider style={{ marginVertical: 10 }} />
           <>
             <Caption>Zuletzt Online</Caption>
-            <Text>{last_seen.date}</Text>
+            <Text>{format(ReallifeService.getChangelogDate(last_seen.date), 'dd.MM HH:mm')}</Text>
           </>
         </View>
       </ScrollView>
