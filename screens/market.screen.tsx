@@ -84,7 +84,7 @@ export const Market: React.FC = () => {
               Markpreis berechnet um{' '}
               {format(
                 ReallifeService.getChangelogDate(market.data[0].market[0].updated_at),
-                'HH:mm:ss'
+                'H:m:s'
               )}{' '}
               Uhr
             </Text>
