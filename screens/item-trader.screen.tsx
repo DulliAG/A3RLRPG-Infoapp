@@ -50,6 +50,7 @@ export const ItemTrader: React.FC = () => {
     <Layout>
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+        contentContainerStyle={{ flexGrow: 1 }}
       >
         {itemShops.length > 0 ? (
           <List.AccordionGroup expandedId={selectedShop} onAccordionPress={handleAccordionPress}>

@@ -49,6 +49,7 @@ export const VehicleTrader: React.FC = () => {
     <Layout>
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+        contentContainerStyle={{ flexGrow: 1 }}
       >
         {vehicleShops.length > 0 ? (
           <List.AccordionGroup expandedId={selectedShop} onAccordionPress={handleAccordionPress}>

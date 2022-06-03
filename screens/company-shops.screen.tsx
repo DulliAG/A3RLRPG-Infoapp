@@ -36,6 +36,7 @@ export const CompanyShops: React.FC = () => {
     <Layout>
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+        contentContainerStyle={{ flexGrow: 1 }}
       >
         <List.AccordionGroup>
           {companies.length > 0 ? (

@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import * as React from 'react';
 import { Image, ScrollView, View } from 'react-native';
 import { List, Text, useTheme } from 'react-native-paper';
@@ -34,6 +35,7 @@ export const Market: React.FC = () => {
     <Layout>
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+        contentContainerStyle={{ flexGrow: 1 }}
       >
         {market.data.length > 0 ? (
           <List.Section>
@@ -71,6 +73,21 @@ export const Market: React.FC = () => {
                 style={{ borderBottomWidth: 1, borderBottomColor: theme.colors.border }}
               />
             ))}
+            <Text
+              style={{
+                textAlign: 'center',
+                padding: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: theme.colors.border,
+              }}
+            >
+              Markpreis berechnet um{' '}
+              {format(
+                ReallifeService.getChangelogDate(market.data[0].market[0].updated_at),
+                'HH:mm:ss'
+              )}{' '}
+              Uhr
+            </Text>
           </List.Section>
         ) : (
           <NoContent />
