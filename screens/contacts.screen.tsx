@@ -47,7 +47,7 @@ export const Contacts: React.FC = () => {
                   id={phonebooks.idNR}
                   title={'Telefonbuch ' + phonebooks.side}
                 >
-                  {phonebooks.phonebook.length > 10 ? (
+                  {phonebooks.phonebook.length > 0 ? (
                     <FlatList
                       data={phonebooks.phonebook}
                       renderItem={(props) => (
