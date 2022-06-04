@@ -7,7 +7,12 @@ import { NoContent } from '../components/no-content.component';
 import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
 import { KeyContext } from '../context/key.context';
-import { MVehicle, Profile, ReallifeRPGService } from '../services/realliferpg.service';
+import {
+  getFractionString,
+  MVehicle,
+  Profile,
+  ReallifeRPGService,
+} from '../services/realliferpg.service';
 
 const VehicleStats: React.FC<{ label: string; value: string }> = ({ label, value }) => {
   return (
@@ -81,21 +86,7 @@ export const Garage: React.FC = () => {
                   break;
               }
 
-              switch (vehicle.side) {
-                case 'COP':
-                  side = Number(profile.data[0].coplevel) === 1 ? 'Justiz' : 'Polizei';
-                  break;
-                case 'EAST':
-                  side = 'RAC';
-                  break;
-                case 'MEDIC':
-                case 'GUER':
-                  side = 'Mediziner';
-                  break;
-                default:
-                  side = 'Zivilisten';
-                  break;
-              }
+              side = getFractionString(vehicle.side, Number(profile.data[0].coplevel));
 
               if (vehicle.active) {
                 status = 'Ausgeparkt';

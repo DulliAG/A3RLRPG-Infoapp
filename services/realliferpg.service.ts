@@ -1,3 +1,22 @@
+export function getFractionString(side: string, coplevel: number = 0) {
+  switch (side) {
+    case 'MEDIC':
+    case 'GUER':
+      return 'Mediziner';
+
+    case 'WEST':
+      if (coplevel == 0) return 'Zivilisten';
+      return coplevel == 1 ? 'Justiz' : 'Polizei';
+
+    case 'EAST':
+      return 'RAC';
+
+    case 'CIV':
+    default:
+      return 'Zivilisten';
+  }
+}
+
 export class ReallifeRPGService {
   private _apiKey: string = '';
 
