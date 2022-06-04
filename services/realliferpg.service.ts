@@ -18,7 +18,11 @@ export class ReallifeRPGService {
   getChangelogDate(changelogDate: string) {
     // 2016-05-25 23:00:00
     let [date, time] = changelogDate.split(' ');
-    return new Date(date + 'T' + time);
+    let ddate = new Date(date + 'T' + time);
+    if (ddate.toString().includes('GMT+0200')) {
+      ddate.setHours(ddate.getHours() - 2);
+    }
+    return ddate;
   }
 
   getChangelogs(): Promise<IChangelog> {
