@@ -16,7 +16,7 @@ import { SnackbarContext, SnackbarContextProvider } from './context/snackbar.con
 
 const App: React.FC = () => {
   const ReallifeService = new ReallifeRPGService();
-  const { setApiKey } = React.useContext(KeyContext);
+  const { apiKey, setApiKey } = React.useContext(KeyContext);
   const { setSnackbar } = React.useContext(SnackbarContext);
   const [showModal, setShowModal] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
@@ -102,7 +102,7 @@ const App: React.FC = () => {
         }
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [apiKey]);
 
   if (loading) return <Spinner />;
   return (
