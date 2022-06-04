@@ -5,7 +5,7 @@ import { Text, Avatar, Title, Subheading, Caption, Divider, Surface } from 'reac
 import { Layout } from '../components/layout.component';
 import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
-import { KeyContext } from '../context/KeyContext';
+import { KeyContext } from '../context/key.context';
 import { Profile as PlayerProfile, ReallifeRPGService } from '../services/realliferpg.service';
 
 export const Profile: React.FC = () => {

@@ -3,7 +3,7 @@ import { Spinner } from '../components/spinner.component';
 import { Layout } from '../components/layout.component';
 import { Profile, ReallifeRPGService } from '../services/realliferpg.service';
 import { CreditCard } from '../components/credit-card.component';
-import { KeyContext } from '../context/KeyContext';
+import { KeyContext } from '../context/key.context';
 import { NoContent } from '../components/no-content.component';
 import { ScrollView } from 'react-native';
 import { RefreshControl } from '../components/refresh-control.component';

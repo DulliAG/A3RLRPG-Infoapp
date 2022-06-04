@@ -14,7 +14,7 @@ import {
   Snackbar,
 } from 'react-native-paper';
 import { ReallifeRPGService } from './services/realliferpg.service';
-import { KeyContext, KeyContextProvider } from './context/KeyContext';
+import { KeyContext, KeyContextProvider } from './context/key.context';
 import useCachedResources from './hooks/useCachedRessources';
 import { LightTheme, DarkTheme } from './constants/Theme';
 import { Spinner } from './components/spinner.component';

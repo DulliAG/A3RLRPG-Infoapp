@@ -6,7 +6,7 @@ import { Divider, TextInput, Title, Text, Button, Snackbar } from 'react-native-
 import { Layout } from '../components/layout.component';
 import { Spinner } from '../components/spinner.component';
 import { name, version } from '../package.json';
-import { KeyContext } from '../context/KeyContext';
+import { KeyContext } from '../context/key.context';
 import { ReallifeRPGService } from '../services/realliferpg.service';
 // import { getNativePushToken } from '../App';
 
