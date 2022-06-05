@@ -81,9 +81,24 @@ export const Market: React.FC = () => {
                 borderBottomColor: theme.colors.border,
               }}
             >
-              Markpreis berechnet um{' '}
+              Markpreise Server 1 berechnet um{' '}
               {format(
                 ReallifeService.getChangelogDate(market.data[0].market[0].updated_at),
+                'HH:mm'
+              )}{' '}
+              Uhr
+            </Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                padding: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: theme.colors.border,
+              }}
+            >
+              Markpreise Server 2 berechnet um{' '}
+              {format(
+                ReallifeService.getChangelogDate(market.data[0].market[1].updated_at),
                 'HH:mm'
               )}{' '}
               Uhr
