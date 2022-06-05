@@ -30,7 +30,7 @@ export const Profile: React.FC = () => {
       .then((result) => setProfileData(result))
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [apiKey]);
 
   if (loading) return <Spinner />;
   // TODO: Redo the design of the profile-page

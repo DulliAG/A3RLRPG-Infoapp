@@ -33,7 +33,7 @@ export const Companies: React.FC = () => {
       .then((result) => setCompanies(result.data[0].company_owned))
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [apiKey]);
 
   if (loading) return <Spinner />;
   return (

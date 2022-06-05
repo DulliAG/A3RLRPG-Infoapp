@@ -96,7 +96,7 @@ export const Banking: React.FC = () => {
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [apiKey]);
 
   if (loading) return <Spinner />;
   return (

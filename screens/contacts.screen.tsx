@@ -29,7 +29,7 @@ export const Contacts: React.FC = () => {
       .then((result) => setProfile(result))
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [apiKey]);
 
   if (loading) return <Spinner />;
   return (

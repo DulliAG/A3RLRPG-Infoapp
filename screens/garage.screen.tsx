@@ -59,7 +59,7 @@ export const Garage: React.FC = () => {
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [apiKey]);
 
   if (loading) return <Spinner />;
   return (

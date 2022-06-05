@@ -29,7 +29,7 @@ export const Properties: React.FC = () => {
       .then((result) => setHouses(result.data[0].houses))
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [apiKey]);
 
   if (loading) return <Spinner />;
   return (
