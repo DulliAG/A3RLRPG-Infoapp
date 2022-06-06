@@ -38,6 +38,7 @@ export const Profile: React.FC = () => {
     name,
     pid,
     avatar_full,
+    justizlevel,
     coplevel,
     mediclevel,
     adaclevel,
@@ -65,9 +66,10 @@ export const Profile: React.FC = () => {
         </View>
 
         <Surface style={{ flexDirection: 'row', elevation: 1, paddingBottom: 10 }}>
-          <SideContainer icon="police-badge" level={coplevel} />
-          <SideContainer icon="medical-bag" level={mediclevel} />
-          <SideContainer icon="car-cog" level={adaclevel} />
+          <FractionLevel icon="badge-account" level={justizlevel} />
+          <FractionLevel icon="police-badge" level={coplevel} />
+          <FractionLevel icon="medical-bag" level={mediclevel} />
+          <FractionLevel icon="car-cog" level={adaclevel} />
         </Surface>
 
         <View style={{ margin: 15 }}>
@@ -101,9 +103,9 @@ export const Profile: React.FC = () => {
   );
 };
 
-const SideContainer: React.FC<{ level: string; icon: string }> = ({ level, icon }) => {
+const FractionLevel: React.FC<{ level: string; icon: string }> = ({ level, icon }) => {
   return (
-    <View style={{ width: `${100 / 3}%`, display: 'flex', alignItems: 'center' }}>
+    <View style={{ width: '25%', display: 'flex', alignItems: 'center' }}>
       <Avatar.Icon
         size={40}
         icon={icon}
