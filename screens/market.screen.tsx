@@ -98,7 +98,7 @@ export const Market: React.FC = () => {
             >
               Markpreise Server 2 berechnet um{' '}
               {format(
-                ReallifeService.getChangelogDate(market.data[0].market[1].updated_at),
+                ReallifeService.getChangelogDate(market.data[1].market[0].updated_at),
                 'HH:mm'
               )}{' '}
               Uhr
