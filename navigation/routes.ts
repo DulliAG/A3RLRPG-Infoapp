@@ -38,6 +38,12 @@ export const ROUTES = [
     component: Properties,
   },
   {
+    name: 'market',
+    title: 'Markt',
+    icon: 'trending-up',
+    component: Market,
+  },
+  {
     name: 'trader',
     title: 'Händler',
     icon: 'cart-outline',
@@ -54,12 +60,6 @@ export const ROUTES = [
     title: 'Kontaktbuch',
     icon: 'contacts',
     component: Contacts,
-  },
-  {
-    name: 'market',
-    title: 'Markt',
-    icon: 'trending-up',
-    component: Market,
   },
   // {
   //   name: 'community_building_system',
