@@ -3,6 +3,7 @@ import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 import { Text, Avatar, Title, Subheading, Caption, Divider, Surface } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
+import { LevelProgress } from '../components/level-progress.component';
 import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
 import { KeyContext } from '../context/key.context';
@@ -37,6 +38,8 @@ export const Profile: React.FC = () => {
   const {
     name,
     pid,
+    level,
+    level_progress,
     avatar_full,
     justizlevel,
     coplevel,
@@ -62,7 +65,7 @@ export const Profile: React.FC = () => {
           <Avatar.Image size={100} source={{ uri: avatar_full }} />
           <Title style={{ marginBottom: 0 }}>{name}</Title>
           <Subheading style={{ marginTop: 0 }}>{pid}</Subheading>
-          {/* TODO: Add level */}
+          <LevelProgress level={level} progress={level_progress} />
         </View>
 
         <Surface style={{ flexDirection: 'row', elevation: 1, paddingBottom: 10 }}>
