@@ -1,4 +1,4 @@
-name: Create Preview
+name: App Preview
 on: [pull_request]
 jobs:
   publish:

@@ -1,5 +1,9 @@
 <h1 align="center">Infoapp</h1>
 
+[![Create Build](https://github.com/DulliAG/A3RLRPG-Infoapp/actions/workflows/build.yml/badge.svg)](https://github.com/DulliAG/A3RLRPG-Infoapp/actions/workflows/build.yml)
+[![Google Play Store Build](https://github.com/DulliAG/A3RLRPG-Infoapp/actions/workflows/build-play-store.yml/badge.svg)](https://github.com/DulliAG/A3RLRPG-Infoapp/actions/workflows/build-play-store.yml)
+[![Create Preview](https://github.com/DulliAG/A3RLRPG-Infoapp/actions/workflows/preview.yml/badge.svg)](https://github.com/DulliAG/A3RLRPG-Infoapp/actions/workflows/preview.yml)
+
 ## :page_facing_up: Informationen
 
 Dies ist **nicht** die **offizielle Infoapp** von [ReallifeRPG](https://realliferpg.de). Die **offizielle App** kannst du **[hier](https://app.realliferpg.de)** herunterladen.
