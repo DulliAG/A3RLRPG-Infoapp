@@ -3,9 +3,10 @@ import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 import { Text, Avatar, Title, Subheading, Caption, Divider, Surface } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
+import { LevelProgress } from '../components/level-progress.component';
 import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
-import { KeyContext } from '../context/KeyContext';
+import { KeyContext } from '../context/key.context';
 import { Profile as PlayerProfile, ReallifeRPGService } from '../services/realliferpg.service';
 
 export const Profile: React.FC = () => {
@@ -30,14 +31,17 @@ export const Profile: React.FC = () => {
       .then((result) => setProfileData(result))
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [apiKey]);
 
   if (loading) return <Spinner />;
   // TODO: Redo the design of the profile-page
   const {
     name,
     pid,
+    level,
+    level_progress,
     avatar_full,
+    justizlevel,
     coplevel,
     mediclevel,
     adaclevel,
@@ -61,13 +65,14 @@ export const Profile: React.FC = () => {
           <Avatar.Image size={100} source={{ uri: avatar_full }} />
           <Title style={{ marginBottom: 0 }}>{name}</Title>
           <Subheading style={{ marginTop: 0 }}>{pid}</Subheading>
-          {/* TODO: Add level */}
+          <LevelProgress level={level} progress={level_progress} />
         </View>
 
         <Surface style={{ flexDirection: 'row', elevation: 1, paddingBottom: 10 }}>
-          <SideContainer icon="police-badge" level={coplevel} />
-          <SideContainer icon="medical-bag" level={mediclevel} />
-          <SideContainer icon="car-cog" level={adaclevel} />
+          <FractionLevel icon="badge-account" level={justizlevel} />
+          <FractionLevel icon="police-badge" level={coplevel} />
+          <FractionLevel icon="medical-bag" level={mediclevel} />
+          <FractionLevel icon="car-cog" level={adaclevel} />
         </Surface>
 
         <View style={{ margin: 15 }}>
@@ -101,9 +106,9 @@ export const Profile: React.FC = () => {
   );
 };
 
-const SideContainer: React.FC<{ level: string; icon: string }> = ({ level, icon }) => {
+const FractionLevel: React.FC<{ level: string; icon: string }> = ({ level, icon }) => {
   return (
-    <View style={{ width: `${100 / 3}%`, display: 'flex', alignItems: 'center' }}>
+    <View style={{ width: '25%', display: 'flex', alignItems: 'center' }}>
       <Avatar.Icon
         size={40}
         icon={icon}

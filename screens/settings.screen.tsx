@@ -2,12 +2,13 @@ import * as React from 'react';
 // import * as Clipboard from 'expo-clipboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Linking, ScrollView, View } from 'react-native';
-import { Divider, TextInput, Title, Text, Button, Snackbar } from 'react-native-paper';
+import { Divider, TextInput, Title, Text, Button } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
 import { Spinner } from '../components/spinner.component';
 import { name, version } from '../package.json';
-import { KeyContext } from '../context/KeyContext';
+import { KeyContext } from '../context/key.context';
 import { ReallifeRPGService } from '../services/realliferpg.service';
+import { SnackbarContext } from '../context/snackbar.context';
 // import { getNativePushToken } from '../App';
 
 const Label: React.FC<{ label: string; value: string; redirect?: string }> = ({
@@ -30,37 +31,27 @@ const Label: React.FC<{ label: string; value: string; redirect?: string }> = ({
 export const Settings: React.FC = () => {
   const ReallifeService = new ReallifeRPGService();
   const { apiKey, setApiKey } = React.useContext(KeyContext);
+  const { setSnackbar } = React.useContext(SnackbarContext);
   // const [nativePushToken, setNativePushToken] = React.useState('');
   const [loading, setLoading] = React.useState(true);
   const [key, setKey] = React.useState('');
-  const [snackbar, setSnackbar] = React.useState<{
-    show: boolean;
-    text: string;
-    action?: { label: string; onPress: () => void };
-  }>({ show: false, text: 'placeholder' });
 
   const handleSave = () => {
     ReallifeService.verifyKey(key)
       .then((result) => {
         if (result.status === 'Error') {
-          setSnackbar((prev) => {
-            return {
-              ...prev,
-              show: true,
-              text: 'Ungültiger API-Schlüssel',
-            };
+          setSnackbar({
+            visible: true,
+            label: 'Ungültiger API-Schlüssel',
           });
           return;
         }
         AsyncStorage.setItem('@apiKey', key)
           .then(() => {
             setApiKey(key);
-            setSnackbar((prev) => {
-              return {
-                ...prev,
-                show: true,
-                text: 'API-Schlüssel gespeichert',
-              };
+            setSnackbar({
+              visible: true,
+              label: 'API-Schlüssel gespeichert',
             });
           })
           .catch((err) => {
@@ -68,12 +59,9 @@ export const Settings: React.FC = () => {
           });
       })
       .catch((err) => {
-        setSnackbar((prev) => {
-          return {
-            ...prev,
-            show: true,
-            text: 'Speichern fehlgeschlagen',
-          };
+        setSnackbar({
+          visible: true,
+          label: 'Speichern fehlgeschlagen',
         });
       });
   };
@@ -140,21 +128,6 @@ export const Settings: React.FC = () => {
 
         {/* TODO: Hinzufügen einer Option zum einstellen von Push-Benachrichtigungen */}
       </ScrollView>
-      <Snackbar
-        visible={snackbar.show}
-        action={snackbar.action}
-        onDismiss={() =>
-          setSnackbar((prev) => {
-            return {
-              ...prev,
-              show: false,
-            };
-          })
-        }
-        {...snackbar.action}
-      >
-        {snackbar.text}
-      </Snackbar>
     </Layout>
   );
 };

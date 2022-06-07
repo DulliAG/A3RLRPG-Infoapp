@@ -5,7 +5,7 @@ import { Layout } from '../components/layout.component';
 import { NoContent } from '../components/no-content.component';
 import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
-import { KeyContext } from '../context/KeyContext';
+import { KeyContext } from '../context/key.context';
 import { Profile, ReallifeRPGService } from '../services/realliferpg.service';
 
 export const Contacts: React.FC = () => {
@@ -29,7 +29,7 @@ export const Contacts: React.FC = () => {
       .then((result) => setProfile(result))
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [apiKey]);
 
   if (loading) return <Spinner />;
   return (
@@ -47,7 +47,7 @@ export const Contacts: React.FC = () => {
                   id={phonebooks.idNR}
                   title={'Telefonbuch ' + phonebooks.side}
                 >
-                  {phonebooks.phonebook.length > 10 ? (
+                  {phonebooks.phonebook.length > 0 ? (
                     <FlatList
                       data={phonebooks.phonebook}
                       renderItem={(props) => (

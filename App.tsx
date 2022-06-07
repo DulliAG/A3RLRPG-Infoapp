@@ -5,31 +5,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useColorScheme } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
-import {
-  Provider as PaperProvider,
-  Portal,
-  Dialog,
-  Button,
-  TextInput,
-  Snackbar,
-} from 'react-native-paper';
+import { Provider as PaperProvider, Portal, Dialog, Button, TextInput } from 'react-native-paper';
 import { ReallifeRPGService } from './services/realliferpg.service';
-import { KeyContext, KeyContextProvider } from './context/KeyContext';
+import { KeyContext, KeyContextProvider } from './context/key.context';
 import useCachedResources from './hooks/useCachedRessources';
 import { LightTheme, DarkTheme } from './constants/Theme';
 import { Spinner } from './components/spinner.component';
 import Drawer, { IDrawerProfile } from './navigation/drawer.navigation';
+import { SnackbarContext, SnackbarContextProvider } from './context/snackbar.context';
 
 const App: React.FC = () => {
   const ReallifeService = new ReallifeRPGService();
-  const { setApiKey } = React.useContext(KeyContext);
+  const { apiKey, setApiKey } = React.useContext(KeyContext);
+  const { setSnackbar } = React.useContext(SnackbarContext);
   const [showModal, setShowModal] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
-  const [snackbar, setSnackbar] = React.useState<{
-    show: boolean;
-    text: string;
-    action?: { label: string; onPress: () => void };
-  }>({ show: false, text: 'placeholder' });
   const [key, setKey] = React.useState('');
   const [profile, setProfile] = React.useState<IDrawerProfile>({} as IDrawerProfile);
   // const [notification, setNotification] = React.useState<any>(false);
@@ -40,12 +30,9 @@ const App: React.FC = () => {
     ReallifeService.verifyKey(key)
       .then((result) => {
         if (result.status === 'Error') {
-          setSnackbar((prev) => {
-            return {
-              ...prev,
-              show: true,
-              text: 'Ungültiger API-Schlüssel',
-            };
+          setSnackbar({
+            visible: true,
+            label: 'Ungültiger API-Schlüssel',
           });
           return;
         }
@@ -53,12 +40,9 @@ const App: React.FC = () => {
           .then(() => {
             setShowModal(false);
             setApiKey(key);
-            setSnackbar((prev) => {
-              return {
-                ...prev,
-                show: true,
-                text: 'API-Schlüssel gespeichert',
-              };
+            setSnackbar({
+              visible: true,
+              label: 'API-Schlüssel gespeichert',
             });
           })
           .catch((err) => {
@@ -66,12 +50,9 @@ const App: React.FC = () => {
           });
       })
       .catch((err) => {
-        setSnackbar((prev) => {
-          return {
-            ...prev,
-            show: true,
-            text: 'Speichern fehlgeschlagen',
-          };
+        setSnackbar({
+          visible: true,
+          label: 'Speichern fehlgeschlagen',
         });
       });
   };
@@ -121,7 +102,7 @@ const App: React.FC = () => {
         }
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [apiKey]);
 
   if (loading) return <Spinner />;
   return (
@@ -144,21 +125,6 @@ const App: React.FC = () => {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-
-      <Snackbar
-        visible={snackbar.show}
-        onDismiss={() =>
-          setSnackbar((prev) => {
-            return {
-              ...prev,
-              show: false,
-            };
-          })
-        }
-        {...snackbar.action}
-      >
-        {snackbar.text}
-      </Snackbar>
     </NavigationContainer>
   );
 };
@@ -171,9 +137,11 @@ const Main: React.FC = () => {
   return (
     // @ts-expect-error
     <PaperProvider theme={colorScheme === 'dark' ? DarkTheme : DarkTheme}>
-      <KeyContextProvider>
-        <App />
-      </KeyContextProvider>
+      <SnackbarContextProvider>
+        <KeyContextProvider>
+          <App />
+        </KeyContextProvider>
+      </SnackbarContextProvider>
     </PaperProvider>
   );
 };

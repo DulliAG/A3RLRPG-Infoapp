@@ -6,7 +6,7 @@ import { Layout } from '../components/layout.component';
 import { NoContent } from '../components/no-content.component';
 import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
-import { KeyContext } from '../context/KeyContext';
+import { KeyContext } from '../context/key.context';
 import { Profile, ReallifeRPGService } from '../services/realliferpg.service';
 
 export const Companies: React.FC = () => {
@@ -33,7 +33,7 @@ export const Companies: React.FC = () => {
       .then((result) => setCompanies(result.data[0].company_owned))
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [apiKey]);
 
   if (loading) return <Spinner />;
   return (

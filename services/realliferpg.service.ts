@@ -1,3 +1,22 @@
+export function getFractionString(side: string, coplevel: number = 0) {
+  switch (side) {
+    case 'MEDIC':
+    case 'GUER':
+      return 'Mediziner';
+
+    case 'WEST':
+      if (coplevel == 0) return 'Zivilisten';
+      return coplevel == 1 ? 'Justiz' : 'Polizei';
+
+    case 'EAST':
+      return 'RAC';
+
+    case 'CIV':
+    default:
+      return 'Zivilisten';
+  }
+}
+
 export class ReallifeRPGService {
   private _apiKey: string = '';
 
@@ -18,7 +37,11 @@ export class ReallifeRPGService {
   getChangelogDate(changelogDate: string) {
     // 2016-05-25 23:00:00
     let [date, time] = changelogDate.split(' ');
-    return new Date(date + 'T' + time);
+    let ddate = new Date(date + 'T' + time);
+    if (ddate.toString().includes('GMT+0200')) {
+      ddate.setHours(ddate.getHours() - 2);
+    }
+    return ddate;
   }
 
   getChangelogs(): Promise<IChangelog> {
