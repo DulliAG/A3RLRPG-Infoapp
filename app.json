@@ -2,7 +2,7 @@
   "expo": {
     "name": "A3RLRPG-Infoapp",
     "slug": "A3RLRPG-Infoapp",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "orientation": "portrait",
     "icon": "./assets/dag-blobbo-small.png",
     "userInterfaceStyle": "light",
@@ -14,14 +14,18 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
-      "permissions": ["NOTIFICATIONS"],
+      "permissions": [
+        "NOTIFICATIONS"
+      ],
       "googleServicesFile": "./google-services.json",
-      "versionCode": 2,
+      "versionCode": 450000201,
       "adaptiveIcon": {
         "foregroundImage": "./assets/dag-blobbo-small.png",
         "backgroundColor": "#fff"
