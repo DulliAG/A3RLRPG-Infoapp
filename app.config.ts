@@ -23,6 +23,7 @@ export default {
     android: {
       permissions: ['NOTIFICATIONS'],
       googleServicesFile: './google-services.json',
+      versionCode: 1,
       adaptiveIcon: {
         foregroundImage: './assets/dag-blobbo.png',
         backgroundColor: '#fff',
