@@ -4,7 +4,7 @@
     "slug": "A3RLRPG-Infoapp",
     "version": "0.2.0",
     "orientation": "portrait",
-    "icon": "./assets/dag-blobbo.png",
+    "icon": "./assets/dag-blobbo-small.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/dag-blobbo-small.png",
@@ -23,7 +23,7 @@
       "googleServicesFile": "./google-services.json",
       "versionCode": 2,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/dag-blobbo.png",
+        "foregroundImage": "./assets/dag-blobbo-small.png",
         "backgroundColor": "#fff"
       },
       "package": "de.dulliag.A3RLRPGInfoapp"
