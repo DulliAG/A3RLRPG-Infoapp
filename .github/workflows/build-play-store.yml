@@ -2,7 +2,7 @@ name: Google Play Store Build
 
 on:
   push:
-    branches: ['master']
+    branches: ['master', '40-cicd-google-play-store']
 
 jobs:
   build:
