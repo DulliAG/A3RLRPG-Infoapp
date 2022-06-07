@@ -45,7 +45,13 @@ Dies ist **nicht** die **offizielle Infoapp** von [ReallifeRPG](https://reallife
   Außerdem wenn ein neuer Changelog erschien ist
 </details>
 
-## Installation
+## How 2 Release
+
+|  Typ  |                  Befehl                   |
+| :---: | :---------------------------------------: |
+| Patch | `npx standard-version --release-as patch` |
+| Minor | `npx standard-version --release-as minor` |
+| Major | `npx standard-version --release-as major` |
 
 ## :link: Ressourcen
 
