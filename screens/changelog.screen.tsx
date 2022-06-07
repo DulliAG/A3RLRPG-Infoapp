@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { List, useTheme } from 'react-native-paper';
+import { List, useTheme, Text, ThemeProvider, Divider } from 'react-native-paper';
 import { IChangelog, ReallifeRPGService } from '../services/realliferpg.service';
 import { format } from 'date-fns';
 import { Spinner } from '../components/spinner.component';
@@ -13,6 +13,12 @@ const ChangeCategory: React.FC<{ category: string }> = ({ category }) => {
 };
 
 const ChangeItem: React.FC<{ change: string }> = ({ change }) => {
+  const theme = useTheme();
+  return (
+    <Text style={{ marginHorizontal: 15, marginBottom: 5, color: theme.colors.placeholder }}>
+      {change}
+    </Text>
+  );
   return <List.Item title={change} titleStyle={{ fontSize: 14 }} />;
 };
 
@@ -47,8 +53,6 @@ export const Changelogs: React.FC = () => {
       >
         {changelogs.data.length > 0 ? (
           <List.AccordionGroup>
-            {/* FIXME: Performance verbessen indem der Inhalt eines Accordions nur gerednert wird
-           wenn dieses selektiert wurde anstatt diese alle beim aufrufen des screens zu rendern */}
             {changelogs.data
               .slice(0, 20)
               .map(({ id, version, release_at, change_mission, change_map, change_mod }, index) => {

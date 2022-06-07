@@ -5,7 +5,7 @@ import { Layout } from '../components/layout.component';
 import { NoContent } from '../components/no-content.component';
 import { RefreshControl } from '../components/refresh-control.component';
 import { Spinner } from '../components/spinner.component';
-import { KeyContext } from '../context/KeyContext';
+import { KeyContext } from '../context/key.context';
 import { Profile, ReallifeRPGService } from '../services/realliferpg.service';
 
 export const Properties: React.FC = () => {
@@ -29,7 +29,7 @@ export const Properties: React.FC = () => {
       .then((result) => setHouses(result.data[0].houses))
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [apiKey]);
 
   if (loading) return <Spinner />;
   return (
