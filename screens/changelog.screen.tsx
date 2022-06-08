@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { List, useTheme, Text, ThemeProvider, Divider } from 'react-native-paper';
+import { List, useTheme, Text } from 'react-native-paper';
 import { IChangelog, ReallifeRPGService } from '../services/realliferpg.service';
 import { format } from 'date-fns';
 import { Spinner } from '../components/spinner.component';
@@ -19,11 +19,9 @@ const ChangeItem: React.FC<{ change: string }> = ({ change }) => {
       {change}
     </Text>
   );
-  return <List.Item title={change} titleStyle={{ fontSize: 14 }} />;
 };
 
 export const Changelogs: React.FC = () => {
-  const theme = useTheme();
   const ReallifeService = new ReallifeRPGService();
   const [loading, setLoading] = React.useState(true);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -54,7 +52,7 @@ export const Changelogs: React.FC = () => {
         {changelogs.data.length > 0 ? (
           <List.AccordionGroup>
             {changelogs.data
-              .slice(0, 20)
+              // .slice(0, 20)
               .map(({ id, version, release_at, change_mission, change_map, change_mod }, index) => {
                 const release = ReallifeService.getChangelogDate(release_at);
                 return (
