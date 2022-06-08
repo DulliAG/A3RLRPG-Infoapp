@@ -18,6 +18,10 @@ export const ItemTrader: React.FC = () => {
   const [itemShops, setItemShops] = React.useState<IShopType[]>([]);
 
   const handleAccordionPress = (expandedId: string | number) => {
+    if (expandedId === selectedShop) {
+      setSelectedShop('');
+      return;
+    }
     setSelectedShop(expandedId.toString());
   };
 

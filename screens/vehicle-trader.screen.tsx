@@ -8,7 +8,6 @@ import { Spinner } from '../components/spinner.component';
 import { IShopType, IVehicleShopItem, ReallifeRPGService } from '../services/realliferpg.service';
 
 export const VehicleTrader: React.FC = () => {
-  const theme = useTheme();
   const ReallifeService = new ReallifeRPGService();
   const [loading, setLoading] = React.useState(true);
   const [loadingShop, setLoadingShop] = React.useState(false);
@@ -18,6 +17,10 @@ export const VehicleTrader: React.FC = () => {
   const [vehicleShops, setVehicleShops] = React.useState<IShopType[]>([]);
 
   const handleAccordionPress = (expandedId: string | number) => {
+    if (expandedId === selectedShop) {
+      setSelectedShop('');
+      return;
+    }
     setSelectedShop(expandedId.toString());
   };
 
