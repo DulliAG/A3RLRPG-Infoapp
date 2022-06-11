@@ -34,3 +34,6 @@ jobs:
 
       - name: 🚀 Build app
         run: eas build -p android --profile production
+
+      - name: 🎉 Submit app
+        run: eas submit -p android --profile production --latest
