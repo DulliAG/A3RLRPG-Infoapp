@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/DulliAG/A3RLRPG-Infoapp/compare/v0.3.1...v0.4.0) (2022-06-11)
+
+
+### Features
+
+* **notifications:** Enable or disable push-notifications ([fdff3e6](https://github.com/DulliAG/A3RLRPG-Infoapp/commit/fdff3e6455bf378245c02f9db7f04a4c3bc822dd))
+
+
+### Bug Fixes
+
+* **component:** Sort players ([43c05a9](https://github.com/DulliAG/A3RLRPG-Infoapp/commit/43c05a9bdc2a722cff1879ec38546b30f9014944))
+
 ### [0.3.1](https://github.com/DulliAG/A3RLRPG-Infoapp/compare/v0.3.0...v0.3.1) (2022-06-08)
 
 

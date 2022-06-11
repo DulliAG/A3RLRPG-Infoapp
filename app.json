@@ -2,7 +2,7 @@
   "expo": {
     "name": "A3RLRPG-Infoapp",
     "slug": "A3RLRPG-Infoapp",
-    "version": "0.3.1",
+    "version": "0.4.0",
     "orientation": "portrait",
     "icon": "./assets/dag-blobbo-small.png",
     "userInterfaceStyle": "light",
@@ -25,7 +25,7 @@
         "NOTIFICATIONS"
       ],
       "googleServicesFile": "./google-services.json",
-      "versionCode": 450000301,
+      "versionCode": 450000400,
       "adaptiveIcon": {
         "foregroundImage": "./assets/dag-blobbo-small.png",
         "backgroundColor": "#fff"
