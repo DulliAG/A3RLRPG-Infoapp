@@ -75,7 +75,7 @@ export const ServerList: React.FC = () => {
           <Title>Spielerliste</Title>
           <View style={{ flexGrow: 1 }}>
             {players.length > 0 ? (
-              players.map((player, index) => <ServerPlayer key={index} player={player} />)
+              players.sort().map((player, index) => <ServerPlayer key={index} player={player} />)
             ) : (
               <NoContent text="Keine Spieler gefunden" />
             )}
