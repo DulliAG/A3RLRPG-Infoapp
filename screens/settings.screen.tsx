@@ -1,15 +1,14 @@
 import * as React from 'react';
-// import * as Clipboard from 'expo-clipboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Linking, ScrollView, View } from 'react-native';
-import { Divider, TextInput, Title, Text, Button } from 'react-native-paper';
+import { Linking, ScrollView, View, StyleSheet } from 'react-native';
+import { Divider, TextInput, Title, Text, Button, Switch, Subheading } from 'react-native-paper';
 import { Layout } from '../components/layout.component';
 import { Spinner } from '../components/spinner.component';
 import { name, version } from '../package.json';
 import { KeyContext } from '../context/key.context';
 import { ReallifeRPGService } from '../services/realliferpg.service';
 import { SnackbarContext } from '../context/snackbar.context';
-// import { getNativePushToken } from '../App';
+import { NotificationService as NotificationServiceClass } from '../services/notification.service';
 
 const Label: React.FC<{ label: string; value: string; redirect?: string }> = ({
   label,
@@ -17,7 +16,7 @@ const Label: React.FC<{ label: string; value: string; redirect?: string }> = ({
   redirect,
 }) => {
   return (
-    <Text style={{ fontWeight: 'bold' }}>
+    <Text style={styles.fwBold}>
       {label}:{' '}
       {redirect ? (
         <Text onPress={() => Linking.openURL(redirect)}>{value}</Text>
@@ -30,13 +29,27 @@ const Label: React.FC<{ label: string; value: string; redirect?: string }> = ({
 
 export const Settings: React.FC = () => {
   const ReallifeService = new ReallifeRPGService();
+  const NotificationService = new NotificationServiceClass();
   const { apiKey, setApiKey } = React.useContext(KeyContext);
   const { setSnackbar } = React.useContext(SnackbarContext);
-  // const [nativePushToken, setNativePushToken] = React.useState('');
+  const [devicePushToken, setDevicePushToken] = React.useState('');
   const [loading, setLoading] = React.useState(true);
+  const [notificationActive, setNotificationsActive] = React.useState(true);
   const [key, setKey] = React.useState('');
 
-  const handleSave = () => {
+  const handleSwitchChange = async () => {
+    const newState = !notificationActive;
+    await AsyncStorage.setItem('@pushNotifications', newState ? 'true' : 'false');
+    await NotificationService.registerToken(devicePushToken, newState);
+
+    setNotificationsActive(newState);
+    setSnackbar({
+      visible: true,
+      label: newState ? 'Benachrichtigungen aktiviert' : 'Benachrichtigungen deaktiviert',
+    });
+  };
+
+  const handleKeySave = () => {
     ReallifeService.verifyKey(key)
       .then((result) => {
         if (result.status === 'Error') {
@@ -66,36 +79,33 @@ export const Settings: React.FC = () => {
       });
   };
 
-  const getApiKey = async () => {
-    const key = await AsyncStorage.getItem('@apiKey');
-    setKey(key || '');
-  };
-
   React.useEffect(() => {
-    getApiKey()
+    let notificationEnabled = false;
+    Promise.all([
+      AsyncStorage.getItem('@apiKey'),
+      NotificationService.getDevicePushToken(),
+      AsyncStorage.getItem('@pushNotifications'),
+    ])
+      .then(async ([key, deviceToken, notifications]) => {
+        console.log(key, deviceToken, notifications);
+        notificationEnabled = notifications === 'true' ? true : false;
+        setKey(key || '');
+        setDevicePushToken(deviceToken || '');
+        setNotificationsActive(notificationEnabled);
+
+        if (deviceToken) {
+          await NotificationService.registerToken(deviceToken, notificationEnabled);
+        }
+      })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-
-    // getNativePushToken()
-    //   .then(async (token) => {
-    //     if (token) {
-    //       setNativePushToken(token);
-    //       await Clipboard.setStringAsync(token);
-    //     } else {
-    //       setNativePushToken('no native token');
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     setNativePushToken(err);
-    //     console.log(err);
-    //   });
   }, []);
 
   if (loading) return <Spinner />;
   return (
     <Layout>
       <ScrollView>
-        <View style={{ margin: 15 }}>
+        <View style={[styles.categoryContainer, { marginTop: 15 }]}>
           <Title>Informationen</Title>
           <Label label="Name" value={name} />
           <Label label="Version" value={'v' + version} />
@@ -105,10 +115,19 @@ export const Settings: React.FC = () => {
             value="GitHub"
             redirect="https://github.com/DulliAG/A3RLRPG-Infoapp"
           />
-          <Divider style={{ marginTop: 15 }} />
+          <Divider style={styles.divider} />
         </View>
 
-        <View style={{ margin: 15, marginTop: 0 }}>
+        <View style={styles.categoryContainer}>
+          <Title>Benachrichtigungen</Title>
+          <View style={styles.row}>
+            <Switch value={notificationActive} onValueChange={handleSwitchChange} />
+            <Subheading style={styles.switchLabel}>Benachrichtigungen</Subheading>
+          </View>
+          <Divider style={styles.divider} />
+        </View>
+
+        <View style={styles.categoryContainer}>
           <Title>API-Schlüssel</Title>
           <TextInput
             mode="outlined"
@@ -116,18 +135,20 @@ export const Settings: React.FC = () => {
             defaultValue={apiKey}
             onChangeText={(text) => setKey(text)}
           />
-          <Button
-            mode="contained"
-            style={{ marginTop: 15, width: '50%', marginLeft: '50%' }}
-            onPress={handleSave}
-          >
+          <Button mode="contained" style={styles.saveBtn} onPress={handleKeySave}>
             Speichern
           </Button>
-          {/* <Divider style={{ marginTop: 15 }} /> */}
         </View>
-
-        {/* TODO: Hinzufügen einer Option zum einstellen von Push-Benachrichtigungen */}
       </ScrollView>
     </Layout>
   );
 };
+
+const styles = StyleSheet.create({
+  fwBold: { fontWeight: 'bold' },
+  categoryContainer: { margin: 10, marginTop: 0 },
+  divider: { marginTop: 15 },
+  row: { flexDirection: 'row', alignItems: 'center' },
+  switchLabel: { marginTop: 0, marginLeft: 15 },
+  saveBtn: { marginTop: 15, width: '50%', marginLeft: '50%' },
+});

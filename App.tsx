@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as Notifications from 'expo-notifications';
-import * as Device from 'expo-device';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useColorScheme } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
@@ -13,18 +12,22 @@ import { LightTheme, DarkTheme } from './constants/Theme';
 import { Spinner } from './components/spinner.component';
 import Drawer, { IDrawerProfile } from './navigation/drawer.navigation';
 import { SnackbarContext, SnackbarContextProvider } from './context/snackbar.context';
+import { NotificationService as NotificationServiceClass } from './services/notification.service';
 
 const App: React.FC = () => {
   const ReallifeService = new ReallifeRPGService();
+  const NotificationService = new NotificationServiceClass();
   const { apiKey, setApiKey } = React.useContext(KeyContext);
   const { setSnackbar } = React.useContext(SnackbarContext);
   const [showModal, setShowModal] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [key, setKey] = React.useState('');
   const [profile, setProfile] = React.useState<IDrawerProfile>({} as IDrawerProfile);
-  // const [notification, setNotification] = React.useState<any>(false);
-  // const notificationListener = React.useRef<any>();
-  // const responseListener = React.useRef<any>();
+  const [notification, setNotification] = React.useState<Notifications.Notification>();
+  const [notificationResponse, setNotificationResponse] =
+    React.useState<Notifications.NotificationResponse>();
+  const notificationListener = React.useRef<any>();
+  const responseListener = React.useRef<any>();
 
   const handleModalSubmit = () => {
     ReallifeService.verifyKey(key)
@@ -57,31 +60,37 @@ const App: React.FC = () => {
       });
   };
 
-  // React.useEffect(() => {
-  //   // getNativePushToken()
-  //   //   .then((token) => console.log(token))
-  //   //   .catch((err) => alert(err));
+  React.useEffect(() => {
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+      setNotification(notification);
+    });
 
-  //   // This listener is fired whenever a notification is received while the app is foregrounded
-  //   notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-  //     setNotification(notification);
-  //   });
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+      setNotificationResponse(response);
+      console.log(response);
+    });
 
-  //   // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-  //   responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-  //     console.log(response);
-  //   });
-
-  //   return () => {
-  //     Notifications.removeNotificationSubscription(notificationListener.current);
-  //     Notifications.removeNotificationSubscription(responseListener.current);
-  //   };
-  // }, []);
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   React.useEffect(() => {
     AsyncStorage.getItem('@apiKey')
-      .then((key) => {
+      .then(async (key) => {
         if (!key) {
+          // Wenn noch ein API-Key gesetzt wurde ist davon auszugehen dass die App gerade erst installiert wurde
+          // Daher wird auch gleichzeitig der DevicePushToken registriert, da Push-Benachrichtigungen by default aktiviert sind
+          const token = await NotificationService.getDevicePushToken();
+          if (token) {
+            const registerToken = await NotificationService.registerToken(token, true);
+            if (registerToken.error) throw registerToken.error;
+            await AsyncStorage.setItem('@pushNotifications', true.toString());
+          }
+
           setShowModal(true);
           setProfile({
             avatar: 'https://files.dulliag.de/share/arma3_x64_HZPy6Cnudh.png',
@@ -147,67 +156,3 @@ const Main: React.FC = () => {
 };
 
 export default Main;
-
-// FIXME: Move this to the notification.service.ts
-// TODO: Register for push-notifications
-// export async function registerForPushNotificationsAsync() {
-//   let token = '';
-//   if (Device.isDevice) {
-//     const { status: existingStatus } = await Notifications.getPermissionsAsync();
-//     let finalStatus = existingStatus;
-//     if (existingStatus !== 'granted') {
-//       const { status } = await Notifications.requestPermissionsAsync();
-//       finalStatus = status;
-//     }
-//     if (finalStatus !== 'granted') {
-//       alert('Failed to get push token for push notification!');
-//       return;
-//     }
-//     token = (await Notifications.getExpoPushTokenAsync()).data;
-//     // console.log(token);
-//   } else {
-//     alert('Must use physical device for Push Notifications');
-//   }
-
-//   if (Platform.OS === 'android') {
-//     Notifications.setNotificationChannelAsync('default', {
-//       name: 'default',
-//       importance: Notifications.AndroidImportance.MAX,
-//       vibrationPattern: [0, 250, 250, 250],
-//       lightColor: '#FF231F7C',
-//     });
-//   }
-
-//   return token;
-// }
-
-// export async function getNativePushToken() {
-//   let token = '';
-//   if (Device.isDevice) {
-//     const { status: existingStatus } = await Notifications.getPermissionsAsync();
-//     let finalStatus = existingStatus;
-//     if (existingStatus !== 'granted') {
-//       const { status } = await Notifications.requestPermissionsAsync();
-//       finalStatus = status;
-//     }
-//     if (finalStatus !== 'granted') {
-//       alert('Failed to get push token for push notification!');
-//       return;
-//     }
-//     token = (await Notifications.getDevicePushTokenAsync()).data;
-//     console.log(token);
-//   } else {
-//     alert('Must use physical device for Push Notifications');
-//   }
-
-//   if (Platform.OS === 'android') {
-//     Notifications.setNotificationChannelAsync('default', {
-//       name: 'default',
-//       importance: Notifications.AndroidImportance.MAX,
-//       vibrationPattern: [0, 250, 250, 250],
-//       lightColor: '#FF231F7C',
-//     });
-//   }
-
-//   return token;
-// }
